@@ -5,16 +5,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using usue_online_tests.Data;
 using usue_online_tests.Models;
 
 namespace usue_online_tests.Controllers
 {
     public class HomeController : Controller
     {
+        public DataContext DataContext { get; }
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, DataContext dataContext)
         {
+            DataContext = dataContext;
             _logger = logger;
         }
 
@@ -23,8 +26,21 @@ namespace usue_online_tests.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult GetUserByName(string name)
         {
+            User user = DataContext.Users.FirstOrDefault(user1 => user1.Name == name);
+            return user == null ? new NotFoundResult() : View(user);
+        }
+
+        public async Task<IActionResult> Privacy()
+        {
+            DataContext.Users.Add(new User()
+            {
+                Name = "Andrey",
+                Role = Roles.Admin
+            });
+            await DataContext.SaveChangesAsync();
+
             return View();
         }
 

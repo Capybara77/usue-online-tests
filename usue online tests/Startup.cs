@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using usue_online_tests.Data;
 
 namespace usue_online_tests
 {
@@ -24,6 +25,7 @@ namespace usue_online_tests
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSingleton(typeof(DataContext));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
