@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Http
+@using usue_online_tests.Data
+@inject DataContext Data
+
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">IDZ Online</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
+                    @{
+                        if (this.Context.User.Identity.IsAuthenticated)
+                        {
+                            User user = Data.Users.FirstOrDefault(user1 => user1.Login == Context.User.Identity.Name);
+
+                            <li style="margin-left: auto;" class="nav-item">
+                                <a style="margin-left: auto;" class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Index">Ваш личный кабинет, @user.Name</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="LoginOut">Выход</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li style="margin-left: auto;" class="nav-item">
+                                <a style="margin-left: auto;" class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Войти</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

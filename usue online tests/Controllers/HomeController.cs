@@ -32,15 +32,8 @@ namespace usue_online_tests.Controllers
             return user == null ? new NotFoundResult() : View(user);
         }
 
-        public async Task<IActionResult> Privacy()
+        public IActionResult Privacy()
         {
-            DataContext.Users.Add(new User()
-            {
-                Name = "Andrey",
-                Role = Roles.Admin
-            });
-            await DataContext.SaveChangesAsync();
-
             return View();
         }
 

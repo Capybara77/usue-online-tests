@@ -1,0 +1,7 @@
+﻿@using usue_online_tests.Tests
+@model IEnumerable<Type>
+
+@foreach (var m in Model)
+{
+    <p>@(@m.GetProperty("Name").GetValue(null))</p>
+}

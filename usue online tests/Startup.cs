@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using usue_online_tests.Data;
 
 namespace usue_online_tests
@@ -25,7 +26,20 @@ namespace usue_online_tests
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddSingleton(typeof(DataContext));
+            services.AddSingleton(new DataContext());
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.AccessDeniedPath = "/login/noaccess";
+                options.LoginPath = "/login/index";
+                options.LogoutPath = "/login/loginout";
+
+                options.Events.OnValidatePrincipal += context =>
+                {
+                    
+                    return Task.CompletedTask;
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +60,7 @@ namespace usue_online_tests
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
