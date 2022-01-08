@@ -73,3 +73,86 @@ body {
 .str-name {
     
 }
+
+.test-desc-box {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    background-color: #e9e9e9;
+    margin-bottom: 30px;
+}
+
+.test-name {
+    font-size: larger;
+}
+
+/*STUDENTS LIST*/
+.user-in-list {
+    margin-bottom: 5px;
+}
+
+.group-students {
+    background-color: #e9e9e9;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+.group-name {
+    font-size: large;
+
+}
+/*STUDENTS LIST*/
+
+
+.question-text {
+    font-size: 20px;
+}
+
+.question-box {
+    margin-bottom: 30px;
+}
+
+.numbers-input {
+    width: 70px;
+}
+
+.text-input {
+
+}
+
+.btn-light {
+    background-color: #d5d5d5;
+}
+
+/*LOGIN*/
+.input-wrapper {
+    margin-bottom: 20px;
+   
+}
+
+.input-btn {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 90px;
+    height: 40px;
+}
+
+.lable {
+    font-size: large;
+}
+
+.err-mess {
+    border: 3px solid #fd7b7b;
+    background-color: #ffb8b8;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+/*LOGIN END*/
+
+.presetBox {
+    border-radius: 3px;
+    background-color: #e9e9e9;
+    margin-bottom: 20px;
+    padding: 15px;
+}

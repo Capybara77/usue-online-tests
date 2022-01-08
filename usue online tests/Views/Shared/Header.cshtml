@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 @using usue_online_tests.Data
-@inject DataContext Data
+@using System.Security.Claims
+@inject GetUserByCookie User
 
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -13,15 +14,29 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
+
                     @{
-                        if (this.Context.User.Identity.IsAuthenticated)
+                        //if ((Context.User.Identity as ClaimsIdentity)?.Claims.FirstOrDefault(claim => claim.Type ==
+                        //"http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value is "Admin" or "Teacher")
+                        if (User.GetUser()?.Role is Roles.Admin or Roles.Teacher)
                         {
-                            User user = Data.Users.FirstOrDefault(user1 => user1.Login == Context.User.Identity.Name);
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="StudentList" asp-action="Index">Списки студентов</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TestPresets" asp-action="Index">Шаблоны тестов</a>
+                            </li>
+                        }
+
+                        if (Context.User.Identity is {IsAuthenticated: true })
+                        {
+                            User user = User.GetUser();
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tests" asp-action="View">Просморт доступных тестов</a>
+                            </li>
 
                             <li style="margin-left: auto;" class="nav-item">
                                 <a style="margin-left: auto;" class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Index">Ваш личный кабинет, @user.Name</a>

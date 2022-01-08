@@ -1,0 +1,16 @@
+﻿@model List<IGrouping<string, User>>
+
+@{
+    ViewData["Title"] = "Списки студентов";
+}
+
+@for (int i = 0; i < Model.Count; i++)
+{
+    <div class="group-students">
+        <h3 class="group-name">Группа "@Model[i].Key":</h3>
+        @foreach (User user in Model[i])
+        {
+            <p class="user-in-list">@user.Name</p>
+        }
+    </div>
+}

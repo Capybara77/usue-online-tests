@@ -1,0 +1,36 @@
+﻿@model ITestWrapper
+
+@{
+    ViewData["Title"] = "Тест";
+}
+
+@if (Model.Test.Boxes != null)
+{
+    @using (Html.BeginForm("checkanswers", "Tests"))
+    {
+        <input hidden name="testId" value="@Model.TestId" />
+        <input hidden name="hash" value="@Model.Hash" />
+
+        @foreach (var box in Model.Test.Boxes)
+        {
+            <div class="question-box">
+                @foreach (var text in box.Texts)
+                {
+                    <p class="question-text">@text</p>
+                }
+
+                @foreach (var a in box.Numbers)
+                {
+                    <input required placeholder="Ответ" type="text" name="numbers" class="numbers-input" />
+                }
+
+                @foreach (var a in box.TextAnswers)
+                {
+                    <input type="text" required placeholder="Ответ" name="textAnswers" class="text-input" />
+                }
+            </div>
+        }
+
+        <input class="btn btn-light" type="submit" value="Завершить тестирование" />
+    }
+}

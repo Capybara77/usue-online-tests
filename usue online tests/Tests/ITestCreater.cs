@@ -7,7 +7,9 @@ namespace usue_online_tests.Tests
 {
     public interface ITestCreater
     {
-        static string Name { get; }
+        int TestID { get; set; }
+        string Name { get; }
+        string Description { get; }
         ITest CreateTest(int randomSeed);
     }
 }

@@ -1,7 +1,15 @@
 ﻿@model User
 
+@{
+    ViewData["Title"] = "Профиль";
+}
+
 <h1>Профиль</h1>
 <B>Имя: </B>
 <p>@Model.Name</p>
+<B>Логин: </B>
+<p>@Model.Login</p>
+<B>Группа: </B>
+<p>@Model.Group</p>
 <b>Роль: </b>
 <p>@Model.Role</p>

@@ -21,10 +21,7 @@ namespace usue_online_tests.Controllers
             DataContext = dataContext;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index(string message) => View("Index", message);
 
         [HttpPost]
         public IActionResult LoginIn(string login, string password)
@@ -35,17 +32,19 @@ namespace usue_online_tests.Controllers
             {
                 List<Claim> claims = new List<Claim>
                 {
-                    new(ClaimsIdentity.DefaultNameClaimType, login)
+                    new(ClaimsIdentity.DefaultNameClaimType, login),
+                    new(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
                 };
 
                 ClaimsIdentity ci = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal cp = new ClaimsPrincipal(ci);
 
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, cp);
+                return Redirect("/profile");
             }
 
-            return Redirect("/home");
-
+            return RedirectToAction("Index", "Login", new { message = "Неправильный логин или пароль" });
+            //return Redirect("/login?message=Неправильный логин или пароль");
         }
 
         public IActionResult LoginOut()
@@ -53,5 +52,7 @@ namespace usue_online_tests.Controllers
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Redirect("/");
         }
+
+        public IActionResult NoAccess() => View();
     }
 }

@@ -1,0 +1,30 @@
+﻿@model List<usue_online_tests.Tests.ITestCreater>
+
+@{
+    ViewData["Title"] = "Выбор теста";
+}
+
+<script>
+    $(document).ready(function () {
+
+        $(".start-test").click(function (sender) {
+            var testId = sender.target.getAttribute('test-id');
+            document.location.href = "/tests/start?id=" + testId;
+        });
+
+    });
+</script>
+
+@for (int i = 0; i < Model.Count; i++)
+{
+    <div class="test-desc-box">
+        <b class="test-name">@Model[i].Name</b>
+        <i>@Model[i].Description</i>
+        <input type="button" class="start-test" test-id="@Model[i].TestID" value="Начать тест"/>
+    </div>
+}
+
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+}

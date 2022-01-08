@@ -10,6 +10,8 @@ namespace usue_online_tests.Data
     public class DataContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<TestPreset> Presets { get; set; }
+
         public DataContext()
         {
             Database.EnsureCreated();

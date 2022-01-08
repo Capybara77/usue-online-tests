@@ -6,10 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using usue_online_tests.Data;
+using usue_online_tests.Models;
+using usue_online_tests.Tests;
 
 namespace usue_online_tests
 {
@@ -26,7 +30,12 @@ namespace usue_online_tests
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddHttpContextAccessor();
             services.AddSingleton(new DataContext());
+            services.AddSingleton(new TestsLoader());
+            services.AddTransient<GetUserByCookie>();
+
+            //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DataContext>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
@@ -36,7 +45,6 @@ namespace usue_online_tests
 
                 options.Events.OnValidatePrincipal += context =>
                 {
-                    
                     return Task.CompletedTask;
                 };
             });

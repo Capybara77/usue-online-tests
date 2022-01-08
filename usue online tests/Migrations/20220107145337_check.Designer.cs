@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using usue_online_tests.Data;
@@ -9,9 +10,10 @@ using usue_online_tests.Data;
 namespace usue_online_tests.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220107145337_check")]
+    partial class check
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,15 +31,10 @@ namespace usue_online_tests.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int?>("OwnerID")
-                        .HasColumnType("integer");
-
                     b.Property<int[]>("Tests")
                         .HasColumnType("integer[]");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerID");
 
                     b.ToTable("Presets");
                 });
@@ -70,15 +67,6 @@ namespace usue_online_tests.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("usue_online_tests.Models.TestPreset", b =>
-                {
-                    b.HasOne("usue_online_tests.Models.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerID");
-
-                    b.Navigation("Owner");
                 });
 #pragma warning restore 612, 618
         }

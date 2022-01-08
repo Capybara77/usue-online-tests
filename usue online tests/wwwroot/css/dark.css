@@ -1,0 +1,30 @@
+﻿nav {
+    color: white !important;
+    background-color: #585858 !important;
+}
+
+.container {
+    color: white !important;
+}
+
+html, body, .container, .navbar {
+    background-color: #282828 !important;
+}
+
+
+.navbar-brand, .navbar-light {
+    color: white !important;
+
+}
+
+.nav-link {
+    color: #dbdbdb !important;
+}
+
+.test-desc-box, .group-name {
+    background-color: #3c3c3c;
+}
+
+.start-test {
+    background-color: #9b9b9b;
+}

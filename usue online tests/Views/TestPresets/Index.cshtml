@@ -1,0 +1,56 @@
+﻿@using usue_online_tests.Tests
+@model IEnumerable<usue_online_tests.Models.TestPreset>
+
+@{
+    ViewData["Title"] = "Создать новый шаблон";
+}
+<p>
+    <a asp-action="Create">Создать новый шаблон</a>
+</p>
+@*<table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Tests)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tests)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>*@
+
+
+@{
+    List<ITestCreater> creaters = ViewBag.Tests;
+}
+
+@foreach (var item in Model)
+{
+    <div class="presetBox">
+        <h3>@item.Name</h3>
+
+        @foreach (var t in item.Tests)
+        {
+            <p>@creaters.First(creater => creater.TestID == t).Name</p>
+        }
+    </div>
+}

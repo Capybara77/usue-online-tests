@@ -8,10 +8,6 @@ namespace usue_online_tests.Tests
 {
     public interface ITest
     {
-        List<string> Texts { get; set; }
-        List<double> Numbers { get; set; }
-        List<Bitmap> Pictures { get; set; }
-
-
+        List<ITestBox> Boxes { get; set; }
     }
 }
