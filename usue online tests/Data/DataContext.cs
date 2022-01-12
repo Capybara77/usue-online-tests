@@ -11,15 +11,18 @@ namespace usue_online_tests.Data
     {
         public DbSet<User> Users { get; set; }
         public DbSet<TestPreset> Presets { get; set; }
+        public DbSet<Exam> Exams { get; set; }
 
         public DataContext()
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
+            Database.Migrate();
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(
-                "   Host=localhost;Port=5432;Database=usue_online_tests;Username=postgres;Password=padmin");
+                "Host=localhost;Port=5432;Database=usue_online_tests;Username=postgres;Password=padmin");
         }
     }
 }

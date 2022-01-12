@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
 using usue_online_tests.Data;
 using usue_online_tests.Models;
 using usue_online_tests.Tests;
@@ -65,49 +67,36 @@ namespace usue_online_tests.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CheckAnswers(int testId, int hash, double[] numbers, string[] textAnswers)
+        public IActionResult CheckAnswers(int testId, int hash)
         {
-            ITest test = TestsLoader.TestCreaters.FirstOrDefault(creater => creater.TestID == testId)?.CreateTest(hash);
-            TestResult testResult = new TestResult
+            string[] skipData = { "__RequestVerificationToken", "testId", "hash" };
+            ITestCreater creater = TestsLoader.TestCreaters.FirstOrDefault(creater => creater.TestID == testId);
+            TestResult testResult = new();
+
+            if (creater != null)
             {
-                UserNumbers = numbers,
-                UserTextAnswers = textAnswers
-            };
-
-            int numbersIndex = 0, textAnsewrsIndex = 0;
-            int totalRight = 0;
-
-            if (test != null)
-                foreach (ITestBox testBox in test.Boxes)
+                foreach (KeyValuePair<string, StringValues> pairs in HttpContext.Request.Form)
                 {
-                    foreach (double testBoxNumber in testBox.Numbers)
+                    if (skipData.Contains(pairs.Key)) continue;
+                    try
                     {
-                        if (numbersIndex != numbers.Length)
+                        if (creater.CheckAnswer(hash, pairs.Key, pairs.Value))
                         {
-                            if (Math.Abs(testBoxNumber - numbers[numbersIndex]) < 0.001)
-                            {
-                                totalRight++;
-                            }
+                            testResult.TotalRight++;
                         }
-
-                        numbersIndex++;
+                    }
+                    catch
+                    {
+                        // ignored
                     }
 
-                    foreach (string testBoxTextAnswer in testBox.TextAnswers)
-                    {
-                        if (testBoxTextAnswer == textAnswers[textAnsewrsIndex])
-                        {
-                            totalRight++;
-                        }
 
-                        textAnsewrsIndex++;
-                    }
+                    testResult.Total++;
                 }
-
-            testResult.Total = numbersIndex + textAnsewrsIndex;
-            testResult.TotalRight = totalRight;
+            }
 
             return View(testResult);
         }
+
     }
 }

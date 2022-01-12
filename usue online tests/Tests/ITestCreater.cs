@@ -11,5 +11,6 @@ namespace usue_online_tests.Tests
         string Name { get; }
         string Description { get; }
         ITest CreateTest(int randomSeed);
+        bool CheckAnswer(int randomSeed, string input, string value);
     }
 }

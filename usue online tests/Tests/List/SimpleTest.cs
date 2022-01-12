@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Net.Http.Headers;
 
 namespace usue_online_tests.Tests
 {
@@ -21,29 +22,39 @@ namespace usue_online_tests.Tests
             ITest result = new SimpleTest();
 
             Random = new Random(randomSeed);
-
             int a = Random.Next(0, 20);
-
-            ITestBox box1 = new SimpleTestBox()
-            {
-                Texts = new List<string> { $"Найдите a для уравнения a + 5 = {a + 5}" },
-                Numbers = new List<double> {a}
-            };
+            result.Text = $"Решите уравнение: \\(<a>\\) + 5 = {a + 5}\r\n";
 
             string word = randomWords[Random.Next(0, randomWords.Length)];
 
-            ITestBox box2 = new SimpleTestBox
-            {
-                Texts = new List<string>{$"Напишите слово полностью **{word.Remove(0, 2)}"},
-                TextAnswers = new List<string>{ word }
-            };
-
-            result.Boxes.Add(box1);
-            result.Boxes.Add(box2);
+            result.Text += $"Напишите слово полностью **{word.Remove(0, 2)}\r\n\\(<word>\\)";
 
             return result;
         }
 
-        public List<ITestBox> Boxes { get; set; } = new List<ITestBox>();
+        public bool CheckAnswer(int randomSeed, string input, string value)
+        {
+            Random = new Random(randomSeed);
+            int a = Random.Next(0, 20);
+            string word = randomWords[Random.Next(0, randomWords.Length)];
+
+            switch (input)
+            {
+                case "a":
+                    {
+                        return a == Convert.ToInt32(value);
+                    }
+                case "word":
+                    {
+                        return word == value;
+                    }
+            }
+
+            return false;
+        }
+
+        public string Text { get; set; }
+        public string[] Inputs { get; set; }
+        public List<Bitmap> Pictures { get; set; }
     }
 }

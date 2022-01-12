@@ -131,38 +131,22 @@ namespace usue_online_tests.Controllers
             return View(testPreset);
         }
 
-        // GET: TestPresets/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var testPreset = await _context.Presets
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (testPreset == null)
-            {
-                return NotFound();
-            }
-
-            return View(testPreset);
-        }
-
-        // POST: TestPresets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var testPreset = await _context.Presets.FindAsync(id);
-            _context.Presets.Remove(testPreset);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         private bool TestPresetExists(int id)
         {
             return _context.Presets.Any(e => e.Id == id);
+        }
+
+
+        public async Task<RedirectToActionResult> Delete(int presetId)
+        {
+            var preset = _context.Presets.FirstOrDefault(preset => preset.Id == presetId && preset.Owner == UserByCookie.GetUser());
+            if (preset != null)
+            {
+                _context.Presets.Remove(preset);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

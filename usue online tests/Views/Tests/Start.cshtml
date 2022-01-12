@@ -1,36 +1,80 @@
-﻿@model ITestWrapper
+﻿@using System.Text.RegularExpressions;
+@model ITestWrapper
+
+@section Scripts
+{
+    @*<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>*@
+
+    @*<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>*@
+    
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        extensions: ["tex2jax.js","/js/forminput.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']],
+        TeX: {extensions: ["AMSmath.js","AMSsymbols.js"]}
+        }});
+    </script>
+    @*<script src="/js/forminput.js"></script>*@
+}
 
 @{
     ViewData["Title"] = "Тест";
 }
 
-@if (Model.Test.Boxes != null)
+@using (Html.BeginForm("CheckAnswers", "Tests", FormMethod.Post))
 {
-    @using (Html.BeginForm("checkanswers", "Tests"))
+    <input hidden name="testId" value="@Model.TestId" />
+    <input hidden name="hash" value="@Model.Hash" />
+    var matches = Regex.Matches(Model.Test.Text, "<(.*?)>");
+    for (int i = 0; i < matches.Count; i++)
     {
-        <input hidden name="testId" value="@Model.TestId" />
-        <input hidden name="hash" value="@Model.Hash" />
-
-        @foreach (var box in Model.Test.Boxes)
-        {
-            <div class="question-box">
-                @foreach (var text in box.Texts)
-                {
-                    <p class="question-text">@text</p>
-                }
-
-                @foreach (var a in box.Numbers)
-                {
-                    <input required placeholder="Ответ" type="text" name="numbers" class="numbers-input" />
-                }
-
-                @foreach (var a in box.TextAnswers)
-                {
-                    <input type="text" required placeholder="Ответ" name="textAnswers" class="text-input" />
-                }
-            </div>
-        }
-
-        <input class="btn btn-light" type="submit" value="Завершить тестирование" />
+        //Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"<input class='answer-place' name='{matches[i].Groups[1].Value}' />");
+        //Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"\\(\\FormInput[2][answer-place][asd]{{{matches[i].Groups[1].Value}}}\\)");
+        Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"\\FormInput[2][answer-place][]{{{matches[i].Groups[1].Value}}}");
     }
+    @Html.Raw(Model.Test.Text.Replace("\n", "<br/>"))
+    <input type="submit" />
+
+    @*<p>
+        \(\FormInput{a}x+\FormInput[][red_background]{b}\).
+    </p>*@
 }
+
+
+@*@if (Model.Test.Boxes != null)
+    {
+        @using (Html.BeginForm("checkanswers", "Tests"))
+        {
+            <input hidden name="testId" value="@Model.TestId" />
+            <input hidden name="hash" value="@Model.Hash" />
+
+            @foreach (var box in Model.Test.Boxes)
+            {
+                <div class="question-box">
+                    @foreach (var text in box.Texts)
+                    {
+                        <p class="question-text">@text</p>
+                    }
+
+                    @foreach (var a in box.Numbers)
+                    {
+                        <input required placeholder="Ответ" type="text" name="numbers" class="numbers-input" />
+                    }
+
+                    @foreach (var a in box.TextAnswers)
+                    {
+                        <input type="text" required placeholder="Ответ" name="textAnswers" class="text-input" />
+                    }
+                </div>
+            }
+
+            <input class="btn btn-light" type="submit" value="Завершить тестирование" />
+        }
+    }*@
