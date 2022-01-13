@@ -27,7 +27,7 @@ namespace usue_online_tests.Tests.List
             return test;
         }
 
-        public bool CheckAnswer(int randomSeed, string input, string value)
+        public int CheckAnswer(int randomSeed, Dictionary<string, string> answers)
         {
             Random random = new Random(randomSeed);
 
@@ -35,19 +35,16 @@ namespace usue_online_tests.Tests.List
             double saltMass = random.Next(10, (int)(luqMass - 5));
             double addSalt = random.Next(5, 20);
 
-            switch (input)
+            try
             {
-                case "in1":
-                {
-                    return Math.Abs(saltMass + addSalt - Convert.ToDouble(value)) < 0.0001;
-                }
-                case "in2":
-                {
-                    return Math.Abs(addSalt + luqMass - Convert.ToDouble(value)) < 0.0001;
-                }
+                double in1 = Convert.ToDouble(answers.FirstOrDefault(pair => pair.Key == "in1").Value);
+                double in2 = Convert.ToDouble(answers.FirstOrDefault(pair => pair.Key == "in2").Value);
+                return Math.Abs(in1 / in2 - (saltMass + addSalt) / (addSalt + luqMass)) < 0.001 ? 2 : 0;
             }
-
-            return false;
+            catch (FormatException)
+            {
+                return 0;
+            }
         }
 
         public string Text { get; set; }

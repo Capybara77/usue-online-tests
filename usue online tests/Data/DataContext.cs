@@ -15,8 +15,8 @@ namespace usue_online_tests.Data
 
         public DataContext()
         {
-            //Database.EnsureCreated();
-            Database.Migrate();
+            Database.EnsureCreated();
+            //Database.Migrate();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -75,24 +75,16 @@ namespace usue_online_tests.Controllers
 
             if (creater != null)
             {
-                foreach (KeyValuePair<string, StringValues> pairs in HttpContext.Request.Form)
+                // create dictionary with answers
+                KeyValuePair<string, StringValues>[] paramsArray = HttpContext.Request.Form.Where(pair => !skipData.Contains(pair.Key)).ToArray();
+                Dictionary<string, string> userAnswer = new Dictionary<string, string>();
+                foreach (KeyValuePair<string, StringValues> keyValuePair in paramsArray)
                 {
-                    if (skipData.Contains(pairs.Key)) continue;
-                    try
-                    {
-                        if (creater.CheckAnswer(hash, pairs.Key, pairs.Value))
-                        {
-                            testResult.TotalRight++;
-                        }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-
-
-                    testResult.Total++;
+                    userAnswer.Add(keyValuePair.Key, keyValuePair.Value);
                 }
+
+                testResult.Total = userAnswer.Count;
+                testResult.TotalRight = creater.CheckAnswer(hash, userAnswer);
             }
 
             return View(testResult);
