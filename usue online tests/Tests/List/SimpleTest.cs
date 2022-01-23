@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +21,6 @@ namespace usue_online_tests.Tests
     //    public ITest CreateTest(int randomSeed)
     //    {
     //        ITest result = new SimpleTest();
-
     //        Random = new Random(randomSeed);
     //        int a = Random.Next(0, 20);
     //        result.Text = $"Решите уравнение: \\(<a>\\) + 5 = {a + 5}\r\n";
@@ -32,29 +32,36 @@ namespace usue_online_tests.Tests
     //        return result;
     //    }
 
-    //    public bool CheckAnswer(int randomSeed, string input, string value)
+    //    public int CheckAnswer(int randomSeed, Dictionary<string, string> answers)
     //    {
     //        Random = new Random(randomSeed);
     //        int a = Random.Next(0, 20);
     //        string word = randomWords[Random.Next(0, randomWords.Length)];
+    //        int total = 0;
 
-    //        switch (input)
+    //        foreach (var key in answers.Keys)
     //        {
-    //            case "a":
+    //            switch (key)
+    //            {
+    //                case "a":
     //                {
-    //                    return a == Convert.ToInt32(value);
+    //                    if (a == Convert.ToInt32(answers[key])) total++;
+    //                    break;
     //                }
-    //            case "word":
+    //                case "word":
     //                {
-    //                    return word == value;
+    //                    if (word == answers[key]) total++;
+    //                    break;
     //                }
+    //            }
+
     //        }
 
-    //        return false;
+    //        return total;
     //    }
 
+
     //    public string Text { get; set; }
-    //    public string[] Inputs { get; set; }
-    //    public List<Bitmap> Pictures { get; set; }
+    //    public List<Image> Pictures { get; set; }
     //}
 }

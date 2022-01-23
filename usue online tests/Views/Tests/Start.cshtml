@@ -1,16 +1,18 @@
 ﻿@using System.Text.RegularExpressions;
+@using System.IO
+@using System.Drawing.Imaging
 @model ITestWrapper
 
 @section Scripts
 {
     @*<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>*@
+        <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>*@
 
     @*<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>*@
-    
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+        </script>*@
+
     <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
 
     <script type="text/x-mathjax-config">
@@ -28,25 +30,45 @@
     ViewData["Title"] = "Тест";
 }
 
-@using (Html.BeginForm("CheckAnswers", "Tests", FormMethod.Post))
+@if (Model.Test != null)
 {
-    <input hidden name="testId" value="@Model.TestId" />
-    <input hidden name="hash" value="@Model.Hash" />
-    var matches = Regex.Matches(Model.Test.Text, "<(.*?)>");
-    for (int i = 0; i < matches.Count; i++)
+    @if (Model.Test.Pictures != null)
     {
-        //Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"<input class='answer-place' name='{matches[i].Groups[1].Value}' />");
-        //Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"\\(\\FormInput[2][answer-place][asd]{{{matches[i].Groups[1].Value}}}\\)");
-        Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"\\FormInput[2][answer-place][]{{{matches[i].Groups[1].Value}}}");
+        @foreach (var pic in Model.Test.Pictures)
+        {
+            MemoryStream stream = new MemoryStream();
+            pic.Save(stream, ImageFormat.Png);
+            byte[] data = new byte[stream.Length];
+            stream.Position = 0;
+            stream.Read(data, 0, data.Length);
+            <img class="img-task" src="data:image/jpeg;base64,@Convert.ToBase64String(data)" width="@(pic.Width)" height="@(pic.Height)"/>
+            pic.Dispose();
+        }
     }
-    @Html.Raw(Model.Test.Text.Replace("\n", "<br/>"))
-    <input type="submit" />
 
-    @*<p>
-        \(\FormInput{a}x+\FormInput[][red_background]{b}\).
-    </p>*@
+    @using (Html.BeginForm("CheckAnswers", "Tests", FormMethod.Post))
+    {
+        <input hidden name="testId" value="@Model.TestId" />
+        <input hidden name="hash" value="@Model.Hash" />
+        var matches = Regex.Matches(Model.Test.Text, "<(.*?)>");
+        for (int i = 0; i < matches.Count; i++)
+        {
+            //Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"<input class='answer-place' name='{matches[i].Groups[1].Value}' />");
+            //Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"\\(\\FormInput[2][answer-place][asd]{{{matches[i].Groups[1].Value}}}\\)");
+            Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"\\FormInput[2][answer-place][]{{{matches[i].Groups[1].Value}}}");
+        }
+        @Html.Raw(Model.Test.Text.Replace("\n", "<br/>"))
+        <input type="submit" />
+
+        @*<p>
+                \(\FormInput{a}x+\FormInput[][red_background]{b}\).
+            </p>*@
+    }
 }
-
+else
+{
+    <h2>Произошла ошибка при генерации задания</h2>
+}
 
 @*@if (Model.Test.Boxes != null)
     {

@@ -7,37 +7,6 @@
 <p>
     <a asp-action="Create">Создать новый шаблон</a>
 </p>
-@*<table class="table">
-        <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Tests)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tests)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>*@
-
 
 @{
     List<ITestCreater> creaters = ViewBag.Tests;
@@ -50,15 +19,22 @@
 
         @foreach (var t in item.Tests)
         {
-            <p>@creaters.First(creater => creater.TestID == t).Name</p>
+            <p>@creaters.FirstOrDefault(creater => creater.TestID == t)?.Name</p>
         }
         <form method="POST" action="/testpresets/delete">
             <input hidden name="presetId" value="@item.Id"/>
             <input class="btn btn-light delete" type="submit" value="Удалить"/>
         </form>
         <br/>
-        <form method="POST" action="/">
-            <input name="createExam" class="btn btn-light exam" type="submit" value="Начать тестирование" />
+        <form method="POST" action="/testpresets/startnew">
+            <input hidden name="presetId" value="@item.Id"/>
+            <label>Группа: </label>
+            <input name="group" type="text"/>
+            <label>Время начала тестирования: </label>
+            <input type="datetime-local" name="datetimeStart"/>
+            <label>Время окончания тестирования: </label>
+            <input type="datetime-local" name="datetimeEnd"/>
+            <input name="createExam" class="btn btn-light exam" type="submit" value="Начать тестирование"/>
         </form>
     </div>
 }

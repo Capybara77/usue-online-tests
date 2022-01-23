@@ -52,11 +52,19 @@ namespace usue_online_tests.Controllers
 
         public IActionResult Start(int id)
         {
-            ITestCreater creater = (ITestCreater)TestCreaters.FirstOrDefault(testCreater => testCreater.TestID == id);
+            ITestCreater creater = TestCreaters.FirstOrDefault(testCreater => testCreater.TestID == id);
             int hash = new Random().Next();
-            ITest test = creater.CreateTest(hash);
+            ITest test = null;
+            try
+            {
+                if (creater != null) test = creater.CreateTest(hash);
+            }
+            catch
+            {
 
-            ITestWrapper testWrapper = new ITestWrapper()
+            }
+
+            ITestWrapper testWrapper = new ITestWrapper
             {
                 Hash = hash,
                 Test = test,
@@ -84,7 +92,14 @@ namespace usue_online_tests.Controllers
                 }
 
                 testResult.Total = userAnswer.Count;
-                testResult.TotalRight = creater.CheckAnswer(hash, userAnswer);
+                try
+                {
+                    testResult.TotalRight = creater.CheckAnswer(hash, userAnswer);
+                }
+                catch
+                {
+                    testResult.TotalRight = -1;
+                }
             }
 
             return View(testResult);

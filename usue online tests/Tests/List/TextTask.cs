@@ -9,7 +9,7 @@ namespace usue_online_tests.Tests.List
     public class TextTask : ITestCreater, ITest
     {
         public int TestID { get; set; }
-        public string Name { get; } = "Текстовая задача про соль";
+        public string Name { get; } = "Текстовая задача про концентрацию";
         public string Description { get; } = "";
         public ITest CreateTest(int randomSeed)
         {
@@ -49,6 +49,6 @@ namespace usue_online_tests.Tests.List
 
         public string Text { get; set; }
         public string[] Inputs { get; set; }
-        public List<Bitmap> Pictures { get; set; }
+        public List<Image> Pictures { get; set; }
     }
 }

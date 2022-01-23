@@ -148,5 +148,25 @@ namespace usue_online_tests.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> StartNew(string group, DateTime dateTimeStart, DateTime dateTimeEnd, int presetId)
+        {
+            if (DateTime.Now > dateTimeStart || dateTimeStart > dateTimeEnd)
+            {
+                return View((object)new string("Некорректные входные данные"));
+            }
+
+            _context.Exams.Add(new Exam()
+            {
+                DateTimeStart = dateTimeStart,
+                DateTimeEnd = dateTimeEnd,
+                Group = group,
+                Preset = _context.Presets.First(preset => preset.Id == presetId)
+            });
+            await _context.SaveChangesAsync();
+
+            return View((object)new string ("Успешно добавлено"));
+        }
     }
 }
