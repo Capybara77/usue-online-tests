@@ -21,10 +21,15 @@ namespace usue_online_tests.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string page)
         {
-            return View();
+            return View(page);
         }
+
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
 
         public IActionResult GetUserByName(string name)
         {

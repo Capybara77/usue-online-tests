@@ -30,10 +30,14 @@ namespace usue_online_tests
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            //services.AddRazorPages();
+            //services.AddServerSideBlazor();
+
             services.AddHttpContextAccessor();
             services.AddSingleton(new DataContext());
             services.AddSingleton(new TestsLoader());
             services.AddTransient<GetUserByCookie>();
+
 
             //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DataContext>();
 
@@ -76,6 +80,7 @@ namespace usue_online_tests
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapRazorPages();
             });
         }
     }
