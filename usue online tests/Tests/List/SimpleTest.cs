@@ -8,7 +8,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace usue_online_tests.Tests
 {
-    //public class SimpleTest : ITestCreater, ITest
+    //public class SimpleTest : ITestCreator, ITest
     //{
     //    private string[] randomWords = new[] { "саня", "набеков", "стас" };
 

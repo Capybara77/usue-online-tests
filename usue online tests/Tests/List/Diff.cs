@@ -9,7 +9,7 @@ using org.mariuszgromada.math.mxparser.mathcollection;
 
 namespace usue_online_tests.Tests.List
 {
-    public class Diff : ITestCreater, ITest
+    public class Diff : ITestCreator, ITest
     {
         public int TestID { get; set; }
         public string Name { get; } = "Дифференцирование";

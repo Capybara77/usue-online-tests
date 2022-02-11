@@ -11,7 +11,7 @@ namespace usue_online_tests.Tests
     public class TestsLoader
     {
         public List<Type> AllTests { get; set; } = new();
-        public List<ITestCreater> TestCreaters { get; set; } = new();
+        public List<ITestCreator> TestCreaters { get; set; } = new();
 
 
         public TestsLoader()
@@ -30,19 +30,19 @@ namespace usue_online_tests.Tests
                     Type[] interfaces = type.GetInterfaces();
                     foreach (Type i in interfaces)
                     {
-                        if (i == typeof(ITestCreater))
+                        if (i == typeof(ITestCreator))
                         {
                             AllTests.Add(type);
-                            ITestCreater creater =
-                                (ITestCreater)type.GetConstructor(Type.EmptyTypes)?.Invoke(new object?[0]);
+                            ITestCreator creator =
+                                (ITestCreator)type.GetConstructor(Type.EmptyTypes)?.Invoke(new object?[0]);
 
-                            string mystring = creater.Name + creater.Description;
+                            string mystring = creator.Name + creator.Description;
                             MD5 md5Hasher = MD5.Create();
                             byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(mystring));
                             int ivalue = BitConverter.ToInt32(hashed, 0);
-                            creater.TestID = ivalue;
+                            creator.TestID = ivalue;
 
-                            TestCreaters.Add(creater);
+                            TestCreaters.Add(creator);
                         }
                     }
                 }
