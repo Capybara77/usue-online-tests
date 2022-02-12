@@ -2,7 +2,7 @@
   "name": "usue-online-tests",
   "version": "1.0.0",
   "description": "",
-  "source": ["Frontend/index.js", "Frontend/index.css"],
+  "source": ["Frontend/index.js", "Frontend/styles/index.css"],
   "targets": {
     "default": {
       "distDir": "wwwroot/bundles"
