@@ -1,0 +1,1 @@
+{"mappings":"AAAA,KACA,iBACA,CCAA,KACE,wBACF","sources":["Frontend/test.css","Frontend/index.css"],"sourcesContent":["html {\r\n  background: \"blue\";\r\n}\r\n","@import \"./test.css\";\r\n\r\nbody {\r\n  background: red !important;\r\n}\r\n"],"names":[],"version":3,"file":"index.css.map"}

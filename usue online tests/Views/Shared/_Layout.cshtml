@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,10 +11,17 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @{ await Html.RenderPartialAsync("Dark"); }
+    @{
+        await Html.RenderPartialAsync("Dark"); 
+    }
+    <script src="~/bundles/index.js"></script>
+    <link rel="stylesheet" href="~/bundles/index.css" />
 </head>
+
 <body>
-    @{ await Html.RenderPartialAsync("Header"); }
+    @{
+        await Html.RenderPartialAsync("Header"); 
+    }
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -29,4 +37,5 @@
         </div>
     </footer>
 </body>
+
 </html>

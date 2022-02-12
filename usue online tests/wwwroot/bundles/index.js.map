@@ -1,0 +1,1 @@
+{"mappings":"AAAAA,QAAQC,IAAI,WCEZD,QAAQC,IAAI","sources":["Frontend/test.js","Frontend/index.js"],"sourcesContent":["console.log(\"test.js\")","import \"./test.js\";\r\n\r\nconsole.log(\"Привет, это код из бандла, который сделал Parcel\");\r\n"],"names":["console","log"],"version":3,"file":"index.js.map"}
