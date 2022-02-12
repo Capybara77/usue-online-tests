@@ -17,7 +17,7 @@ namespace usue_online_tests.Controllers
     [Authorize]
     public class Tests : Controller
     {
-        public List<ITestCreater> TestCreaters { get; set; }
+        public List<ITestCreator> TestCreaters { get; set; }
 
         public DataContext DataContext { get; }
         public TestsLoader TestsLoader { get; }
@@ -52,12 +52,12 @@ namespace usue_online_tests.Controllers
 
         public IActionResult Start(int id)
         {
-            ITestCreater creater = TestCreaters.FirstOrDefault(testCreater => testCreater.TestID == id);
+            ITestCreator creator = TestCreaters.FirstOrDefault(testCreater => testCreater.TestID == id);
             int hash = new Random().Next();
             ITest test = null;
             try
             {
-                if (creater != null) test = creater.CreateTest(hash);
+                if (creator != null) test = creator.CreateTest(hash);
             }
             catch
             {
@@ -78,10 +78,10 @@ namespace usue_online_tests.Controllers
         public IActionResult CheckAnswers(int testId, int hash)
         {
             string[] skipData = { "__RequestVerificationToken", "testId", "hash" };
-            ITestCreater creater = TestsLoader.TestCreaters.FirstOrDefault(creater => creater.TestID == testId);
+            ITestCreator creator = TestsLoader.TestCreaters.FirstOrDefault(creater => creater.TestID == testId);
             TestResult testResult = new();
 
-            if (creater != null)
+            if (creator != null)
             {
                 // create dictionary with answers
                 KeyValuePair<string, StringValues>[] paramsArray = HttpContext.Request.Form.Where(pair => !skipData.Contains(pair.Key)).ToArray();
@@ -94,7 +94,7 @@ namespace usue_online_tests.Controllers
                 testResult.Total = userAnswer.Count;
                 try
                 {
-                    testResult.TotalRight = creater.CheckAnswer(hash, userAnswer);
+                    testResult.TotalRight = creator.CheckAnswer(hash, userAnswer);
                 }
                 catch
                 {

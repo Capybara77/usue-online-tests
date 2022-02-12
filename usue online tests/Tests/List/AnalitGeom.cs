@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace usue_online_tests.Tests.List
 {
-    public class AnalitGeom : ITestCreater, ITest
+    public class AnalitGeom : ITestCreator, ITest
     {
         public int TestID { get; set; }
         public string Name { get; } = "Аналитическая геометрия";

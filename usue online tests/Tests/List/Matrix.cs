@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace usue_online_tests.Tests.List
 {
-    public class Matrix : ITestCreater, ITest
+    public class Matrix : ITestCreator, ITest
     {
         public int TestID { get; set; }
         public string Name { get; } = "Умножение матриц на макроуровне";

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace usue_online_tests.Tests.List
 {
-    public class TextTask : ITestCreater, ITest
+    public class TextTask : ITestCreator, ITest
     {
         public int TestID { get; set; }
         public string Name { get; } = "Текстовая задача про концентрацию";
