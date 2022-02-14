@@ -4,16 +4,7 @@
     ViewData["Title"] = "Доступные тесты";
 }
 
-<script>
-    $(document).ready(function () {
-
-        $(".start-test").click(function (sender) {
-            var testId = sender.target.getAttribute('test-id');
-            document.location.href = "/tests/start?id=" + testId;
-        });
-
-    });
-</script>
+<h1>Доступные тесты</h1>
 
 @for (int i = 0; i < Model.Count; i++)
 {

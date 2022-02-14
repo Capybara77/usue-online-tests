@@ -1,45 +1,20 @@
 ﻿@model usue_online_tests.Models.TestPreset
 
 @{
-    ViewData["Title"] = "Создние шаблона";
+    ViewData["Title"] = "Создание шаблона";
 }
 
-<h1>Создние шаблона</h1>
+<h1>Создание шаблона</h1>
 
-<hr />
-@*<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Tests" class="control-label"></label>
-                <input asp-for="Tests" class="form-control" />
-                <span asp-validation-for="Tests" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form class="test-presets-create" method="post" action="/testpresets/create">
+    <div class="test-presets-create-group">
+        <span>Название</span>
+        <input name="name" />
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>*@
-
-<form method="post" action="/testpresets/create">
-    <div class="input-wrapper">
-        <span class="lable">Название шаблона: </span>
-        <input name="name" type="text" class="input"/>
+    <div class="test-presets-create-group">
+        <span>Перечисление id тестов через ','</span>
+        <input name="Tests" />
     </div>
-    <div class="input-wrapper">
-        <span class="lable">Перечисление id тестов через ',': </span>
-        <input name="Tests" type="text" class="input"/>
-    </div>
-    <input type="submit"/>
+    <input class="test-presets-create-button" type="submit" value="Создать" />
+    <a href="/testpresets" class="test-presets-create-button-outline">Отменить</a>
 </form>

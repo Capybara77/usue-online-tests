@@ -4,9 +4,9 @@
 @{
     ViewData["Title"] = "Шаблоны тестов";
 }
-<p>
-    <a asp-action="Create">Создать новый шаблон</a>
-</p>
+
+<h1>Шаблоны тестов</h1>
+<a class="test-presets-button" href="/testpresets/create">Создать новый шаблон</a>
 
 @{
     List<ITestCreator> creaters = ViewBag.Tests;

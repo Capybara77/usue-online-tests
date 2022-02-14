@@ -2,15 +2,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1054px;
+  max-width: 1024px;
   width: 100%;
   margin: 0 auto;
+  padding: 0 15px;
+  box-sizing: border-box;
 }
 
 .navigation-logo {
   color: inherit;
   text-decoration: none;
-  padding: 15px;
+  padding: 15px 0;
   font-weight: bold;
 }
 
@@ -162,6 +164,50 @@
   cursor: pointer;
 }
 
+.test-presets-button {
+  background: var(--blue);
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
+  margin-top: 15px;
+  display: inline-block;
+}
+
+.test-presets-create-button {
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.test-presets-create-button-outline {
+  text-decoration: none;
+  color: var(--blue);
+  padding: 10px;
+}
+
+.test-presets-create-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.test-presets-create-group span {
+  margin-bottom: 10px;
+}
+
+.test-presets-create-group input {
+  max-width: 300px;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid gray;
+  outline-color: var(--blue);
+}
 body {
   margin: 0;
   min-height: 100vh;
