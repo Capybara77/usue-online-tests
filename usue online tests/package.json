@@ -4,8 +4,7 @@
   "description": "",
   "source": [
     "Frontend/index.js",
-    "Frontend/styles/index.css",
-    "Frontend/forminput.js"
+    "Frontend/styles/index.css"
   ],
   "targets": {
     "default": {
@@ -21,5 +20,8 @@
   "license": "ISC",
   "devDependencies": {
     "parcel": "^2.3.1"
+  },
+  "dependencies": {
+    "mathjax": "^3.2.0"
   }
 }

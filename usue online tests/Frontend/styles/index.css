@@ -2,6 +2,7 @@
 @import "./main.css";
 @import "./layout.css";
 @import "./footer.css";
+@import "./login.css";
 
 body {
   margin: 0;
@@ -12,4 +13,9 @@ body {
 
 * {
   font-family: Inter;
+}
+
+:root {
+  --blue: rgb(89, 89, 255);
+  --red: rgb(253, 83, 83);
 }

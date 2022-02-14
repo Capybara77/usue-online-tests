@@ -4,23 +4,12 @@
     ViewData["Title"] = "Вход";
 }
 
-<form class="login-wrapper" action="/login/loginin" method="post">
+<form class="login" action="/login/loginin" method="post">
     @if (!string.IsNullOrEmpty(Model))
     {
-        <div class="err-mess">
-            @Model
-        </div>
+        <div class="login-error">@Model</div>
     }
-
-    <div class="input-wrapper">
-        <span class="lable">Логин: </span>
-        <input name="login" type="text" class="input"/>
-    </div>
-
-    <div class="input-wrapper">
-        <span class="lable">Пароль: </span>
-        <input name="password" type="password" class="input"/>
-    </div>
-
-    <input type="submit" class="input-btn" value="Войти"/>
+    <input class="login-input" placeholder="Почта" name="login" type="text"/>
+    <input class="login-input" placeholder="Пароль" name="password" type="password"/>
+    <input class="login-button" type="submit" value="Войти"/>
 </form>
