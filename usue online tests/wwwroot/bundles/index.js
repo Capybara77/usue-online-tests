@@ -519,11 +519,14 @@ function hmrAcceptRun(bundle, id) {
 }
 
 },{}],"c4vyP":[function(require,module,exports) {
-var _testJs = require("./test.js");
-console.log("Привет, это код из бандла, который сделал Parcel");
+var _navigation = require("./navigation");
 
-},{"./test.js":"7faAh"}],"7faAh":[function(require,module,exports) {
-console.log("test.js");
+},{"./navigation":"cnzUp"}],"cnzUp":[function(require,module,exports) {
+const navigationProfile = document.querySelector(".navigation-profile");
+const profileMenu = document.querySelector(".navigation-profile-menu");
+navigationProfile.onclick = ()=>{
+    profileMenu.classList.toggle("hidden");
+};
 
 },{}]},["gm1PL","c4vyP"], "c4vyP", "parcelRequireabcd")
 

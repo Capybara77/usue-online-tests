@@ -11,6 +11,10 @@ body {
   flex-direction: column;
 }
 
+.hidden {
+  display: none;
+}
+
 * {
   font-family: Inter;
 }

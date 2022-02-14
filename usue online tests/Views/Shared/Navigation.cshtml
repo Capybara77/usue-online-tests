@@ -6,15 +6,19 @@
         @{
             if (User.GetUser()?.Role is Roles.Admin or Roles.Teacher)
             {
-                <a href="/studentlist">Списки студентов</a>
-                <a href="/testpresets">Шаблоны тестов</a>
+                <a class="navigation-item" href="/testpresets">Шаблоны тестов</a>
+                <a class="navigation-item" href="/studentlist">Списки студентов</a>
             }
 
             if (Context.User.Identity is { IsAuthenticated: true })
             {
-                <a href="/tests/view">Просморт доступных тестов</a>
-                <a href="/profile">Ваш личный кабинет, @User.GetUser().Name</a>
-                <a href="/login/loginout">Выход</a>
+                <a class="navigation-item" href="/tests/view">Доступные тесты</a>
+                <div class="navigation-profile">
+                    <div class="navigation-profile-menu hidden">
+                        <p class="navigation-profile-menu-item">Изменить тему</p>
+                        <a class="navigation-profile-menu-item" href="/login/loginout">Выход</a>
+                    </div>
+                </div>
             }
         }
     </div>
