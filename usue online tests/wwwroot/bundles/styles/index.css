@@ -5,7 +5,6 @@
   max-width: 1054px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 
 }
 
 .navigation-logo {
@@ -89,6 +88,7 @@
   margin: 0 auto;
   flex-grow: 1;
   padding: 0 15px;
+  box-sizing: border-box;
 }
 
 .footer {
@@ -107,21 +107,23 @@
   background: var(--red);
   color: white;
   padding: 15px;
-  max-width: 266px;
+  max-width: 300px;
   margin-bottom: 20px;
   border-radius: 8px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .login-input {
   width: 100%;
-  max-width: 266px;
+  max-width: 300px;
   padding: 15px;
   font-size: 16px;
   margin-bottom: 20px;
   border-radius: 8px;
   border: 2px solid gray;
   outline-color: var(--blue);
+  box-sizing: border-box;
 }
 
 .login-button {
