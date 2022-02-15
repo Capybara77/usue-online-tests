@@ -30,6 +30,7 @@ namespace usue_online_tests.Controllers
         {
             var user = GetUserByCookie.GetUser();
             user.IsDark = !user.IsDark;
+            DataContext.SaveChanges();
             return StatusCode(200);
         }
     }
