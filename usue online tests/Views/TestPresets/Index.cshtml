@@ -12,6 +12,11 @@
     List<ITestCreator> creaters = ViewBag.Tests;
 }
 
+@if (!Model.Any())
+{
+    <h2>Вы еще не создали шаблоны</h2>
+}
+
 @foreach (var item in Model)
 {
     <div class="presetBox">
