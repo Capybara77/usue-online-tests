@@ -25,7 +25,7 @@ namespace usue_online_tests.Controllers
             return View(DataContext.Users.FirstOrDefault(user => user.Login == HttpContext.User.Identity.Name));
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult ChangeUserTheme()
         {
             var user = GetUserByCookie.GetUser();

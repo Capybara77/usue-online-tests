@@ -24,8 +24,10 @@
   margin-bottom: 20px;
   border-radius: 8px;
   border: 2px solid gray;
-  outline-color: var(--blue);
+  outline: none;
   box-sizing: border-box;
+  background: var(--background-input);
+  color: var(--foreground);
 }
 
 .login-button {

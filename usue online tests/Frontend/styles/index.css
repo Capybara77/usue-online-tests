@@ -10,6 +10,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--background);
+  color: var(--foreground);
 }
 
 .hidden {
@@ -23,4 +25,13 @@ body {
 :root {
   --blue: rgb(89, 89, 255);
   --red: rgb(253, 83, 83);
+  --background: white;
+  --foreground: black;
+  --background-input: white;
+}
+
+[data-theme="dark"]:root {
+  --background: rgb(31, 31, 31);
+  --foreground: white;
+  --background-input: rgb(54, 54, 54);
 }
