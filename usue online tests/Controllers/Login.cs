@@ -42,7 +42,10 @@ namespace usue_online_tests.Controllers
                 ClaimsIdentity ci = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal cp = new ClaimsPrincipal(ci);
 
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, cp);
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, cp, new AuthenticationProperties()
+                {
+                    ExpiresUtc = DateTimeOffset.Now + new TimeSpan(365, 0, 0)
+                });
                 return Redirect("/profile");
             }
 

@@ -43,6 +43,7 @@ namespace usue_online_tests
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
+                options.Cookie.MaxAge = new TimeSpan(365, 0, 0, 0);
                 options.ExpireTimeSpan = new TimeSpan(365, 0, 0, 0);
                 options.AccessDeniedPath = "/login/noaccess";
                 options.LoginPath = "/login/index";
