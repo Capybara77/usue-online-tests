@@ -1,0 +1,30 @@
+.test-card {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid gray;
+}
+
+.test-card-title {
+  font-size: 24px;
+  margin: 0;
+  margin-bottom: 15px;
+}
+
+.test-card-description {
+  margin: 0;
+  margin-bottom: 15px;
+}
+
+.test-card-button {
+  text-decoration: none;
+  color: white;
+  background: var(--blue);
+  display: inline-block;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.test-description {
+  margin-bottom: 25px;
+}

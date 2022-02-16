@@ -5,12 +5,15 @@
 }
 
 <h1>Доступные тесты</h1>
+<p class="test-description">
+    Здесь представлены все тесты, которые есть на портале. Вы можете ознакомиться или попрактиковаться
+</p>
 
 @for (int i = 0; i < Model.Count; i++)
 {
-    <div class="test-desc-box">
-        <b class="test-name">@Model[i].Name</b>
-        <i>@Model[i].Description</i>
-        <a href="/tests/start?id=@Model[i].TestID">Начать тест</a>
+    <div class="test-card">
+        <p class="test-card-title">@Model[i].Name</p>
+        <p class="test-card-description">@Model[i].Description</p>
+        <a class="test-card-button" href="/tests/start?id=@Model[i].TestID">Начать тест</a>
     </div>
 }

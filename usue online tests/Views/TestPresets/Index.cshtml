@@ -14,7 +14,7 @@
 
 @if (!Model.Any())
 {
-    <h2>Вы еще не создали шаблоны</h2>
+    <p class="test-presets-nothing">Пока вы не создали ни одного шаблона.</p>
 }
 
 @foreach (var item in Model)
@@ -27,19 +27,19 @@
             <p>@creaters.FirstOrDefault(creater => creater.TestID == t)?.Name</p>
         }
         <form method="POST" action="/testpresets/delete">
-            <input hidden name="presetId" value="@item.Id"/>
-            <input class="btn btn-light delete" type="submit" value="Удалить"/>
+            <input hidden name="presetId" value="@item.Id" />
+            <input class="btn btn-light delete" type="submit" value="Удалить" />
         </form>
-        <br/>
+        <br />
         <form method="POST" action="/testpresets/startnew">
-            <input hidden name="presetId" value="@item.Id"/>
+            <input hidden name="presetId" value="@item.Id" />
             <label>Группа: </label>
-            <input name="group" type="text"/>
+            <input name="group" type="text" />
             <label>Время начала тестирования: </label>
-            <input type="datetime-local" name="datetimeStart"/>
+            <input type="datetime-local" name="datetimeStart" />
             <label>Время окончания тестирования: </label>
-            <input type="datetime-local" name="datetimeEnd"/>
-            <input name="createExam" class="btn btn-light exam" type="submit" value="Начать тестирование"/>
+            <input type="datetime-local" name="datetimeEnd" />
+            <input name="createExam" class="btn btn-light exam" type="submit" value="Начать тестирование" />
         </form>
     </div>
 }
