@@ -4,6 +4,7 @@
 @import "./footer.css";
 @import "./login.css";
 @import "./test-presets.css";
+@import "./test.css";
 
 body {
   margin: 0;

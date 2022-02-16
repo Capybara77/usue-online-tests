@@ -44,3 +44,7 @@
   background: var(--background-input);
   color: var(--foreground);
 }
+
+.test-presets-nothing {
+  margin-top: 40px;
+}
