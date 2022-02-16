@@ -38,7 +38,7 @@
 
 .navigation-profile-menu {
   position: absolute;
-  background: white;
+  background: var(--background);
   border: 1px solid gray;
   width: 150px;
   top: 0;
@@ -148,8 +148,10 @@
   margin-bottom: 20px;
   border-radius: 8px;
   border: 2px solid gray;
-  outline-color: var(--blue);
+  outline: none;
   box-sizing: border-box;
+  background: var(--background-input);
+  color: var(--foreground);
 }
 
 .login-button {
@@ -206,13 +208,17 @@
   padding: 10px;
   border-radius: 8px;
   border: 2px solid gray;
-  outline-color: var(--blue);
+  outline: none;
+  background: var(--background-input);
+  color: var(--foreground);
 }
 body {
   margin: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--background);
+  color: var(--foreground);
 }
 .hidden {
   display: none;
@@ -223,6 +229,14 @@ body {
 :root {
   --blue: rgb(89, 89, 255);
   --red: rgb(253, 83, 83);
+  --background: white;
+  --foreground: black;
+  --background-input: white;
+}
+[data-theme="dark"]:root {
+  --background: rgb(31, 31, 31);
+  --foreground: white;
+  --background-input: rgb(54, 54, 54);
 }
 
 /*# sourceMappingURL=index.css.map */

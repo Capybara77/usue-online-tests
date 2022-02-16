@@ -520,13 +520,21 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"c4vyP":[function(require,module,exports) {
 var _navigation = require("./navigation");
+var _theme = require("./theme");
 
-},{"./navigation":"cnzUp"}],"cnzUp":[function(require,module,exports) {
+},{"./navigation":"cnzUp","./theme":"6nncI"}],"cnzUp":[function(require,module,exports) {
 const navigationProfile = document.querySelector(".navigation-profile");
 const profileMenu = document.querySelector(".navigation-profile-menu");
-navigationProfile.onclick = ()=>{
+navigationProfile?.addEventListener("click", ()=>{
     profileMenu.classList.toggle("hidden");
-};
+});
+
+},{}],"6nncI":[function(require,module,exports) {
+const themeSwitcher = document.querySelector(".theme-switcher");
+themeSwitcher?.addEventListener("click", ()=>{
+    fetch("/profile/changeusertheme").then(()=>location.reload()
+    );
+});
 
 },{}]},["gm1PL","c4vyP"], "c4vyP", "parcelRequireabcd")
 

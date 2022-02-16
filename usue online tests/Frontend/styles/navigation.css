@@ -38,7 +38,7 @@
 
 .navigation-profile-menu {
   position: absolute;
-  background: white;
+  background: var(--background);
   border: 1px solid gray;
   width: 150px;
   top: 0;
