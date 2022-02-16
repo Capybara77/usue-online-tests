@@ -21,9 +21,14 @@ namespace usue_online_tests.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index(string page)
+        public IActionResult Index()
         {
-            return View(page);
+            if (HttpContext.User.Identity is { IsAuthenticated: true })
+            {
+                return RedirectToAction("Index", "Profile");
+            }
+
+            return View();
         }
 
         //public IActionResult Index()
