@@ -21,7 +21,10 @@ namespace usue_online_tests.Controllers
             DataContext = dataContext;
         }
 
-        public IActionResult Index(string message) => View("Index", message);
+        public IActionResult Index(string message)
+        {
+            return RedirectAuthorizedUsers() ?? View("Index", message);
+        }
 
         [HttpPost]
         public IActionResult LoginIn(string login, string password)
@@ -54,5 +57,15 @@ namespace usue_online_tests.Controllers
         }
 
         public IActionResult NoAccess() => View();
+
+        private IActionResult RedirectAuthorizedUsers()
+        {
+            if (HttpContext.User.Identity is { IsAuthenticated: true })
+            {
+                return RedirectToAction("Index", "Profile");
+            }
+
+            return null;
+        }
     }
 }
