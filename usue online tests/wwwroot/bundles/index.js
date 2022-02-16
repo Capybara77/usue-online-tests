@@ -525,13 +525,23 @@ var _theme = require("./theme");
 },{"./navigation":"cnzUp","./theme":"6nncI"}],"cnzUp":[function(require,module,exports) {
 const navigationProfile = document.querySelector(".navigation-profile");
 const profileMenu = document.querySelector(".navigation-profile-menu");
+const mobileNavigation = document.querySelector(".navigation-mobile");
+const mobileMenu = document.querySelector(".navigation-mobile-menu");
 navigationProfile?.addEventListener("click", ()=>{
-    profileMenu.classList.toggle("hidden");
+    if (matchMedia("(min-width: 768px)").matches) profileMenu.classList.toggle("hidden");
+});
+mobileNavigation?.addEventListener("click", ()=>{
+    mobileMenu.classList.toggle("hidden");
 });
 
 },{}],"6nncI":[function(require,module,exports) {
 const themeSwitcher = document.querySelector(".theme-switcher");
+const mobileThemeSwitcher = document.querySelector(".mobile-theme-switcher");
 themeSwitcher?.addEventListener("click", ()=>{
+    fetch("/profile/changeusertheme").then(()=>location.reload()
+    );
+});
+mobileThemeSwitcher?.addEventListener("click", ()=>{
     fetch("/profile/changeusertheme").then(()=>location.reload()
     );
 });

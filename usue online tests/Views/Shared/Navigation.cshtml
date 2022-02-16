@@ -20,6 +20,22 @@
                         <a class="navigation-profile-menu-item" href="/login/loginout">Выход</a>
                     </div>
                 </div>
+                <svg class="navigation-mobile" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                fill="#000000">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+                <div class="navigation-mobile-menu hidden">
+                    @if (User.GetUser()?.Role is Roles.Admin or Roles.Teacher)
+                    {
+                        <a class="navigation-profile-menu-item" href="/testpresets">Шаблоны тестов</a>
+                        <a class="navigation-profile-menu-item" href="/studentlist">Списки студентов</a>
+                    }
+                    <a class="navigation-profile-menu-item" href="/tests/view">Доступные тесты</a>
+                    <a class="navigation-profile-menu-item" href="/profile">Профиль</a>
+                    <p class="navigation-profile-menu-item mobile-theme-switcher">Изменить тему</p>
+                    <a class="navigation-profile-menu-item" href="/login/loginout">Выход</a>
+                </div>
             }
         }
     </div>

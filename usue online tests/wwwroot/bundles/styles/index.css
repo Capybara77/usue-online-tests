@@ -55,6 +55,32 @@
   display: block;
 }
 
+.navigation-mobile {
+  padding: 15px;
+  padding-right: 0;
+}
+
+.navigation-mobile-menu {
+  position: absolute;
+  left: 0;
+  background: var(--background);
+  right: 0;
+  margin-top: 54px;
+  border-bottom: 1px solid gray;
+}
+
+@media (min-width: 768px) {
+  .navigation-mobile {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .navigation-item {
+    display: none;
+  }
+}
+
 .main {
   margin-top: 120px;
   margin-bottom: 100px;
