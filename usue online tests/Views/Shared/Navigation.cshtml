@@ -1,4 +1,5 @@
 ﻿@inject GetUserByCookie User
+@using System.Text
 
 <nav class="navigation">
     <a class="navigation-logo" href="/">AT Online</a>
@@ -12,15 +13,33 @@
 
             if (Context.User.Identity is { IsAuthenticated: true })
             {
+                // https://mui.com/components/avatars/#letter-avatars
+                var hash = 0;
+                var username = User.GetUser().Name;
+
+                for (var i = 0; i < username.Length; i += 1)
+                {
+                    hash = Encoding.ASCII.GetBytes(username)[i] + ((hash << 5) - hash);
+                }
+
+                var profileColor = "#";
+
+                for (var i = 0; i < 3; i += 1)
+                {
+                    var value = (hash >> (i * 8)) & 0xff;
+                    profileColor += $"{value.ToString("X2")}";
+                }
+
                 <a class="navigation-item" href="/tests/view">Доступные тесты</a>
-                <div class="navigation-profile">
+                <div class="navigation-profile" style="background: @profileColor">
+                    @char.ToUpper(username[0])
                     <div class="navigation-profile-menu hidden">
                         <a class="navigation-profile-menu-item" href="/profile">Профиль</a>
                         <p class="navigation-profile-menu-item theme-switcher">Изменить тему</p>
                         <a class="navigation-profile-menu-item" href="/login/loginout">Выход</a>
                     </div>
                 </div>
-                
+
                 var mobileMenuColor = User.GetUser().IsDark ? "white" : "black";
 
                 <svg class="navigation-mobile" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"

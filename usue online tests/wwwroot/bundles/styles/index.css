@@ -27,13 +27,16 @@
 }
 
 .navigation-profile {
-  border: 1px solid gray;
   width: 30px;
   height: 30px;
   border-radius: 100px;
   margin: auto;
   cursor: pointer;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 
 .navigation-profile-menu {
@@ -49,7 +52,7 @@
 
 .navigation-profile-menu-item {
   text-decoration: none;
-  color: inherit;
+  color: var(--foreground);
   margin: 0;
   padding: 15px;
   display: block;
