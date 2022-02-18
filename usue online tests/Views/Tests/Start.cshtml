@@ -5,8 +5,8 @@
 
 @section Scripts
 {
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
         MathJax.Hub.Config({
             extensions: ["tex2jax.js", "/libs/forminput.js"],
             jax: ["input/TeX", "output/HTML-CSS"],
@@ -18,7 +18,7 @@
                 TeX: { extensions: ["AMSmath.js", "AMSsymbols.js"] },
             },
             showMathMenu: false,
-            messageStyle: "none",
+            messageStyle: "none"
         });
     </script>
 }
@@ -38,9 +38,7 @@
             byte[] data = new byte[stream.Length];
             stream.Position = 0;
             stream.Read(data, 0, data.Length);
-            <div class="img-task-wrapper">
-                <img class="img-task" src="data:image/jpeg;base64,@Convert.ToBase64String(data)"/>
-            </div>
+            <img class="test-start-img" src="data:image/jpeg;base64,@Convert.ToBase64String(data)" />
             pic.Dispose();
         }
     }
@@ -49,53 +47,19 @@
     {
         <input hidden name="testId" value="@Model.TestId" />
         <input hidden name="hash" value="@Model.Hash" />
+
         var matches = Regex.Matches(Model.Test.Text, "<(.*?)>");
         for (int i = 0; i < matches.Count; i++)
         {
-            //Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"<input class='answer-place' name='{matches[i].Groups[1].Value}' />");
-            //Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"\\(\\FormInput[2][answer-place][asd]{{{matches[i].Groups[1].Value}}}\\)");
-            Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value, $"\\FormInput[2][answer-place][]{{{matches[i].Groups[1].Value}}}");
+            Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
+            $"\\FormInput[2][test-start-input][]{{{matches[i].Groups[1].Value}}}");
         }
-        @Html.Raw(Model.Test.Text.Replace("\n", "<br/>"))
-        <input type="submit" />
 
-        @*<p>
-                \(\FormInput{a}x+\FormInput[][red_background]{b}\).
-            </p>*@
+        <p class="test-start-text">@Html.Raw(Model.Test.Text.Replace("\n", "<br/>"))</p>
+        <input type="submit" class="test-start-complete-button" value="Завершить" />
     }
 }
 else
 {
     <h2>Произошла ошибка при генерации задания</h2>
 }
-
-@*@if (Model.Test.Boxes != null)
-    {
-        @using (Html.BeginForm("checkanswers", "Tests"))
-        {
-            <input hidden name="testId" value="@Model.TestId" />
-            <input hidden name="hash" value="@Model.Hash" />
-
-            @foreach (var box in Model.Test.Boxes)
-            {
-                <div class="question-box">
-                    @foreach (var text in box.Texts)
-                    {
-                        <p class="question-text">@text</p>
-                    }
-
-                    @foreach (var a in box.Numbers)
-                    {
-                        <input required placeholder="Ответ" type="text" name="numbers" class="numbers-input" />
-                    }
-
-                    @foreach (var a in box.TextAnswers)
-                    {
-                        <input type="text" required placeholder="Ответ" name="textAnswers" class="text-input" />
-                    }
-                </div>
-            }
-
-            <input class="btn btn-light" type="submit" value="Завершить тестирование" />
-        }
-    }*@

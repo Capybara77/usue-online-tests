@@ -28,3 +28,35 @@
 .test-description {
   margin-bottom: 25px;
 }
+
+.test-start-img {
+  border: 2px solid gray;
+  max-width: 450px;
+  max-height: 450px;
+  width: 100%;
+  height: 100%;
+}
+
+.test-start-input {
+  border: 2px solid gray;
+  border-radius: 8px;
+  background: var(--background-input);
+  color: var(--foreground);
+  padding: 5px;
+  outline: none;
+  margin: 2px 5px;
+}
+
+.test-start-complete-button {
+  background: var(--blue);
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.test-start-text {
+  overflow: hidden;
+  overflow-x: auto;
+}

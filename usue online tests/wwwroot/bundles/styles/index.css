@@ -48,6 +48,8 @@
   right: 0;
   margin-top: 40px;
   border-radius: 8px;
+  z-index: 999;
+  position: absolute;
 }
 
 .navigation-profile-menu-item {
@@ -70,6 +72,8 @@
   right: 0;
   margin-top: 54px;
   border-bottom: 1px solid gray;
+  z-index: 999;
+  position: absolute;
 }
 
 @media (min-width: 768px) {
@@ -333,6 +337,37 @@
   margin-bottom: 25px;
 }
 
+.test-start-img {
+  border: 2px solid gray;
+  max-width: 450px;
+  max-height: 450px;
+  width: 100%;
+  height: 100%;
+}
+
+.test-start-input {
+  border: 2px solid gray;
+  border-radius: 8px;
+  background: var(--background-input);
+  color: var(--foreground);
+  padding: 5px;
+  outline: none;
+  margin: 2px 5px;
+}
+
+.test-start-complete-button {
+  background: var(--blue);
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.test-start-text {
+  overflow: hidden;
+  overflow-x: auto;
+}
 body {
   margin: 0;
   min-height: 100vh;
@@ -352,7 +387,7 @@ body {
   --red: rgb(253, 83, 83);
   --background: white;
   --foreground: black;
-  --background-input: white;
+  --background-input: rgb(235, 235, 235);
 }
 [data-theme="dark"]:root {
   --background: rgb(31, 31, 31);

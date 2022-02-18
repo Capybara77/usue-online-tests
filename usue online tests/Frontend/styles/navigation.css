@@ -48,6 +48,8 @@
   right: 0;
   margin-top: 40px;
   border-radius: 8px;
+  z-index: 999;
+  position: absolute;
 }
 
 .navigation-profile-menu-item {
@@ -70,6 +72,8 @@
   right: 0;
   margin-top: 54px;
   border-bottom: 1px solid gray;
+  z-index: 999;
+  position: absolute;
 }
 
 @media (min-width: 768px) {

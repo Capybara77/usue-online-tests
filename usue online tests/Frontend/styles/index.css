@@ -28,7 +28,7 @@ body {
   --red: rgb(253, 83, 83);
   --background: white;
   --foreground: black;
-  --background-input: white;
+  --background-input: rgb(235, 235, 235);
 }
 
 [data-theme="dark"]:root {
