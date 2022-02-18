@@ -521,8 +521,9 @@ function hmrAcceptRun(bundle, id) {
 },{}],"c4vyP":[function(require,module,exports) {
 var _navigation = require("./navigation");
 var _theme = require("./theme");
+var _testPresets = require("./test-presets");
 
-},{"./navigation":"cnzUp","./theme":"6nncI"}],"cnzUp":[function(require,module,exports) {
+},{"./navigation":"cnzUp","./theme":"6nncI","./test-presets":"lIzSJ"}],"cnzUp":[function(require,module,exports) {
 const navigationProfile = document.querySelector(".navigation-profile");
 const profileMenu = document.querySelector(".navigation-profile-menu");
 const mobileNavigation = document.querySelector(".navigation-mobile");
@@ -545,6 +546,13 @@ mobileThemeSwitcher?.addEventListener("click", ()=>{
     fetch("/profile/changeusertheme").then(()=>location.reload()
     );
 });
+
+},{}],"lIzSJ":[function(require,module,exports) {
+const deleteForm = document.querySelectorAll(".test-presets-delete-form");
+deleteForm?.forEach((form)=>form.addEventListener("submit", (e)=>{
+        if (!confirm("Вы действительно хотите удалить этот шаблон?")) e.preventDefault();
+    })
+);
 
 },{}]},["gm1PL","c4vyP"], "c4vyP", "parcelRequireabcd")
 

@@ -6,6 +6,7 @@
   color: white;
   margin-top: 15px;
   display: inline-block;
+  margin-bottom: 25px;
 }
 
 .test-presets-create-button {
@@ -43,8 +44,63 @@
   outline: none;
   background: var(--background-input);
   color: var(--foreground);
+  box-sizing: border-box;
 }
 
-.test-presets-nothing {
-  margin-top: 40px;
+.test-presets-card {
+  border-radius: 8px;
+  border: 1px solid gray;
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.test-presets-card-title {
+  margin: 0;
+  font-size: 24px;
+}
+
+.test-presets-card-list {
+  margin: 0;
+  padding: 0;
+  padding-left: 15px;
+  padding-bottom: 15px;
+}
+
+.test-presets-delete-button {
+  color: var(--red);
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 16px;
+  padding: 0;
+}
+
+.test-presets-edit-form label {
+  width: 70px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.test-presets-edit-input {
+  width: 165px;
+  background: var(--background-input);
+  padding: 5px;
+  color: var(--foreground);
+  outline: none;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border: 2px solid gray;
+}
+
+.test-presets-start-button {
+  display: block;
+  margin-top: 15px;
+  border: none;
+  color: var(--blue);
+  background: none;
+  padding: 0;
+  font-size: 16px;
+  margin-top: 20px;
+  cursor: pointer;
 }

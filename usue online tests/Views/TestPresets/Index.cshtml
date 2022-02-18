@@ -19,27 +19,32 @@
 
 @foreach (var item in Model)
 {
-    <div class="presetBox">
-        <h3>@item.Name</h3>
+    <div class="test-presets-card">
+        <p class="test-presets-card-title">@item.Name</p>
 
-        @foreach (var t in item.Tests)
-        {
-            <p>@creaters.FirstOrDefault(creater => creater.TestID == t)?.Name</p>
-        }
-        <form method="POST" action="/testpresets/delete">
+        <p>В шаблон входят тесты по дисциплинам:</p>
+        <ul class="test-presets-card-list">
+            @foreach (var t in item.Tests)
+            {
+                <li>@creaters.FirstOrDefault(creater => creater.TestID == t)?.Name</li>
+            }
+        </ul>
+        <form class="test-presets-edit-form" method="POST" action="/testpresets/startnew">
             <input hidden name="presetId" value="@item.Id" />
-            <input class="btn btn-light delete" type="submit" value="Удалить" />
+            <label>Группа</label>
+            <input class="test-presets-edit-input" name="group" type="text" />
+            <br>
+            <label>Начало</label>
+            <input class="test-presets-edit-input" type="datetime-local" name="datetimeStart" />
+            <br>
+            <label>Конец </label>
+            <input class="test-presets-edit-input" type="datetime-local" name="datetimeEnd" />
+            <br>
+            <input name="createExam" class="test-presets-start-button" type="submit" value="Начать тестирование" />
         </form>
-        <br />
-        <form method="POST" action="/testpresets/startnew">
+        <form class="test-presets-delete-form" method="POST" action="/testpresets/delete">
             <input hidden name="presetId" value="@item.Id" />
-            <label>Группа: </label>
-            <input name="group" type="text" />
-            <label>Время начала тестирования: </label>
-            <input type="datetime-local" name="datetimeStart" />
-            <label>Время окончания тестирования: </label>
-            <input type="datetime-local" name="datetimeEnd" />
-            <input name="createExam" class="btn btn-light exam" type="submit" value="Начать тестирование" />
+            <input class="test-presets-delete-button" type="submit" value="Удалить" />
         </form>
     </div>
 }
