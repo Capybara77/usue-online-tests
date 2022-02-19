@@ -32,7 +32,7 @@
         <form class="test-presets-edit-form" method="POST" action="/testpresets/startnew">
             <input hidden name="presetId" value="@item.Id" />
             <label>Группа</label>
-            <input class="test-presets-edit-input" name="group" type="text" />
+            <div id="select-group"></div>
             <br>
             <label>Начало</label>
             <input class="test-presets-edit-input" type="datetime-local" name="datetimeStart" />

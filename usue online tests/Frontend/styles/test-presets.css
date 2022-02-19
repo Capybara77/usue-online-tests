@@ -83,14 +83,15 @@
 }
 
 .test-presets-edit-input {
-  width: 165px;
+  width: 159px;
   background: var(--background-input);
-  padding: 5px;
+  padding: 8px;
   color: var(--foreground);
   outline: none;
   border-radius: 8px;
   margin-bottom: 10px;
   border: 2px solid gray;
+  font-size: 12px;
 }
 
 .test-presets-start-button {

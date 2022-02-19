@@ -1,4 +1,5 @@
 import "./navigation";
 import "./theme";
 import "./test-presets";
-import "./test-react-app";
+import "./select-group";
+import "./select-tests";
