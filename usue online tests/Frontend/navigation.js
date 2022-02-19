@@ -5,8 +5,6 @@ const mobileMenu = document.querySelector(".navigation-mobile-menu");
 
 document.documentElement.addEventListener("click", (e) => {
   if (!profileMenu.contains(e.target) && e.target !== navigationProfile) {
-    console.log(e.target);
-    console.log(navigationProfile)
     profileMenu.classList.add("hidden");
   }
 });
