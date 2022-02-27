@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Test_Wrapper;
 
 namespace usue_online_tests.Tests
 {
     public class TestsLoader
     {
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public List<Type> AllTests { get; set; } = new();
         public List<ITestCreator> TestCreaters { get; set; } = new();
 
 
-        public TestsLoader()
+        public TestsLoader(IWebHostEnvironment webHostEnvironment)
         {
+            _webHostEnvironment = webHostEnvironment;
             LoadTests();
+            LoadDllTests();
         }
 
         private void LoadTests()
@@ -27,23 +33,48 @@ namespace usue_online_tests.Tests
             {
                 foreach (Type type in assembly.ExportedTypes)
                 {
-                    Type[] interfaces = type.GetInterfaces();
-                    foreach (Type i in interfaces)
+                    CheckAndLoadCreator(type);
+                }
+            }
+        }
+
+        private void CheckAndLoadCreator(Type type)
+        {
+            Type[] interfaces = type.GetInterfaces();
+            foreach (Type i in interfaces)
+            {
+                if (i == typeof(ITestCreator))
+                {
+                    AllTests.Add(type);
+                    ITestCreator creator =
+                        (ITestCreator)type.GetConstructor(Type.EmptyTypes)?.Invoke(new object?[0]);
+
+                    string mystring = creator.Name + creator.Description;
+                    MD5 md5Hasher = MD5.Create();
+                    byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(mystring));
+                    int ivalue = BitConverter.ToInt32(hashed, 0);
+                    creator.TestID = ivalue;
+
+                    TestCreaters.Add(creator);
+                }
+            }
+        }
+
+        private void LoadDllTests()
+        {
+            string[] files = Directory.GetFiles(_webHostEnvironment.ContentRootPath + "/dll")
+                .Where(s => s.EndsWith(".dll")).ToArray();
+
+            foreach (var file in files)
+            {
+                Assembly assembly = Assembly.LoadFrom(file);
+                Module[] modules = assembly.GetLoadedModules();
+
+                foreach (Module module in modules)
+                {
+                    foreach (Type assemblyExportedType in module.Assembly.ExportedTypes)
                     {
-                        if (i == typeof(ITestCreator))
-                        {
-                            AllTests.Add(type);
-                            ITestCreator creator =
-                                (ITestCreator)type.GetConstructor(Type.EmptyTypes)?.Invoke(new object?[0]);
-
-                            string mystring = creator.Name + creator.Description;
-                            MD5 md5Hasher = MD5.Create();
-                            byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(mystring));
-                            int ivalue = BitConverter.ToInt32(hashed, 0);
-                            creator.TestID = ivalue;
-
-                            TestCreaters.Add(creator);
-                        }
+                        CheckAndLoadCreator(assemblyExportedType);
                     }
                 }
             }
