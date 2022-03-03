@@ -1052,41 +1052,48 @@ var _reactSelect = require("react-select");
 var _reactSelectDefault = parcelHelpers.interopDefault(_reactSelect);
 var _customSelectStyles = require("./custom-select-styles");
 var _customSelectStylesDefault = parcelHelpers.interopDefault(_customSelectStyles);
-const options = [
-    {
-        label: "АИС-20",
-        value: "1"
-    },
-    {
-        label: "АИС-19",
-        value: "2"
-    },
-    {
-        label: "ИБ-20-1",
-        value: "3"
-    }, 
-];
-function SelectGroup() {
+function SelectGroup({ input , groups  }) {
+    function updateForm({ label  }) {
+        input.value = label;
+    }
     return(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactSelectDefault.default, {
         styles: _customSelectStylesDefault.default,
         noOptionsMessage: ()=>"Пусто"
         ,
         placeholder: "Выберите...",
-        options: options
+        options: groups,
+        onChange: updateForm
     }, void 0, false, {
         fileName: "Frontend/select-group.js",
-        lineNumber: 13,
+        lineNumber: 11,
         columnNumber: 5
     }, this));
 }
 _c = SelectGroup;
-const selectGroupElement = document.getElementById("select-group");
-if (selectGroupElement) _reactDomDefault.default.render(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(SelectGroup, {
-}, void 0, false, {
-    fileName: "Frontend/select-group.js",
-    lineNumber: 25,
-    columnNumber: 19
-}, undefined), selectGroupElement);
+const selects = document.querySelectorAll(".select-group");
+if (selects) {
+    const inputs = document.querySelectorAll("input[name=group]");
+    fetch("api/getgrouplist").then((res)=>res.json()
+    ).then((res)=>{
+        const preparedGroups = res.map((group, i)=>({
+                label: group,
+                value: i
+            })
+        );
+        [
+            ...selects
+        ].map((select, i)=>{
+            _reactDomDefault.default.render(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(SelectGroup, {
+                input: inputs[i],
+                groups: preparedGroups
+            }, void 0, false, {
+                fileName: "Frontend/select-group.js",
+                lineNumber: 34,
+                columnNumber: 11
+            }, undefined), select);
+        });
+    });
+}
 var _c;
 $RefreshReg$(_c, "SelectGroup");
 

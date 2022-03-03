@@ -2,25 +2,38 @@ import ReactDOM from "react-dom";
 import Select from "react-select";
 import customStyles from "./custom-select-styles";
 
-const options = [
-  { label: "АИС-20", value: "1" },
-  { label: "АИС-19", value: "2" },
-  { label: "ИБ-20-1", value: "3" },
-];
+function SelectGroup({ input, groups }) {
+  function updateForm({ label }) {
+    input.value = label;
+  }
 
-function SelectGroup() {
   return (
     <Select
       styles={customStyles}
       noOptionsMessage={() => "Пусто"}
       placeholder="Выберите..."
-      options={options}
+      options={groups}
+      onChange={updateForm}
     />
   );
 }
 
-const selectGroupElement = document.getElementById("select-group");
+const selects = document.querySelectorAll(".select-group");
 
-if (selectGroupElement) {
-  ReactDOM.render(<SelectGroup />, selectGroupElement);
+if (selects) {
+  const inputs = document.querySelectorAll("input[name=group]");
+  fetch("api/getgrouplist")
+    .then((res) => res.json())
+    .then((res) => {
+      const preparedGroups = res.map((group, i) => ({
+        label: group,
+        value: i,
+      }));
+      [...selects].map((select, i) => {
+        ReactDOM.render(
+          <SelectGroup input={inputs[i]} groups={preparedGroups} />,
+          select
+        );
+      });
+    });
 }
