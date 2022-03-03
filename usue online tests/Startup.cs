@@ -19,8 +19,11 @@ namespace usue_online_tests
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _environment;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
+            _environment = environment;
             Configuration = configuration;
         }
 
@@ -35,7 +38,7 @@ namespace usue_online_tests
 
             services.AddHttpContextAccessor();
             services.AddSingleton(new DataContext());
-            services.AddSingleton(new TestsLoader());
+            services.AddSingleton(new TestsLoader(_environment));
             services.AddTransient<GetUserByCookie>();
 
 

@@ -6,9 +6,9 @@ using System.Drawing;
 
 namespace usue_online_tests.Tests
 {
-    public interface ITest
-    {
-        string Text { get; set; }
-        List<Image> Pictures { get; set; }
-    }
+    //public interface ITest
+    //{
+    //    string Text { get; set; }
+    //    List<Image> Pictures { get; set; }
+    //}
 }
