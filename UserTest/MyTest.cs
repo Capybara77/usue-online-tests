@@ -18,12 +18,8 @@ namespace UserTest
         {
             ITest result = new MyTask();
 
-            HtmlAgilityPack.HtmlWeb web = new HtmlWeb();
-            var doc = web.Load("https://vk.com/");
-            
-
             int a = new Random(randomSeed).Next(10, 20);
-            result.Text = $"В ответ запишите число {a}. \\(<number>\\){doc.DocumentNode.InnerHtml}";
+            result.Text = $"В ответ запишите число {a}. \\(<number>\\)";
 
             result.CheckBoxes = Boxes;
 
