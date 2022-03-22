@@ -49,13 +49,15 @@ namespace usue_online_tests.Tests
                     ITestCreator creator =
                         (ITestCreator)type.GetConstructor(Type.EmptyTypes)?.Invoke(new object?[0]);
 
-                    string mystring = creator.Name + creator.Description;
-                    MD5 md5Hasher = MD5.Create();
-                    byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(mystring));
-                    int ivalue = BitConverter.ToInt32(hashed, 0);
-                    creator.TestID = ivalue;
-
-                    TestCreaters.Add(creator);
+                    if (creator != null)
+                    {
+                        string mystring = creator.Name + creator.Description;
+                        MD5 md5Hasher = MD5.Create();
+                        byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(mystring));
+                        int ivalue = BitConverter.ToInt32(hashed, 0);
+                        creator.TestID = ivalue;
+                        TestCreaters.Add(creator);
+                    }
                 }
             }
         }
@@ -72,10 +74,18 @@ namespace usue_online_tests.Tests
 
                 foreach (Module module in modules)
                 {
-                    foreach (Type assemblyExportedType in module.Assembly.ExportedTypes)
+                    try
                     {
-                        CheckAndLoadCreator(assemblyExportedType);
+                        foreach (Type assemblyExportedType in module.Assembly.ExportedTypes)
+                        {
+                            CheckAndLoadCreator(assemblyExportedType);
+                        }
                     }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+
                 }
             }
         }

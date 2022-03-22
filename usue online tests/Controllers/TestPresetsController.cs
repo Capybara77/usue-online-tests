@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -75,7 +76,7 @@ namespace usue_online_tests.Controllers
                 }
             }
 
-            _context.Add(testPreset);
+            _context.Presets.Add(testPreset);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -140,8 +141,15 @@ namespace usue_online_tests.Controllers
         public async Task<RedirectToActionResult> Delete(int presetId)
         {
             var preset = _context.Presets.FirstOrDefault(preset => preset.Id == presetId && preset.Owner == UserByCookie.GetUser());
+
             if (preset != null)
             {
+                var exams = _context.Exams.Where(exam => exam.Preset == preset).ToArray();
+                foreach (Exam exam in exams)
+                {
+                    _context.Exams.Remove(exam);
+                }
+
                 _context.Presets.Remove(preset);
                 await _context.SaveChangesAsync();
             }
@@ -154,10 +162,11 @@ namespace usue_online_tests.Controllers
         {
             if (DateTime.Now > dateTimeStart || dateTimeStart > dateTimeEnd)
             {
-                return View((object)new string("Некорректные входные данные"));
+                HttpContext.Response.StatusCode = 400;
+                return Json("Некорректные входные данные");
             }
 
-            _context.Exams.Add(new Exam()
+            _context.Exams.Add(new Exam
             {
                 DateTimeStart = dateTimeStart,
                 DateTimeEnd = dateTimeEnd,

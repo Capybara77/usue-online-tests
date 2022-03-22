@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using usue_online_tests.Data;
+using usue_online_tests.Models;
 using usue_online_tests.Tests;
 
 namespace usue_online_tests.Controllers
@@ -27,7 +28,7 @@ namespace usue_online_tests.Controllers
 
         public async Task<IActionResult> GetGroupList()
         {
-            return Json((await Data.Users.Select(user => user.Group).ToListAsync()).Distinct());
+            return Json((await Data.Users.Where(user => user.Role == Roles.User).Select(user => user.Group).ToListAsync()).Distinct());
         }
 
         public IActionResult GetTasksList()

@@ -50,7 +50,6 @@ namespace usue_online_tests.Controllers
             return View(TestsLoader.TestCreaters);
         }
 
-
         public IActionResult Start(int id)
         {
             ITestCreator creator = TestCreaters.FirstOrDefault(testCreater => testCreater.TestID == id);
@@ -76,9 +75,9 @@ namespace usue_online_tests.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CheckAnswers(int testId, int hash)
+        public IActionResult CheckAnswers(int testId, int hash, int TestsCount)
         {
-            string[] skipData = { "__RequestVerificationToken", "testId", "hash" };
+            string[] skipData = { "__RequestVerificationToken", "testId", "hash", "TestsCount" };
             ITestCreator creator = TestsLoader.TestCreaters.FirstOrDefault(creater => creater.TestID == testId);
             TestResult testResult = new();
 
@@ -103,8 +102,9 @@ namespace usue_online_tests.Controllers
                 }
             }
 
+            testResult.Total = TestsCount;
+
             return View(testResult);
         }
-
     }
 }

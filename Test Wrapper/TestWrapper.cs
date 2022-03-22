@@ -15,6 +15,7 @@ namespace Test_Wrapper
     public interface ITest
     {
         string Text { get; set; }
+        public string[] CheckBoxes { get; set; }
         List<Image> Pictures { get; set; }
     }
 }

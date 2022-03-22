@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Test Wrapper\Test Wrapper.csproj" />
   </ItemGroup>
 

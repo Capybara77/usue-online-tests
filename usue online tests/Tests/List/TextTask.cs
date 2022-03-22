@@ -49,6 +49,7 @@ namespace usue_online_tests.Tests.List
         }
 
         public string Text { get; set; }
+        public string[] CheckBoxes { get; set; }
         public string[] Inputs { get; set; }
         public List<Image> Pictures { get; set; }
     }
