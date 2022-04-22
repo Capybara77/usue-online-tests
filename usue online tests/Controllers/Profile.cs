@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using usue_online_tests.Data;
+using usue_online_tests.Models;
+using usue_online_tests.Models.View;
 
 namespace usue_online_tests.Controllers
 {
@@ -22,7 +25,18 @@ namespace usue_online_tests.Controllers
 
         public IActionResult Index()
         {
-            return View(DataContext.Users.FirstOrDefault(user => user.Login == HttpContext.User.Identity.Name));
+            User user = GetUserByCookie.GetUser();
+
+            ProfileWrapper profileWrapper = new ProfileWrapper
+            {
+                User = user,
+                ExamResults = DataContext.UserExamResults
+                    .Where(result => result.IsCompleted && result.User.ID == user.ID)
+                    .Include(result => result.Exam.Preset)
+                    .Include(result => result.ExamTestAnswers)
+            };
+
+            return View(profileWrapper);
         }
 
         [HttpGet]

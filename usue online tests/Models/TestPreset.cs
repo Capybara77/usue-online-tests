@@ -11,5 +11,7 @@ namespace usue_online_tests.Models
         public int[] Tests { get; set; }
         public string Name { get; set; }
         public User Owner { get; set; }
+        public int MinutesToPass { get; set; } = 0;
+        public bool TimeLimited { get; set; } = false;
     }
 }

@@ -1,4 +1,4 @@
-﻿@model User
+﻿@model usue_online_tests.Models.View.ProfileWrapper
 
 @{
     ViewData["Title"] = "Профиль";
@@ -6,10 +6,25 @@
 
 <h1>Профиль</h1>
 <B>Имя: </B>
-<p>@Model.Name</p>
+<p>@Model.User.Name</p>
 <B>Логин: </B>
-<p>@Model.Login</p>
+<p>@Model.User.Login</p>
 <B>Группа: </B>
-<p>@Model.Group</p>
+<p>@Model.User.Group</p>
 <b>Роль: </b>
-<p>@Model.Role</p>
+<p>@Model.User.Role</p>
+
+@if (Model.ExamResults != null)
+{
+    foreach (var examResult in Model.ExamResults)
+    {
+        <div style="border: 1px solid black">
+            <b>Название теста:</b>
+            <p>@examResult.Exam.Preset.Name</p>
+            <b>Время прохождения:</b>
+            <p>@examResult.DateTimeStart</p>
+            <b>Результат прохождени:</b>
+            <p>@examResult.ExamTestAnswers.Where(answer => answer.CorrectAnswers != -1).Select(answer => answer.CorrectAnswers).Sum()/@examResult.ExamTestAnswers.Where(answer => answer.CorrectAnswers != -1).Select(answer => answer.TotalAnswers).Sum()</p>
+        </div>
+    }
+}

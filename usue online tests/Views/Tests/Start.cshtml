@@ -68,7 +68,7 @@
 
         if (Model.Test.CheckBoxes != null)
         {
-            <input hidden name="TestsCount" value="@(Model.Test.CheckBoxes.Length + matches.Count)" />
+            <input hidden name="testsCount" value="@(Model.Test.CheckBoxes.Length + matches.Count)" />
             foreach (var t in Model.Test.CheckBoxes)
             {
                 <div>
@@ -79,7 +79,7 @@
         }
         else
         {
-            <input hidden name="TestsCount" value="@matches.Count" />
+            <input hidden name="testsCount" value="@matches.Count" />
         }
 
         <input type="submit" class="test-start-complete-button" value="Завершить" />

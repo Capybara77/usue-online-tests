@@ -15,7 +15,7 @@ namespace usue_online_tests.Tests
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         public List<Type> AllTests { get; set; } = new();
-        public List<ITestCreator> TestCreaters { get; set; } = new();
+        public List<ITestCreator> TestCreators { get; set; } = new();
 
 
         public TestsLoader(IWebHostEnvironment webHostEnvironment)
@@ -56,7 +56,7 @@ namespace usue_online_tests.Tests
                         byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(mystring));
                         int ivalue = BitConverter.ToInt32(hashed, 0);
                         creator.TestID = ivalue;
-                        TestCreaters.Add(creator);
+                        TestCreators.Add(creator);
                     }
                 }
             }

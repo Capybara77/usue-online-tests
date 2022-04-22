@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Primitives;
@@ -18,7 +20,14 @@ namespace usue_online_tests.Controllers
     [Authorize]
     public class Tests : Controller
     {
-        public List<ITestCreator> TestCreaters { get; set; }
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern IntPtr OpenThread(uint dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+
+
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern bool TerminateThread(IntPtr hThread, uint dwExitCode);
+
+        public List<ITestCreator> TestCreators { get; set; }
 
         public DataContext DataContext { get; }
         public TestsLoader TestsLoader { get; }
@@ -27,7 +36,7 @@ namespace usue_online_tests.Controllers
         {
             DataContext = dataContext;
             TestsLoader = testsLoader;
-            TestCreaters = testsLoader.TestCreaters;
+            TestCreators = testsLoader.TestCreators;
         }
 
         public IActionResult Index()
@@ -37,31 +46,24 @@ namespace usue_online_tests.Controllers
 
         public IActionResult View()
         {
-            //TestCreaterInfo[] testsInfo = new TestCreaterInfo[AllTests.Count];
-            //for (int i = 0; i < testsInfo.Length; i++)
-            //{
-            //    testsInfo[i] = new TestCreaterInfo()
-            //    {
-            //        Name = (string)AllTests[i].GetProperty("Name")?.GetValue(null),
-            //        Description = (string)AllTests[i].GetProperty("Description")?.GetValue(null),
-            //        Id =i
-            //    };
-            //}
-            return View(TestsLoader.TestCreaters);
+            return View(TestsLoader.TestCreators);
         }
 
         public IActionResult Start(int id)
         {
-            ITestCreator creator = TestCreaters.FirstOrDefault(testCreater => testCreater.TestID == id);
+            ITestCreator creator = TestCreators.FirstOrDefault(testCreator => testCreator.TestID == id);
             int hash = new Random().Next();
             ITest test = null;
             try
             {
-                if (creator != null) test = creator.CreateTest(hash);
+                if (creator != null)
+                {
+                    test = creator.CreateTest(hash);
+                }
             }
             catch
             {
-
+                // ignored
             }
 
             ITestWrapper testWrapper = new ITestWrapper
@@ -75,10 +77,10 @@ namespace usue_online_tests.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CheckAnswers(int testId, int hash, int TestsCount)
+        public IActionResult CheckAnswers(int testId, int hash, int testsCount)
         {
-            string[] skipData = { "__RequestVerificationToken", "testId", "hash", "TestsCount" };
-            ITestCreator creator = TestsLoader.TestCreaters.FirstOrDefault(creater => creater.TestID == testId);
+            string[] skipData = { "__RequestVerificationToken", "testId", "hash", "testsCount" };
+            ITestCreator creator = TestsLoader.TestCreators.FirstOrDefault(testCreator => testCreator.TestID == testId);
             TestResult testResult = new();
 
             if (creator != null)
@@ -102,7 +104,7 @@ namespace usue_online_tests.Controllers
                 }
             }
 
-            testResult.Total = TestsCount;
+            testResult.Total = testsCount;
 
             return View(testResult);
         }

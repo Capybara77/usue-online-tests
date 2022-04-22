@@ -12,6 +12,8 @@ namespace usue_online_tests.Data
         public DbSet<User> Users { get; set; }
         public DbSet<TestPreset> Presets { get; set; }
         public DbSet<Exam> Exams { get; set; }
+        public DbSet<UserExamResult> UserExamResults { get; set; }
+        public DbSet<ExamTestAnswer> ExamTestAnswers { get; set; }
 
         public DataContext()
         {

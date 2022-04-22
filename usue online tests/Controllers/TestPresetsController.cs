@@ -18,20 +18,20 @@ namespace usue_online_tests.Controllers
     {
         public GetUserByCookie UserByCookie { get; }
         public TestsLoader TestsLoader { get; }
-        private readonly DataContext _context;
+        private readonly DataContext context;
 
         public TestPresetsController(DataContext context, GetUserByCookie userByCookie, TestsLoader testsLoader)
         {
             UserByCookie = userByCookie;
             TestsLoader = testsLoader;
-            _context = context;
+            this.context = context;
         }
 
         // GET: TestPresets
         public async Task<IActionResult> Index()
         {
-            ViewBag.Tests = TestsLoader.TestCreaters;
-            return View(await _context.Presets.Where(preset => preset.Owner.Login == UserByCookie.GetUser().Login).ToListAsync());
+            ViewBag.Tests = TestsLoader.TestCreators;
+            return View(await context.Presets.Where(preset => preset.Owner.Login == UserByCookie.GetUser().Login).ToListAsync());
         }
 
         // GET: TestPresets/Details/5
@@ -42,7 +42,7 @@ namespace usue_online_tests.Controllers
                 return NotFound();
             }
 
-            var testPreset = await _context.Presets
+            var testPreset = await context.Presets
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (testPreset == null)
             {
@@ -59,25 +59,31 @@ namespace usue_online_tests.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(string name, string tests)
+        public async Task<IActionResult> Create(string name, string tests, bool timeLimited, int minutesToPass)
         {
+            timeLimited = Request.Form["timeLimited"].FirstOrDefault() == "on";
+
             TestPreset testPreset = new TestPreset
             {
                 Tests = tests.Trim().Split(',').Select(s => Convert.ToInt32(s)).ToArray(),
                 Name = name,
-                Owner = UserByCookie.GetUser()
+                Owner = UserByCookie.GetUser(),
+                TimeLimited = timeLimited,
+                MinutesToPass = minutesToPass
             };
+
+            if (testPreset.Tests.Length == 0) return StatusCode(400);
 
             foreach (int testPresetTest in testPreset.Tests)
             {
-                if (TestsLoader.TestCreaters.Count(creater => creater.TestID == testPresetTest) != 1)
+                if (TestsLoader.TestCreators.Count(creator => creator.TestID == testPresetTest) != 1)
                 {
                     return StatusCode(400);
                 }
             }
 
-            _context.Presets.Add(testPreset);
-            await _context.SaveChangesAsync();
+            context.Presets.Add(testPreset);
+            await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -89,7 +95,7 @@ namespace usue_online_tests.Controllers
                 return NotFound();
             }
 
-            var testPreset = await _context.Presets.FindAsync(id);
+            var testPreset = await context.Presets.FindAsync(id);
             if (testPreset == null)
             {
                 return NotFound();
@@ -113,8 +119,8 @@ namespace usue_online_tests.Controllers
             {
                 try
                 {
-                    _context.Update(testPreset);
-                    await _context.SaveChangesAsync();
+                    context.Update(testPreset);
+                    await context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -134,24 +140,24 @@ namespace usue_online_tests.Controllers
 
         private bool TestPresetExists(int id)
         {
-            return _context.Presets.Any(e => e.Id == id);
+            return context.Presets.Any(e => e.Id == id);
         }
 
 
         public async Task<RedirectToActionResult> Delete(int presetId)
         {
-            var preset = _context.Presets.FirstOrDefault(preset => preset.Id == presetId && preset.Owner == UserByCookie.GetUser());
+            var preset = context.Presets.FirstOrDefault(preset => preset.Id == presetId && preset.Owner == UserByCookie.GetUser());
 
             if (preset != null)
             {
-                var exams = _context.Exams.Where(exam => exam.Preset == preset).ToArray();
+                var exams = context.Exams.Where(exam => exam.Preset == preset).ToArray();
                 foreach (Exam exam in exams)
                 {
-                    _context.Exams.Remove(exam);
+                    context.Exams.Remove(exam);
                 }
 
-                _context.Presets.Remove(preset);
-                await _context.SaveChangesAsync();
+                context.Presets.Remove(preset);
+                await context.SaveChangesAsync();
             }
 
             return RedirectToAction("Index");
@@ -166,14 +172,16 @@ namespace usue_online_tests.Controllers
                 return Json("Некорректные входные данные");
             }
 
-            _context.Exams.Add(new Exam
+            if (!context.Users.Any(user => user.Group == group)) return StatusCode(400);
+
+            context.Exams.Add(new Exam
             {
                 DateTimeStart = dateTimeStart,
                 DateTimeEnd = dateTimeEnd,
                 Group = group,
-                Preset = _context.Presets.First(preset => preset.Id == presetId)
+                Preset = context.Presets.First(preset => preset.Id == presetId)
             });
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return View((object)new string ("Успешно добавлено"));
         }

@@ -59,6 +59,8 @@ namespace usue_online_tests.Controllers
             return Redirect("/");
         }
 
+
+
         public IActionResult NoAccess() => View();
 
         private IActionResult RedirectAuthorizedUsers()

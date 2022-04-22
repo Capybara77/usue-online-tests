@@ -33,7 +33,7 @@ namespace usue_online_tests.Controllers
 
         public IActionResult GetTasksList()
         {
-            return Json(TestLoader.TestCreaters.Select(creator => new {label = creator.Name, value = creator.TestID}).ToArray());
+            return Json(TestLoader.TestCreators.Select(creator => new {label = creator.Name, value = creator.TestID}).ToArray());
         }
     }
 }

@@ -1,0 +1,30 @@
+﻿@model ITestWrapper
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            extensions: ["tex2jax.js", "/libs/forminput.js"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+                inlineMath: [
+                ["$", "$"],
+                ["\\(", "\\)"]
+                ],
+                TeX: { extensions: ["AMSmath.js", "AMSsymbols.js"] },
+            },
+            showMathMenu: false,
+            messageStyle: "none"
+        });
+    </script>
+}
+
+<audio autoplay>
+    <source src="/20f52df178205f2.mp3" type='audio/mpeg'>
+    <source src="20f52df178205f2.mp3" type="audio/mpeg">
+    Тег audio не поддерживается вашим браузером. <a href="audio/music.mp3">Скачайте музыку</a>.
+</audio>
+
+
+@{ await Html.RenderPartialAsync("Test", Model);}

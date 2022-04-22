@@ -1,0 +1,21 @@
+﻿@using usue_online_tests.Models
+@model IEnumerable<Exam>
+
+@if (Model != null)
+{
+    @foreach (var exam in Model)
+    {
+        <div class="test-card">
+            <p class="test-card-title">@exam.Preset.Name</p>
+            <p class="test-card-description">Создатель: @exam.Preset.Owner.Name</p>
+            <p class="test-card-description">Количество тестов: @exam.Preset.Tests.Length</p>
+            <p class="test-card-description">Задание выдано: @exam.DateTimeStart</p>
+            <p class="test-card-description">Необходимо начать тестирование до: @exam.DateTimeEnd</p>
+            @if (exam.Preset.TimeLimited)
+            {
+                <p class="test-card-description">Время на прохождение: @exam.Preset.MinutesToPass мин.</p>
+            }
+            <a class="test-card-button" href="/exam/starttest?examId=@exam.Id&testNumber=1">Начать тест</a>
+        </div>
+    }
+}

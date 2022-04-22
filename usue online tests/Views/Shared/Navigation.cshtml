@@ -1,23 +1,42 @@
 ﻿@inject GetUserByCookie User
+@inject DataContext context
 @using System.Text
+@using usue_online_tests.Data
+
+<script>
+  
+        var r = $.post("/availabletests/count",
+            {},
+            function (data, status) {
+                document.getElementsByClassName("navigation-item")[0].innerText += " (" + data + ")";
+            });
+
+</script>
 
 <nav class="navigation">
     <a class="navigation-logo" href="/">Аудиторные тесты</a>
     <div class="navigation-links">
         @{
-            if (User.GetUser()?.Role is Roles.Admin or Roles.Teacher)
+            var user = User.GetUser();
+            if (user?.Role is Roles.Admin or Roles.Teacher)
             {
                 <a class="navigation-item" href="/testpresets">Шаблоны тестов</a>
                 <a class="navigation-item" href="/studentlist">Списки студентов</a>
             }
 
+            if (user?.Role is Roles.User)
+            {
+                <a class="navigation-item" href="/availabletests">Тесты для прохождения</a>
+            }
+
+
             if (Context.User.Identity is { IsAuthenticated: true })
             {
                 // https://mui.com/components/avatars/#letter-avatars
                 var hash = 0;
-                var username = User.GetUser().Name;
+                var username = user?.Name;
 
-                for (var i = 0; i < username.Length; i += 1)
+                for (var i = 0; i < username?.Length; i += 1)
                 {
                     hash = Encoding.ASCII.GetBytes(username)[i] + ((hash << 5) - hash);
                 }
@@ -40,18 +59,22 @@
                     </div>
                 </div>
 
-                var mobileMenuColor = User.GetUser().IsDark ? "white" : "black";
+                var mobileMenuColor = user is { IsDark: true } ? "white" : "black";
 
                 <svg class="navigation-mobile" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
-                fill="@mobileMenuColor">
+                     fill="@mobileMenuColor">
                     <path d="M0 0h24v24H0V0z" fill="none" />
                     <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
                 </svg>
                 <div class="navigation-mobile-menu hidden">
-                    @if (User.GetUser()?.Role is Roles.Admin or Roles.Teacher)
+                    @if (user?.Role is Roles.Admin or Roles.Teacher)
                     {
                         <a class="navigation-profile-menu-item" href="/testpresets">Шаблоны тестов</a>
                         <a class="navigation-profile-menu-item" href="/studentlist">Списки студентов</a>
+                    }
+                    @if (user?.Role is Roles.User)
+                    {
+                        <a class="navigation-item" href="/availabletests">Тесты для прохождения</a>
                     }
                     <a class="navigation-profile-menu-item" href="/tests/view">Доступные тесты</a>
                     <a class="navigation-profile-menu-item" href="/profile">Профиль</a>

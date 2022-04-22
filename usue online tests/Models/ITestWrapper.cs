@@ -12,5 +12,7 @@ namespace usue_online_tests.Models
         public ITest Test { get; set; }
         public int TestId { get; set; }
         public int Hash { get; set; }
+        public string Link { get; set; }
+        public string BtnText { get; set; }
     }
 }

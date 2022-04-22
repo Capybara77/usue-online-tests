@@ -10,7 +10,7 @@
 <a class="test-presets-button" href="/testpresets/create">Создать новый шаблон</a>
 
 @{
-    List<ITestCreator> creaters = ViewBag.Tests;
+    List<ITestCreator> creators = ViewBag.Tests;
 }
 
 @if (!Model.Any())
@@ -27,7 +27,7 @@
         <ul class="test-presets-card-list">
             @foreach (var t in item.Tests)
             {
-                <li>@creaters.FirstOrDefault(creater => creater.TestID == t)?.Name</li>
+                <li>@creators.FirstOrDefault(creator => creator.TestID == t)?.Name</li>
             }
         </ul>
         <form class="test-presets-edit-form" method="POST" action="/testpresets/startnew">

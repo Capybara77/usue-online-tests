@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using usue_online_tests.Data;
 using usue_online_tests.Models;
+using usue_online_tests.Services;
 using usue_online_tests.Tests;
 
 namespace usue_online_tests
@@ -39,6 +40,7 @@ namespace usue_online_tests
             services.AddHttpContextAccessor();
             services.AddSingleton(new DataContext());
             services.AddSingleton(new TestsLoader(_environment));
+            services.AddSingleton<IHostedService, TestAnalyticsService>();
             services.AddTransient<GetUserByCookie>();
 
 
