@@ -1,4 +1,8 @@
 const deleteForm = document.querySelectorAll(".test-presets-delete-form");
+const timeLimitedCheckbox = document.querySelector("input[name='timeLimited']");
+const minutesToPassInput = document.querySelector(
+  "input[name='minutesToPass']"
+);
 
 deleteForm?.forEach((form) =>
   form.addEventListener("submit", (e) => {
@@ -7,3 +11,7 @@ deleteForm?.forEach((form) =>
     }
   })
 );
+
+timeLimitedCheckbox?.addEventListener("change", function () {
+  minutesToPassInput.classList.toggle("hidden");
+});

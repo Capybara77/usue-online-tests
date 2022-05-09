@@ -22,7 +22,7 @@ const selects = document.querySelectorAll(".select-group");
 
 if (selects) {
   const inputs = document.querySelectorAll("input[name=group]");
-  fetch("api/getgrouplist")
+  fetch("/api/getgrouplist")
     .then((res) => res.json())
     .then((res) => {
       const preparedGroups = res.map((group, i) => ({

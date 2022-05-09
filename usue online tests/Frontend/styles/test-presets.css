@@ -30,7 +30,8 @@
   flex-direction: column;
 }
 
-.test-presets-create-group span {
+.test-presets-create-group span,
+.test-presets-create-group label {
   margin-bottom: 10px;
 }
 
@@ -45,6 +46,14 @@
   background: var(--background-input);
   color: var(--foreground);
   box-sizing: border-box;
+}
+
+.checkbox-with-label input {
+  width: auto;
+}
+
+.checkbox-with-label label {
+  user-select: none;
 }
 
 .test-presets-card {

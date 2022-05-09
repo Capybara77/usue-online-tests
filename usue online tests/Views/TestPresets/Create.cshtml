@@ -16,8 +16,13 @@
         <div id="select-tests"></div>
         <input name="Tests" hidden />
     </div>
-    <input type="checkbox" name="timeLimited"/>
-    <input name="minutesToPass"/>
+    <div class="test-presets-create-group">
+        <div class="checkbox-with-label">
+            <input type="checkbox" name="timeLimited" id="timeLimited"/>
+            <label for="timeLimited">Ограничение по времени</label>
+        </div>
+        <input class="hidden" name="minutesToPass"/>
+    </div>
     <input class="test-presets-create-button" type="submit" value="Создать" />
     <a href="/testpresets" class="test-presets-create-button-outline">Отменить</a>
 </form>
