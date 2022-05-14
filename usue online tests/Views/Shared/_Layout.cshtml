@@ -1,7 +1,7 @@
 ﻿@using usue_online_tests.Data
 @inject DataContext data
 @{
-    string theme = "light";
+    string theme = "";
     if (Context.User.Identity.IsAuthenticated)
     {
         var user = data.Users.FirstOrDefault(user1 => user1.Login == Context.User.Identity.Name);
@@ -12,7 +12,7 @@
     }
 }
 <!DOCTYPE html>
-<html lang="en" data-theme="@theme">
+<html lang="en" class="@theme">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,16 +20,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/bundles/styles/index.css" />
+    <link rel="stylesheet" href="~/bundles/index.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </head>
-<body>
+<body class="flex min-h-screen flex-col bg-gray-100">
     @{await Html.RenderPartialAsync("Navigation");}
-    <div class="layout">
+    <div class="grow max-w-screen-lg mx-auto w-full">
         @RenderBody()
     </div>
-    <footer class="footer">Уральский государственный экономический университет&nbsp;-&nbsp;@(DateTime.Now.Year).</footer>
+    <footer class="text-center py-4">Уральский государственный экономический университет&nbsp;-&nbsp;@(DateTime.Now.Year).</footer>
     <script src="~/bundles/index.js"></script>
 </body>
 </html>

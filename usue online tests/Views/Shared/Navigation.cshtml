@@ -13,15 +13,15 @@
 
 </script>
 
-<nav class="navigation">
-    <a class="navigation-logo" href="/">Аудиторные тесты</a>
-    <div class="navigation-links">
+<nav class="flex items-center justify-between max-w-screen-lg mx-auto py-4 w-full">
+    <a class="font-bold text-lg" href="/">Аудиторные тесты</a>
+    <div class="flex items-center">
         @{
             var user = User.GetUser();
             if (user?.Role is Roles.Admin or Roles.Teacher)
             {
-                <a class="navigation-item" href="/testpresets">Шаблоны тестов</a>
-                <a class="navigation-item" href="/studentlist">Списки студентов</a>
+                <a class="mx-3" href="/testpresets">Шаблоны тестов</a>
+                <a class="mx-3" href="/studentlist">Списки студентов</a>
             }
 
             if (user?.Role is Roles.User)
@@ -50,7 +50,7 @@
                 }
 
                 <a class="navigation-item" href="/tests/view">Доступные тесты</a>
-                <div class="navigation-profile" style="background: @profileColor">
+                <div class="w-8 h-8 rounded-full text-white cursor-pointer flex justify-center items-center" style="background: @profileColor">
                     @char.ToUpper(username[0])
                     <div class="navigation-profile-menu hidden">
                         <a class="navigation-profile-menu-item" href="/profile">Профиль</a>
@@ -61,7 +61,7 @@
 
                 var mobileMenuColor = user is { IsDark: true } ? "white" : "black";
 
-                <svg class="navigation-mobile" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                <svg class="hidden" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
                      fill="@mobileMenuColor">
                     <path d="M0 0h24v24H0V0z" fill="none" />
                     <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />

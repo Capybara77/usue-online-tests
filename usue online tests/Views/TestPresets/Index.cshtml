@@ -6,8 +6,8 @@
     ViewData["Title"] = "Шаблоны тестов";
 }
 
-<h1>Шаблоны тестов</h1>
-<a class="test-presets-button" href="/testpresets/create">Создать новый шаблон</a>
+<h1 class="text-3xl font-bold">Шаблоны тестов</h1>
+<a class="bg-blue-500 hover:bg-blue-600 text-white p-3 inline-block my-4 rounded" href="/testpresets/create">Создать новый шаблон</a>
 
 @{
     List<ITestCreator> creators = ViewBag.Tests;
@@ -15,22 +15,23 @@
 
 @if (!Model.Any())
 {
-    <p class="test-presets-nothing">Пока вы не создали ни одного шаблона.</p>
+    <p>Пока вы не создали ни одного шаблона.</p>
 }
 
+<div class="grid grid-cols-2 gap-4">
 @foreach (var item in Model)
 {
-    <div class="test-presets-card">
-        <p class="test-presets-card-title">@item.Name</p>
+    <a href="/testpresets/edit" class="block rounded-md shadow-sm bg-white p-10 cursor-pointer hover:shadow-md">
+        <p class="font-bold text-2xl">@item.Name</p>
 
         <p>В шаблон входят тесты по дисциплинам:</p>
-        <ul class="test-presets-card-list">
+        <ul class="list-disc">
             @foreach (var t in item.Tests)
             {
                 <li>@creators.FirstOrDefault(creator => creator.TestID == t)?.Name</li>
             }
         </ul>
-        <form class="test-presets-edit-form" method="POST" action="/testpresets/startnew">
+        <!-- <form class="test-presets-edit-form" method="POST" action="/testpresets/startnew">
             <input hidden name="presetId" value="@item.Id" />
             <label>Группа</label>
             <div class="select-group"></div>
@@ -42,11 +43,12 @@
             <label>Конец </label>
             <input class="test-presets-edit-input" type="datetime-local" name="datetimeEnd" />
             <br>
-            <input name="createExam" class="test-presets-start-button" type="submit" value="Начать тестирование" />
-        </form>
-        <form class="test-presets-delete-form" method="POST" action="/testpresets/delete">
+            <input name="createExam" class="p-3 bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer" type="submit" value="Начать тестирование" />
+        </form> -->
+        <!-- <form class="test-presets-delete-form" method="POST" action="/testpresets/delete">
             <input hidden name="presetId" value="@item.Id" />
-            <input class="test-presets-delete-button" type="submit" value="Удалить" />
-        </form>
-    </div>
+            <input class="p-3 rounded text-red-500 border-2 border-red-500 cursor-pointer hover:bg-red-50" type="submit" value="Удалить" />
+        </form> -->
+    </a>
 }
+</div>
