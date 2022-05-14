@@ -4,15 +4,13 @@
     ViewData["Title"] = "Профиль";
 }
 
-<h1>Профиль</h1>
-<B>Имя: </B>
-<p>@Model.User.Name</p>
-<B>Логин: </B>
-<p>@Model.User.Login</p>
-<B>Группа: </B>
-<p>@Model.User.Group</p>
-<b>Роль: </b>
-<p>@Model.User.Role</p>
+<h1 class="text-3xl font-bold">Профиль</h1>
+<div class="mt-8 space-y-3">
+    <p class="font-bold text-lg">Имя: <span class="font-normal">@Model.User.Name<span></p>
+    <p class="font-bold text-lg">Логин: <span class="font-normal">@Model.User.Login<span></p>
+    <p class="font-bold text-lg">Группа: <span class="font-normal">@Model.User.Group<span></p>
+    <p class="font-bold text-lg">Роль: <span class="font-normal">@Model.User.Role<span></p>
+</div>
 
 @if (Model.ExamResults != null)
 {

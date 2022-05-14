@@ -6,16 +6,18 @@
 }
 
 <h1 class="text-3xl font-bold">Доступные тесты</h1>
-<p class="my-4">
+<p class="my-5 text-lg">
     Здесь представлены все тесты, которые есть на портале. Вы можете ознакомиться или попрактиковаться
 </p>
 
 <div class="grid grid-cols-2 gap-4">
 @for (int i = 0; i < Model.Count; i++)
 {
-    <a class="block shadow-sm hover:shadow-md bg-white cursor-pointer rounded-md p-10 space-y-5" href="/tests/start?id=@Model[i].TestID">
-        <p class="font-bold text-2xl">@Model[i].Name</p>
-        <p class="test-card-description">@Model[i].Description</p>
+    <a class="card bg-white shadow-md hover:shadow-lg" href="/tests/start?id=@Model[i].TestID">
+        <div class="card-body">
+            <h2 class="card-title">@Model[i].Name</h2>
+            <p>@Model[i].Description</p>
+        </div>
     </a>
 }
 </div>

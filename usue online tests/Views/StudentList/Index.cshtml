@@ -3,15 +3,17 @@
 @{
     ViewData["Title"] = "Списки студентов";
 }
-<h1>Списки студентов</h1>
+<h1 class="text-3xl font-bold mb-5">Списки студентов</h1>
 
 @for (int i = 0; i < Model.Count; i++)
 {
-    <div class="group-students">
-        <h3 class="group-name">Группа "@Model[i].Key":</h3>
+    <div class="space-y-3">
+        <h3 class="font-bold text-lg">@Model[i].Key:</h3>
+        <ul class="list-disc list-inside space-y-3 text-lg">
         @foreach (User user in Model[i])
         {
-            <p class="user-in-list">@user.Name</p>
+            <li>@user.Name</li>
         }
+        </ul>
     </div>
 }

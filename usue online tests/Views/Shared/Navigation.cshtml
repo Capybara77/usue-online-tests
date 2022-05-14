@@ -13,20 +13,20 @@
 
 </script>
 
-<nav class="flex items-center justify-between max-w-screen-lg mx-auto py-4 w-full">
-    <a class="font-bold text-lg" href="/">Аудиторные тесты</a>
-    <div class="flex items-center">
+<nav class="max-w-screen-lg mx-auto navbar w-full">
+    <a class="text-xl flex-1 -ml-1" href="/">Аудиторные тесты</a>
+    <ul class="menu menu-horizontal p-0">
         @{
             var user = User.GetUser();
             if (user?.Role is Roles.Admin or Roles.Teacher)
             {
-                <a class="mx-3" href="/testpresets">Шаблоны тестов</a>
-                <a class="mx-3" href="/studentlist">Списки студентов</a>
+                <li><a class="" href="/testpresets">Шаблоны тестов</a></li>
+                <li><a class="" href="/studentlist">Списки студентов</a></li>
             }
 
             if (user?.Role is Roles.User)
             {
-                <a class="navigation-item" href="/availabletests">Тесты для прохождения</a>
+                <li><a class="" href="/availabletests">Тесты для прохождения</a></li>
             }
 
 
@@ -49,10 +49,10 @@
                     profileColor += $"{value.ToString("X2")}";
                 }
 
-                <a class="navigation-item" href="/tests/view">Доступные тесты</a>
-                <div class="w-8 h-8 rounded-full text-white cursor-pointer flex justify-center items-center" style="background: @profileColor">
+                <li><a class="" href="/tests/view">Доступные тесты</a></li>
+                <div class="dropdown ml-4 w-8 h-8 rounded-full text-white cursor-pointer flex justify-center items-center" style="background: @profileColor">
                     @char.ToUpper(username[0])
-                    <div class="navigation-profile-menu hidden">
+                    <div class="menu menu-compact dropdown-content">
                         <a class="navigation-profile-menu-item" href="/profile">Профиль</a>
                         <p class="navigation-profile-menu-item theme-switcher">Изменить тему</p>
                         <a class="navigation-profile-menu-item" href="/login/loginout">Выход</a>
