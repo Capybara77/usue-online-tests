@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import Select from "react-select";
 
-export default {
+const customStyles = {
   control: (provided) => ({
     ...provided,
     width: "100%",
@@ -120,15 +120,16 @@ if (selects) {
     });
 }
 
-const themeSwitcher = document.querySelector(".theme-switcher");
-const mobileThemeSwitcher = document.querySelector(".mobile-theme-switcher");
+const themeSwitcher = document.getElementById("theme-switcher");
 
 themeSwitcher?.addEventListener("click", () => {
-  fetch("/profile/changeusertheme").then(() => location.reload());
-});
-
-mobileThemeSwitcher?.addEventListener("click", () => {
-  fetch("/profile/changeusertheme").then(() => location.reload());
+  fetch("/profile/changeusertheme").then(() => {
+    if (document.documentElement.dataset.theme === "light") {
+      document.documentElement.dataset.theme = "dark";
+    } else {
+      document.documentElement.dataset.theme = "light";
+    }
+  });
 });
 
 const deleteForm = document.querySelectorAll(".test-presets-delete-form");

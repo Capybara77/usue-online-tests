@@ -1004,7 +1004,6 @@ $parcel$ReactRefreshHelpers$71c1.prelude(module);
 
 try {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _reactDom = require("react-dom");
@@ -1012,7 +1011,7 @@ var _reactDomDefault = parcelHelpers.interopDefault(_reactDom);
 var _reactSelect = require("react-select");
 var _reactSelectDefault = parcelHelpers.interopDefault(_reactSelect);
 var _s = $RefreshSig$();
-exports.default = {
+const customStyles = {
     control: (provided)=>({
             ...provided,
             width: "100%",
@@ -1141,15 +1140,12 @@ if (selects) {
         });
     });
 }
-const themeSwitcher = document.querySelector(".theme-switcher");
-const mobileThemeSwitcher = document.querySelector(".mobile-theme-switcher");
+const themeSwitcher = document.getElementById("theme-switcher");
 themeSwitcher?.addEventListener("click", ()=>{
-    fetch("/profile/changeusertheme").then(()=>location.reload()
-    );
-});
-mobileThemeSwitcher?.addEventListener("click", ()=>{
-    fetch("/profile/changeusertheme").then(()=>location.reload()
-    );
+    fetch("/profile/changeusertheme").then(()=>{
+        if (document.documentElement.dataset.theme === "light") document.documentElement.dataset.theme = "dark";
+        else document.documentElement.dataset.theme = "light";
+    });
 });
 const deleteForm = document.querySelectorAll(".test-presets-delete-form");
 const timeLimitedCheckbox = document.querySelector("input[name='timeLimited']");

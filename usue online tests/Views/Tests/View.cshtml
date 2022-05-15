@@ -12,7 +12,7 @@
 <div class="grid gap-4 sm:grid-cols-2">
 @for (int i = 0; i < Model.Count; i++)
 {
-    <a class="card bg-white shadow-md hover:shadow-lg" href="/tests/start?id=@Model[i].TestID">
+    <a class="card bg-base-100 shadow-md hover:shadow-lg" href="/tests/start?id=@Model[i].TestID">
         <div class="card-body">
             <h2 class="card-title">@Model[i].Name</h2>
             <p>@Model[i].Description</p>
