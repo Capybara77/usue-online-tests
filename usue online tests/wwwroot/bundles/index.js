@@ -620,13 +620,13 @@ module.exports = require('./cjs/react-refresh-runtime.development.js');
     exports.setSignature = setSignature;
 })();
 
-},{}],"bu83b":[function(require,module,exports) {
+},{}],"eQgjk":[function(require,module,exports) {
 "use strict";
 var HMR_HOST = null;
 var HMR_PORT = 1234;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
-module.bundle.HMR_BUNDLE_ID = "4ac309b0ce8667a8";
+module.bundle.HMR_BUNDLE_ID = "0672eee0061d7843";
 function _toConsumableArray(arr) {
     return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
@@ -996,85 +996,127 @@ function hmrAcceptRun(bundle, id) {
     acceptedAssets[id] = true;
 }
 
-},{}],"4Ab1o":[function(require,module,exports) {
-var _navigation = require("./navigation");
-var _theme = require("./theme");
-var _testPresets = require("./test-presets");
-var _selectGroup = require("./select-group");
-var _selectTests = require("./select-tests");
-
-},{"./navigation":"evlJ6","./theme":"dvACT","./test-presets":"46HBH","./select-group":"eD8LG","./select-tests":"fWBwH"}],"evlJ6":[function(require,module,exports) {
-const navigationProfile = document.querySelector(".navigation-profile");
-const profileMenu = document.querySelector(".navigation-profile-menu");
-const mobileNavigation = document.querySelector(".navigation-mobile");
-const mobileMenu = document.querySelector(".navigation-mobile-menu");
-document.documentElement.addEventListener("click", (e)=>{
-    if (!profileMenu.contains(e.target) && e.target !== navigationProfile) profileMenu.classList.add("hidden");
-});
-navigationProfile?.addEventListener("click", ()=>{
-    if (matchMedia("(min-width: 768px)").matches) profileMenu.classList.toggle("hidden");
-});
-mobileNavigation?.addEventListener("click", ()=>{
-    mobileMenu.classList.toggle("hidden");
-});
-
-},{}],"dvACT":[function(require,module,exports) {
-const themeSwitcher = document.querySelector(".theme-switcher");
-const mobileThemeSwitcher = document.querySelector(".mobile-theme-switcher");
-themeSwitcher?.addEventListener("click", ()=>{
-    fetch("/profile/changeusertheme").then(()=>location.reload()
-    );
-});
-mobileThemeSwitcher?.addEventListener("click", ()=>{
-    fetch("/profile/changeusertheme").then(()=>location.reload()
-    );
-});
-
-},{}],"46HBH":[function(require,module,exports) {
-const deleteForm = document.querySelectorAll(".test-presets-delete-form");
-const timeLimitedCheckbox = document.querySelector("input[name='timeLimited']");
-const minutesToPassInput = document.querySelector("input[name='minutesToPass']");
-deleteForm?.forEach((form)=>form.addEventListener("submit", (e)=>{
-        if (!confirm("Вы действительно хотите удалить этот шаблон?")) e.preventDefault();
-    })
-);
-timeLimitedCheckbox?.addEventListener("change", function() {
-    minutesToPassInput.classList.toggle("hidden");
-});
-
-},{}],"eD8LG":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$5e48 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+},{}],"dhNI8":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$71c1 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$5e48.prelude(module);
+$parcel$ReactRefreshHelpers$71c1.prelude(module);
 
 try {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
 var _reactDom = require("react-dom");
 var _reactDomDefault = parcelHelpers.interopDefault(_reactDom);
 var _reactSelect = require("react-select");
 var _reactSelectDefault = parcelHelpers.interopDefault(_reactSelect);
-var _customSelectStyles = require("./custom-select-styles");
-var _customSelectStylesDefault = parcelHelpers.interopDefault(_customSelectStyles);
+var _s = $RefreshSig$();
+exports.default = {
+    control: (provided)=>({
+            ...provided,
+            width: "100%",
+            maxWidth: 300,
+            border: "2px solid gray",
+            borderRadius: 8,
+            boxShadow: "none",
+            background: "var(--background-input)",
+            fontSize: 14
+        })
+    ,
+    menu: (provided)=>({
+            ...provided,
+            width: "100%",
+            maxWidth: 300,
+            background: "var(--background)",
+            color: "var(--foreground)"
+        })
+    ,
+    option: (provided, state)=>({
+            ...provided,
+            background: state.isSelected ? "var(--select-item-selected)" : state.isFocused ? "var(--select-item-focused)" : "none",
+            ":active": {
+                ...provided[":active"],
+                background: "var(--select-item-focused)"
+            }
+        })
+    ,
+    multiValue: (provided)=>({
+            ...provided,
+            background: "var(--select-value-background)",
+            color: "var(--foreground)"
+        })
+    ,
+    multiValueLabel: (provided)=>({
+            ...provided,
+            color: "var(--foreground)"
+        })
+    ,
+    singleValue: (provided)=>({
+            ...provided,
+            color: "var(--foreground)"
+        })
+    ,
+    input: (provided)=>({
+            ...provided,
+            color: "var(--foreground)"
+        })
+};
+function SelectTests() {
+    _s();
+    const [tasks, setTasks] = _react.useState([]);
+    function updateForm(selected) {
+        const values = selected.map(({ value  })=>value
+        ).join();
+        document.querySelector("input[name=Tests]").value = values;
+    }
+    _react.useEffect(()=>{
+        fetch("/api/gettaskslist").then((res)=>res.json()
+        ).then((res)=>setTasks(res)
+        );
+    }, []);
+    return(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactSelectDefault.default, {
+        styles: customStyles,
+        closeMenuOnSelect: false,
+        isMulti: true,
+        options: tasks,
+        placeholder: "Выберите...",
+        noOptionsMessage: ()=>"Пусто"
+        ,
+        onChange: updateForm
+    }, void 0, false, {
+        fileName: "Desktop/usue-online-tests/usue online tests/Assets/index.js",
+        lineNumber: 69,
+        columnNumber: 5
+    }, this));
+}
+_s(SelectTests, "bBd6yqkqV9dlkj9ENgRyXKaiXpk=");
+_c = SelectTests;
+const selectTestsElement = document.getElementById("select-tests");
+if (selectTestsElement) _reactDomDefault.default.render(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(SelectTests, {
+}, void 0, false, {
+    fileName: "Desktop/usue-online-tests/usue online tests/Assets/index.js",
+    lineNumber: 84,
+    columnNumber: 19
+}, undefined), selectTestsElement);
 function SelectGroup({ input , groups  }) {
     function updateForm({ label  }) {
         input.value = label;
     }
     return(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactSelectDefault.default, {
-        styles: _customSelectStylesDefault.default,
+        styles: customStyles,
         noOptionsMessage: ()=>"Пусто"
         ,
         placeholder: "Выберите...",
         options: groups,
         onChange: updateForm
     }, void 0, false, {
-        fileName: "Desktop/usue-online-tests/usue online tests/Frontend/select-group.js",
-        lineNumber: 11,
+        fileName: "Desktop/usue-online-tests/usue online tests/Assets/index.js",
+        lineNumber: 93,
         columnNumber: 5
     }, this));
 }
-_c = SelectGroup;
+_c1 = SelectGroup;
 const selects = document.querySelectorAll(".select-group");
 if (selects) {
     const inputs = document.querySelectorAll("input[name=group]");
@@ -1092,22 +1134,43 @@ if (selects) {
                 input: inputs[i],
                 groups: preparedGroups
             }, void 0, false, {
-                fileName: "Desktop/usue-online-tests/usue online tests/Frontend/select-group.js",
-                lineNumber: 34,
+                fileName: "Desktop/usue-online-tests/usue online tests/Assets/index.js",
+                lineNumber: 116,
                 columnNumber: 11
             }, undefined), select);
         });
     });
 }
-var _c;
-$RefreshReg$(_c, "SelectGroup");
+const themeSwitcher = document.querySelector(".theme-switcher");
+const mobileThemeSwitcher = document.querySelector(".mobile-theme-switcher");
+themeSwitcher?.addEventListener("click", ()=>{
+    fetch("/profile/changeusertheme").then(()=>location.reload()
+    );
+});
+mobileThemeSwitcher?.addEventListener("click", ()=>{
+    fetch("/profile/changeusertheme").then(()=>location.reload()
+    );
+});
+const deleteForm = document.querySelectorAll(".test-presets-delete-form");
+const timeLimitedCheckbox = document.querySelector("input[name='timeLimited']");
+const minutesToPassInput = document.querySelector("input[name='minutesToPass']");
+deleteForm?.forEach((form)=>form.addEventListener("submit", (e)=>{
+        if (!confirm("Вы действительно хотите удалить этот шаблон?")) e.preventDefault();
+    })
+);
+timeLimitedCheckbox?.addEventListener("change", function() {
+    minutesToPassInput.classList.toggle("hidden");
+});
+var _c, _c1;
+$RefreshReg$(_c, "SelectTests");
+$RefreshReg$(_c1, "SelectGroup");
 
-  $parcel$ReactRefreshHelpers$5e48.postlude(module);
+  $parcel$ReactRefreshHelpers$71c1.postlude(module);
 } finally {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"aPDTK","react-dom":"a9Sww","react-select":"lDVFZ","./custom-select-styles":"3Ny9p","@parcel/transformer-js/src/esmodule-helpers.js":"ggF0d","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"g5GrY"}],"aPDTK":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"aPDTK","react":"isnYI","react-dom":"a9Sww","react-select":"lDVFZ","@parcel/transformer-js/src/esmodule-helpers.js":"ggF0d","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"g5GrY"}],"aPDTK":[function(require,module,exports) {
 'use strict';
 module.exports = require('./cjs/react-jsx-dev-runtime.development.js');
 
@@ -29256,61 +29319,7 @@ function _defineProperty(obj, key, value) {
 }
 module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
-},{}],"3Ny9p":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-exports.default = {
-    control: (provided)=>({
-            ...provided,
-            width: "100%",
-            maxWidth: 300,
-            border: "2px solid gray",
-            borderRadius: 8,
-            boxShadow: "none",
-            background: "var(--background-input)",
-            fontSize: 14
-        })
-    ,
-    menu: (provided)=>({
-            ...provided,
-            width: "100%",
-            maxWidth: 300,
-            background: "var(--background)",
-            color: "var(--foreground)"
-        })
-    ,
-    option: (provided, state)=>({
-            ...provided,
-            background: state.isSelected ? "var(--select-item-selected)" : state.isFocused ? "var(--select-item-focused)" : "none",
-            ":active": {
-                ...provided[":active"],
-                background: "var(--select-item-focused)"
-            }
-        })
-    ,
-    multiValue: (provided)=>({
-            ...provided,
-            background: "var(--select-value-background)",
-            color: "var(--foreground)"
-        })
-    ,
-    multiValueLabel: (provided)=>({
-            ...provided,
-            color: "var(--foreground)"
-        })
-    ,
-    singleValue: (provided)=>({
-            ...provided,
-            color: "var(--foreground)"
-        })
-    ,
-    input: (provided)=>({
-            ...provided,
-            color: "var(--foreground)"
-        })
-};
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ggF0d"}],"g5GrY":[function(require,module,exports) {
+},{}],"g5GrY":[function(require,module,exports) {
 "use strict";
 var Refresh = require('react-refresh/runtime');
 function debounce(func, delay) {
@@ -29430,68 +29439,6 @@ function registerExportsForReactRefresh(module) {
     }
 }
 
-},{"react-refresh/runtime":"bdon5"}],"fWBwH":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$4a4f = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-var prevRefreshReg = window.$RefreshReg$;
-var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$4a4f.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _reactDom = require("react-dom");
-var _reactDomDefault = parcelHelpers.interopDefault(_reactDom);
-var _reactSelect = require("react-select");
-var _reactSelectDefault = parcelHelpers.interopDefault(_reactSelect);
-var _customSelectStyles = require("./custom-select-styles");
-var _customSelectStylesDefault = parcelHelpers.interopDefault(_customSelectStyles);
-var _s = $RefreshSig$();
-function SelectTests() {
-    _s();
-    const [tasks, setTasks] = _react.useState([]);
-    function updateForm(selected) {
-        const values = selected.map(({ value  })=>value
-        ).join();
-        document.querySelector("input[name=Tests]").value = values;
-    }
-    _react.useEffect(()=>{
-        fetch("/api/gettaskslist").then((res)=>res.json()
-        ).then((res)=>setTasks(res)
-        );
-    }, []);
-    return(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactSelectDefault.default, {
-        styles: _customSelectStylesDefault.default,
-        closeMenuOnSelect: false,
-        isMulti: true,
-        options: tasks,
-        placeholder: "Выберите...",
-        noOptionsMessage: ()=>"Пусто"
-        ,
-        onChange: updateForm
-    }, void 0, false, {
-        fileName: "Desktop/usue-online-tests/usue online tests/Frontend/select-tests.js",
-        lineNumber: 21,
-        columnNumber: 5
-    }, this));
-}
-_s(SelectTests, "bBd6yqkqV9dlkj9ENgRyXKaiXpk=");
-_c = SelectTests;
-const selectTestsElement = document.getElementById("select-tests");
-if (selectTestsElement) _reactDomDefault.default.render(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(SelectTests, {
-}, void 0, false, {
-    fileName: "Desktop/usue-online-tests/usue online tests/Frontend/select-tests.js",
-    lineNumber: 36,
-    columnNumber: 19
-}, undefined), selectTestsElement);
-var _c;
-$RefreshReg$(_c, "SelectTests");
-
-  $parcel$ReactRefreshHelpers$4a4f.postlude(module);
-} finally {
-  window.$RefreshReg$ = prevRefreshReg;
-  window.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-dev-runtime":"aPDTK","react":"isnYI","react-dom":"a9Sww","react-select":"lDVFZ","./custom-select-styles":"3Ny9p","@parcel/transformer-js/src/esmodule-helpers.js":"ggF0d","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"g5GrY"}]},["3ia1j","bu83b","4Ab1o"], "4Ab1o", "parcelRequire94c2")
+},{"react-refresh/runtime":"bdon5"}]},["3ia1j","eQgjk","dhNI8"], "dhNI8", "parcelRequire94c2")
 
 //# sourceMappingURL=index.js.map

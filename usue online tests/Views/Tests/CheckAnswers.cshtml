@@ -4,4 +4,23 @@
     ViewData["Title"] = "Результат прохождения теста";
 }
 
-<h3>Правильно @Model.TotalRight из @Model.Total</h3>
+<div class="prose">
+    <h1 class="mb-8">Результат прохождения</h1>
+</div>
+
+<div class="stats shadow stats-vertical md:stats-horizontal">
+    <div class="stat">
+        <div class="stat-title">Правильные ответы</div>
+        <div class="stat-value">@Model.TotalRight/@Model.Total</div>
+    </div>
+    <div class="stat">
+        <div class="stat-title">Время</div>
+        <div class="stat-value">00:00</div>
+    </div>
+    <div class="stat">
+        <div class="stat-title">Коэффициент отвлеченности</div>
+        <div class="stat-value">0</div>
+    </div>
+</div>
+<br>
+<a class="btn my-8" href="/tests/view">Вернуться к тестам</a>

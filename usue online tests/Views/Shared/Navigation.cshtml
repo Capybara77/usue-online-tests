@@ -3,16 +3,6 @@
 @using System.Text
 @using usue_online_tests.Data
 
-<script>
-  
-        var r = $.post("/availabletests/count",
-            {},
-            function (data, status) {
-                document.getElementsByClassName("navigation-item")[0].innerText += " (" + data + ")";
-            });
-
-</script>
-
 <nav class="max-w-screen-lg mx-auto navbar p-0">
     <div class="flex-1">
         <a class="text-xl" href="/">Аудиторные тесты</a>
@@ -51,7 +41,12 @@
                 </label>
                 <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                     <li><a href="/profile">Профиль</a></li>
-                    <li><a href="/tests/view">Доступные тесты</a></li>
+                    <li>
+                        <a href="/tests/view" class="justify-between">
+                            Доступные тесты
+                            <span class="badge">0</span>
+                        </a>
+                    </li>
                     @if (user?.Role is Roles.Admin or Roles.Teacher)
                     {
                         <li><a href="/testpresets">Шаблоны тестов</a></li>

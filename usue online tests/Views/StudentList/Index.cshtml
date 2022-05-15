@@ -8,14 +8,12 @@
 
     @for (int i = 0; i < Model.Count; i++)
     {
-        <div>
-            <h3>@Model[i].Key:</h3>
-            <ul>
-            @foreach (User user in Model[i])
-            {
-                <li>@user.Name</li>
-            }
-            </ul>
-        </div>
+        <h3>@Model[i].Key:</h3>
+        <ul>
+        @foreach (User user in Model[i])
+        {
+            <li>@user.Name</li>
+        }
+        </ul>
     }
 </div>

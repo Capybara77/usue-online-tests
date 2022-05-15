@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "source": [
-    "Frontend/index.js",
-    "Frontend/index.css"
+    "Assets/index.js",
+    "Assets/index.css"
   ],
   "targets": {
     "default": {
