@@ -798,6 +798,28 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 0.75rem;
   line-height: 1rem;
   opacity: 0.6;
+}.swap {
+  position: relative;
+  display: inline-grid;
+  -webkit-user-select: none;
+  user-select: none;
+  place-content: center;
+  cursor: pointer;
+}.swap > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: transform, opacity;
+}.swap input {
+  -webkit-appearance: none;
+  appearance: none;
+}.swap .swap-on, .swap .swap-indeterminate, .swap input:indeterminate ~ .swap-on {
+  opacity: 0;
+}.swap input:checked ~ .swap-off, .swap.swap-active .swap-off, .swap input:indeterminate ~ .swap-off {
+  opacity: 0;
+}.swap input:checked ~ .swap-on, .swap-active .swap-on, .swap input:indeterminate ~ .swap-indeterminate {
+  opacity: 1;
 }.avatar-group .avatar {
   overflow: hidden;
   border-radius: 9999px;
@@ -1234,6 +1256,33 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-divide-y-reverse: 0;
   border-top-width: calc(0px * calc(1 - var(--tw-divide-y-reverse)));
   border-bottom-width: calc(0px * var(--tw-divide-y-reverse));
+}.swap-rotate .swap-on, .swap-rotate .swap-indeterminate, .swap-rotate input:indeterminate ~ .swap-on {
+  --tw-rotate: 45deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}.swap-rotate input:checked ~ .swap-off, .swap-rotate.swap-active .swap-off, .swap-rotate input:indeterminate ~ .swap-off {
+  --tw-rotate: -45deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}.swap-rotate input:checked ~ .swap-on, .swap-rotate.swap-active .swap-on, .swap-rotate input:indeterminate ~ .swap-indeterminate {
+  --tw-rotate: 0deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}.swap-flip .swap-on,
+.swap-flip .swap-indeterminate,
+.swap-flip input:indeterminate ~ .swap-on {
+  transform: rotateY(180deg);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  opacity: 1;
+}.swap-flip input:checked ~ .swap-off,
+.swap-flip.swap-active .swap-off,
+.swap-flip input:indeterminate ~ .swap-off {
+  transform: rotateY(-180deg);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  opacity: 1;
+}.swap-flip input:checked ~ .swap-on,
+.swap-flip.swap-active .swap-on,
+.swap-flip input:indeterminate ~ .swap-indeterminate {
+  transform: rotateY(0deg);
 }:root .prose {
   --tw-prose-body: hsla(var(--bc)/.8);
   --tw-prose-headings: hsl(var(--bc));
@@ -1792,6 +1841,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.bg-base-300 {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}.fill-current {
+  fill: currentColor;
 }.stroke-current {
   stroke: currentColor;
 }.p-3 {
@@ -1802,6 +1853,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 0.5rem;
 }.p-4 {
   padding: 1rem;
+}.p-1 {
+  padding: 0.25rem;
 }.px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
