@@ -1705,6 +1705,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.my-1 {
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
+}.my-48 {
+  margin-top: 12rem;
+  margin-bottom: 12rem;
 }.mt-4 {
   margin-top: 1rem;
 }.mb-8 {
@@ -1757,6 +1760,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 2.5rem;
 }.w-52 {
   width: 13rem;
+}.w-32 {
+  width: 8rem;
+}.w-64 {
+  width: 16rem;
 }.max-w-sm {
   max-width: 24rem;
 }.max-w-screen-lg {
@@ -1779,6 +1786,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   flex-direction: column;
 }.items-center {
   align-items: center;
+}.justify-start {
+  justify-content: flex-start;
 }.justify-center {
   justify-content: center;
 }.justify-between {

@@ -55,10 +55,10 @@
                 if (matches[i].Groups[1].Value.StartsWith("CB_"))
                 {
                     Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
-                        $"<div class=\"label\">" +
+                        $"<label class=\"label cursor-pointer w-52\">" +
                         $"    <input class=\"checkbox\" type=\"checkbox\" name=\"{matches[i].Groups[1].Value.Remove(0, 3)}\"/> " +
-                        $"    <label class=\"label-text ml-2 mr-auto\">{matches[i].Groups[1].Value.Remove(0, 3)}</label>") +
-                        $"</div>";
+                        $"    <span class=\"label-text\">{matches[i].Groups[1].Value.Remove(0, 3)}</span>") +
+                        $"</label>";
                 }
                 else
                 {
@@ -74,10 +74,10 @@
                 <input hidden name="testsCount" value="@(Model.Test.CheckBoxes.Length + matches.Count)" />
                 foreach (var t in Model.Test.CheckBoxes)
                 {
-                    <div class="label">
+                    <label class="label cursor-pointer w-52">
                         <input class="checkbox" type="checkbox" name="@t" />
-                        <label class="label-text ml-2 mr-auto">@t</label>
-                    </div>
+                        <span class="label-text">@t</span>
+                    </label>
                 }
             }
             else

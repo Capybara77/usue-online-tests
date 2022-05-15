@@ -14,10 +14,12 @@
     <label class="label label-text">Тесты</label>
     <div id="select-tests"></div>
     <input name="Tests" hidden />
-    <div class="label cursor-pointer">
+    <label class="label cursor-pointer w-52 my-4">
         <input class="checkbox" type="checkbox" name="timeLimited" id="timeLimited"/>
-        <label class="label-text mr-auto ml-2" for="timeLimited">Ограничение по времени</label>
-        <input class="hidden" name="minutesToPass"/>
+        <span class="label-text">Ограничение по времени</span>
+    </label>
+    <div>
+        <input class="input input-bordered w-full max-w-xs hidden mb-8" name="minutesToPass"/>
     </div>
-    <input class="btn mt-4" type="submit" value="Создать" />
+    <input class="btn" type="submit" value="Создать" />
 </form>
