@@ -13,20 +13,20 @@
 
 </script>
 
-<nav class="max-w-screen-lg mx-auto navbar w-full">
-    <a class="text-xl flex-1 -ml-1" href="/">Аудиторные тесты</a>
+<nav class="max-w-screen-lg mx-auto navbar p-0">
+    <a class="text-xl flex-1" href="/">Аудиторные тесты</a>
     <ul class="menu menu-horizontal p-0">
         @{
             var user = User.GetUser();
             if (user?.Role is Roles.Admin or Roles.Teacher)
             {
-                <li><a class="" href="/testpresets">Шаблоны тестов</a></li>
-                <li><a class="" href="/studentlist">Списки студентов</a></li>
+                <li><a class="hidden" href="/testpresets">Шаблоны тестов</a></li>
+                <li><a class="hidden" href="/studentlist">Списки студентов</a></li>
             }
 
             if (user?.Role is Roles.User)
             {
-                <li><a class="" href="/availabletests">Тесты для прохождения</a></li>
+                <li><a class="hidden" href="/availabletests">Тесты для прохождения</a></li>
             }
 
 
@@ -49,14 +49,21 @@
                     profileColor += $"{value.ToString("X2")}";
                 }
 
-                <li><a class="" href="/tests/view">Доступные тесты</a></li>
-                <div class="dropdown ml-4 w-8 h-8 rounded-full text-white cursor-pointer flex justify-center items-center" style="background: @profileColor">
-                    @char.ToUpper(username[0])
-                    <div class="menu menu-compact dropdown-content">
-                        <a class="navigation-profile-menu-item" href="/profile">Профиль</a>
-                        <p class="navigation-profile-menu-item theme-switcher">Изменить тему</p>
-                        <a class="navigation-profile-menu-item" href="/login/loginout">Выход</a>
-                    </div>
+                <li><a class="hidden" href="/tests/view">Доступные тесты</a></li>
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn btn-ghost btn-circle">
+                        <div class="w-10 h-10 rounded-full text-white cursor-pointer flex justify-center items-center" style="background: @profileColor">
+                            @char.ToUpper(username[0])
+                        </div>
+                    </label>
+                    <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                        <li><a href="/profile">Профиль</a></li>
+                        <li><a href="/testpresets">Шаблоны тестов</a></li>
+                        <li><a href="/studentlist">Списки студентов</a></li>
+                        <li><a href="/availabletests">Тесты для прохождения</a></li>
+                        <li><a href="/tests/view">Доступные тесты</a></li>
+                        <li><a href="/login/loginout">Выход</a></li>
+                    </ul>
                 </div>
 
                 var mobileMenuColor = user is { IsDark: true } ? "white" : "black";

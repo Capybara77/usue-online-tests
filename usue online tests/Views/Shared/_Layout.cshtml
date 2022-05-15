@@ -21,12 +21,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </head>
-<body class="flex min-h-screen flex-col bg-gray-100">
+<body class="flex min-h-screen flex-col bg-gray-100 px-4">
     @{await Html.RenderPartialAsync("Navigation");}
     <div class="grow max-w-screen-lg mx-auto w-full">
         @RenderBody()
     </div>
-    <footer class="text-center py-4">Уральский государственный экономический университет&nbsp;-&nbsp;@(DateTime.Now.Year).</footer>
+    <footer class="footer footer-center p-4 text-base-content">© @(DateTime.Now.Year) - Уральский государственный экономический университет</footer>
     <script src="~/bundles/index.js"></script>
 </body>
 </html>
