@@ -22,14 +22,14 @@
     </div>
 }
 
-<div class="grid gap-4">
+<div class="grid sm:grid-cols-2 gap-4">
 @foreach (var item in Model)
 {
     <a href="/testpresets/edit" class="card shadow-md hover:shadow-lg bg-white">
         <div class="card-body">
             <h2 class="card-title">@item.Name</h2>
             <p>В шаблон входят тесты по дисциплинам:</p>
-            <ul class="list-disc list-inside">
+            <ul class="list-disc list-inside prose">
                 @foreach (var t in item.Tests)
                 {
                     <li>@creators.FirstOrDefault(creator => creator.TestID == t)?.Name</li>

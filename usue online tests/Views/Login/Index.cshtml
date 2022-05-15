@@ -4,7 +4,10 @@
     ViewData["Title"] = "Вход";
 }
 
-<form class="space-y-4 my-36 max-w-sm mx-auto" action="/login/loginin" method="post">
+<form class="space-y-4 my-28 max-w-sm mx-auto" action="/login/loginin" method="post">
+    <div class="prose text-center">
+        <h1>Вход</h1>
+    </div>
     @if (!string.IsNullOrEmpty(Model))
     {
         <div class="alert alert-error shadow-lg">
