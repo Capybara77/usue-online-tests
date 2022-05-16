@@ -23,37 +23,44 @@
 }
 
 <div class="grid sm:grid-cols-2 gap-4">
-@foreach (var item in Model)
-{
-    <a href="/testpresets/edit" class="card shadow-md hover:shadow-lg bg-base-100">
-        <div class="card-body">
-            <h2 class="card-title">@item.Name</h2>
-            <p>В шаблон входят тесты по дисциплинам:</p>
-            <ul class="list-disc list-inside prose">
-                @foreach (var t in item.Tests)
-                {
-                    <li>@creators.FirstOrDefault(creator => creator.TestID == t)?.Name</li>
-                }
-            </ul>
+    @foreach (var item in Model)
+    {
+        <a href="/testpresets/edit" class="card shadow-md hover:shadow-lg bg-base-100">
+            <div class="card-body">
+                <h2 class="card-title">@item.Name</h2>
+                <p>В шаблон входят тесты по дисциплинам:</p>
+                <ul class="list-disc list-inside prose">
+                    @foreach (var t in item.Tests)
+                    {
+                        <li>@creators.FirstOrDefault(creator => creator.TestID == t)?.Name</li>
+                    }
+                </ul>
+                <label for="create-modal" class="btn modal-button mt-4">Начать тестирование</label>
+            </div>
+        </a>
+        @* <form class="test-presets-delete-form" method="POST" action="/testpresets/delete">
+            <input hidden name="presetId" value="@item.Id" />
+            <input class="p-3 rounded text-red-500 border-2 border-red-500 cursor-pointer hover:bg-red-50" type="submit"
+            value="Удалить" />
+            </form> *@
+    }
+</div>
+
+<input type="checkbox" id="create-modal" class="modal-toggle" />
+<div class="modal modal-bottom sm:modal-middle">
+    <form class="modal-box" method="POST" action="/testpresets/startnew">
+        @* <input hidden name="presetId" value="@item.Id" /> *@
+        <h3 class="font-bold text-lg">Выберите группу и время доступности теста</h3>
+        <label class="label label-text">Группа</label>
+        <div class="select-group"></div>
+        <input name="group" hidden />
+        <label class="label label-text">Начало</label>
+        <input class="input input-bordered w-full" type="datetime-local" name="datetimeStart" />
+        <label class="label label-text">Конец </label>
+        <input class="input input-bordered w-full" type="datetime-local" name="datetimeEnd" />
+        <div class="modal-action">
+            <input name="createExam" class="btn" type="submit" value="Начать тестирование" />
+            <label for="create-modal" class="btn btn-ghost">Отмена</label>
         </div>
-    </a>
-        <!-- <form class="test-presets-edit-form" method="POST" action="/testpresets/startnew">
-            <input hidden name="presetId" value="@item.Id" />
-            <label>Группа</label>
-            <div class="select-group"></div>
-            <input name="group" hidden />
-            <br>
-            <label>Начало</label>
-            <input class="test-presets-edit-input" type="datetime-local" name="datetimeStart" />
-            <br>
-            <label>Конец </label>
-            <input class="test-presets-edit-input" type="datetime-local" name="datetimeEnd" />
-            <br>
-            <input name="createExam" class="p-3 bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer" type="submit" value="Начать тестирование" />
-        </form> -->
-        <!-- <form class="test-presets-delete-form" method="POST" action="/testpresets/delete">
-            <input hidden name="presetId" value="@item.Id" />
-            <input class="p-3 rounded text-red-500 border-2 border-red-500 cursor-pointer hover:bg-red-50" type="submit" value="Удалить" />
-        </form> -->
-}
+    </form>
 </div>
