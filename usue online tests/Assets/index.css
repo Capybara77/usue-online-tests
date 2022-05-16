@@ -6,10 +6,16 @@
   @apply max-w-xs;
   min-height: 48px !important;
   border-radius: 8px !important;
+  @apply bg-base-100 !important;
 }
 
 .react-select-tests__menu {
   @apply max-w-xs;
+  @apply bg-base-100 !important;
+}
+
+.react-select-tests__multi-value {
+  @apply bg-base-200 text-base-content !important;
 }
 
 .react-select-group__control {

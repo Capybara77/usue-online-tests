@@ -2011,8 +2011,17 @@ Ensure the default browser behavior of the `hidden` attribute.
   max-width: 20rem;
   min-height: 48px !important;
   border-radius: 8px !important;
+  --tw-bg-opacity: 1 !important;
+  background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
 }.react-select-tests__menu {
   max-width: 20rem;
+  --tw-bg-opacity: 1 !important;
+  background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
+}.react-select-tests__multi-value {
+  --tw-bg-opacity: 1 !important;
+  background-color: hsl(var(--b2, var(--b1)) / var(--tw-bg-opacity)) !important;
+  --tw-text-opacity: 1 !important;
+  color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
 }.react-select-group__control {
   min-height: 48px !important;
   border-radius: 8px !important;
