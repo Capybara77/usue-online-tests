@@ -1,5 +1,4 @@
-﻿@using usue_online_tests.Tests
-@using Test_Wrapper
+﻿@using Test_Wrapper
 @model IEnumerable<usue_online_tests.Models.TestPreset>
 
 @{
@@ -25,7 +24,7 @@
 <div class="grid sm:grid-cols-2 gap-4">
     @foreach (var item in Model)
     {
-        <a href="/testpresets/edit" class="card shadow-md hover:shadow-lg bg-base-100">
+        <a href="/testpresets/edit/@item.Id" class="card shadow-md hover:shadow-lg bg-base-100">
             <div class="card-body">
                 <h2 class="card-title">@item.Name</h2>
                 <p>В шаблон входят тесты по дисциплинам:</p>

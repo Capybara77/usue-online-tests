@@ -1025,6 +1025,8 @@ function SelectTests() {
         );
     }, []);
     return(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactSelectDefault.default, {
+        className: "react-select-container",
+        classNamePrefix: "react-select",
         closeMenuOnSelect: false,
         isMulti: true,
         options: tasks,
@@ -1044,7 +1046,7 @@ const selectTestsElement = document.getElementById("select-tests");
 if (selectTestsElement) _reactDomDefault.default.render(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(SelectTests, {
 }, void 0, false, {
     fileName: "Desktop/usue-online-tests/usue online tests/Assets/index.js",
-    lineNumber: 34,
+    lineNumber: 36,
     columnNumber: 19
 }, undefined), selectTestsElement);
 function SelectGroup({ input , groups  }) {
@@ -1059,7 +1061,7 @@ function SelectGroup({ input , groups  }) {
         onChange: updateForm
     }, void 0, false, {
         fileName: "Desktop/usue-online-tests/usue online tests/Assets/index.js",
-        lineNumber: 43,
+        lineNumber: 45,
         columnNumber: 5
     }, this));
 }
@@ -1082,7 +1084,7 @@ if (selects) {
                 groups: preparedGroups
             }, void 0, false, {
                 fileName: "Desktop/usue-online-tests/usue online tests/Assets/index.js",
-                lineNumber: 65,
+                lineNumber: 67,
                 columnNumber: 11
             }, undefined), select);
         });

@@ -18,6 +18,8 @@ function SelectTests() {
 
   return (
     <Select
+      className="react-select-container"
+      classNamePrefix="react-select"
       closeMenuOnSelect={false}
       isMulti
       options={tasks}
