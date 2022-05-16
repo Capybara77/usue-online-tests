@@ -854,6 +854,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 }:where(.navbar > *) {
   display: inline-flex;
   align-items: center;
+}.progress {
+  position: relative;
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  overflow: hidden;
+  height: 0.5rem;
+  border-radius: var(--rounded-box, 1rem);
 }.stats {
   display: inline-grid;
   --tw-bg-opacity: 1;
@@ -885,6 +893,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 2.25rem;
   line-height: 2.5rem;
   font-weight: 800;
+}.stat-desc {
+  grid-column-start: 1;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  opacity: 0.6;
 }.swap {
   position: relative;
   display: inline-grid;
@@ -1423,6 +1437,46 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}.progress::-moz-progress-bar {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--n) / var(--tw-bg-opacity));
+}.progress-primary::-moz-progress-bar {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--p) / var(--tw-bg-opacity));
+}.progress-info::-moz-progress-bar {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--in) / var(--tw-bg-opacity));
+}.progress:indeterminate::after {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--n) / var(--tw-bg-opacity));
+  content: "";
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: -40%;
+  width: 33.333333%;
+  border-radius: var(--rounded-box, 1rem);
+  animation: progress-loading 5s infinite ease-in-out;
+}.progress-primary:indeterminate::after {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--p) / var(--tw-bg-opacity));
+}.progress-info:indeterminate::after {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--in) / var(--tw-bg-opacity));
+}.progress::-webkit-progress-bar {
+  background-color: hsl(var(--n) / var(--tw-bg-opacity));
+  --tw-bg-opacity: 0.2;
+  border-radius: var(--rounded-box, 1rem);
+}.progress::-webkit-progress-value {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--nf, var(--n)) / var(--tw-bg-opacity));
+  border-radius: var(--rounded-box, 1rem);
+}.progress-primary::-webkit-progress-value {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--p) / var(--tw-bg-opacity));
+}.progress-info::-webkit-progress-value {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--in) / var(--tw-bg-opacity));
 }@keyframes progress-loading {
 
   50% {
@@ -1897,6 +1951,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-top: 0.75rem;
 }.mb-4 {
   margin-bottom: 1rem;
+}.mt-8 {
+  margin-top: 2rem;
+}.mt-16 {
+  margin-top: 4rem;
+}.mt-12 {
+  margin-top: 3rem;
 }.flex {
   display: flex;
 }.grid {
@@ -1955,8 +2015,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   overflow-x: auto;
 }.rounded-full {
   border-radius: 9999px;
-}.border {
-  border-width: 1px;
 }.bg-base-100 {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--b1) / var(--tw-bg-opacity));
@@ -1989,6 +2047,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 1.75rem;
 }.font-bold {
   font-weight: 700;
+}.font-normal {
+  font-weight: 400;
 }.text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));

@@ -29,15 +29,31 @@
 
 @if (Model.ExamResults != null)
 {
-    foreach (var examResult in Model.ExamResults)
-    {
-        <div style="border: 1px solid black">
-            <b>Название теста:</b>
-            <p>@examResult.Exam.Preset.Name</p>
-            <b>Время прохождения:</b>
-            <p>@examResult.DateTimeStart</p>
-            <b>Результат прохождени:</b>
-            <p>@examResult.ExamTestAnswers.Where(answer => answer.CorrectAnswers != -1).Select(answer => answer.CorrectAnswers).Sum()/@examResult.ExamTestAnswers.Where(answer => answer.CorrectAnswers != -1).Select(answer => answer.TotalAnswers).Sum()</p>
-        </div>
-    }
+    <div class="grid gap-4 sm:grid-cols-2 mt-12">
+        @foreach (var examResult in Model.ExamResults)
+        {
+            var solved = examResult.ExamTestAnswers
+            .Where(answer => answer.CorrectAnswers != -1)
+            .Select(answer => answer.CorrectAnswers)
+            .Sum();
+
+            var total = examResult.ExamTestAnswers
+            .Where(answer => answer.CorrectAnswers != -1)
+            .Select(answer => answer.TotalAnswers)
+            .Sum();
+
+            <a class="card bg-base-100 shadow-md hover:shadow-lg" href="#">
+                <div class="card-body">
+                    <h2 class="card-title">@examResult.Exam.Preset.Name</h2>
+                    <p class="font-bold">
+                        Выдано: <span class="font-normal">@examResult.DateTimeStart.ToString("dd.MM.yyyy")</span>
+                    </p>
+                    @if (solved > 0)
+                    {
+                        <progress class="progress progress-primary w-full mt-4" value="@solved" max="@total"></progress>
+                    }
+                </div>
+            </a>
+        }
+    </div>
 }
