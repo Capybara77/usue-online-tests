@@ -41,11 +41,6 @@ namespace usue_online_tests.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult View()
-        {
             return View(TestsLoader.TestCreators);
         }
 
