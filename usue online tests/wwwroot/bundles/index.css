@@ -2011,17 +2011,32 @@ Ensure the default browser behavior of the `hidden` attribute.
   max-width: 20rem;
   min-height: 48px !important;
   border-radius: 8px !important;
+}.react-select-tests__control, .react-select-group__control {
   --tw-bg-opacity: 1 !important;
   background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
 }.react-select-tests__menu {
   max-width: 20rem;
+}.react-select-tests__menu, .react-select-group__menu {
   --tw-bg-opacity: 1 !important;
   background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
-}.react-select-tests__multi-value {
+}.react-select-tests__multi-value, .react-select-group__multi-value {
   --tw-bg-opacity: 1 !important;
   background-color: hsl(var(--b2, var(--b1)) / var(--tw-bg-opacity)) !important;
+}.react-select-tests__multi-value__label, .react-select-group__multi-value__label {
   --tw-text-opacity: 1 !important;
   color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
+}.react-select-group__single-value {
+  --tw-text-opacity: 1 !important;
+  color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
+}.react-select-tests__input, .react-select-group__input {
+  --tw-text-opacity: 1 !important;
+  color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
+}.react-select-tests__option:active, .react-select-group__option--is-focused {
+  --tw-bg-opacity: 1 !important;
+  background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity)) !important;
+}.react-select-tests__option--is-focused {
+  --tw-bg-opacity: 1 !important;
+  background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity)) !important;
 }.react-select-group__control {
   min-height: 48px !important;
   border-radius: 8px !important;

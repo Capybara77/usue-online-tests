@@ -6,16 +6,48 @@
   @apply max-w-xs;
   min-height: 48px !important;
   border-radius: 8px !important;
+}
+
+.react-select-tests__control,
+.react-select-group__control {
   @apply bg-base-100 !important;
 }
 
 .react-select-tests__menu {
   @apply max-w-xs;
+}
+
+.react-select-tests__menu,
+.react-select-group__menu {
   @apply bg-base-100 !important;
 }
 
-.react-select-tests__multi-value {
-  @apply bg-base-200 text-base-content !important;
+.react-select-tests__multi-value,
+.react-select-group__multi-value {
+  @apply bg-base-200 !important;
+}
+
+.react-select-tests__multi-value__label,
+.react-select-group__multi-value__label {
+  @apply text-base-content !important;
+}
+
+.react-select-group__single-value {
+  @apply text-base-content !important;
+}
+
+.react-select-tests__input,
+.react-select-group__input {
+  @apply text-base-content !important;
+}
+
+.react-select-tests__option:active,
+.react-select-group__option--is-focused {
+  @apply bg-base-300 !important;
+}
+
+.react-select-tests__option--is-focused {
+  @apply bg-base-300 !important;
 }
 
 .react-select-group__control {
