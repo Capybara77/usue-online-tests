@@ -2,12 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-.react-select__control {
-  @apply max-w-xs rounded-full;
+.react-select-tests__control {
+  @apply max-w-xs;
   min-height: 48px !important;
   border-radius: 8px !important;
 }
 
-.react-select__menu {
+.react-select-tests__menu {
   @apply max-w-xs;
+}
+
+.react-select-group__control {
+  min-height: 48px !important;
+  border-radius: 8px !important;
 }

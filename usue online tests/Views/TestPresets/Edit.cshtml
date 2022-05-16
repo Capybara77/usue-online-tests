@@ -15,11 +15,16 @@
     <div id="select-tests"></div>
     <input name="Tests" hidden />
     <label class="label cursor-pointer w-52 my-4">
-        <input class="checkbox" type="checkbox" name="timeLimited" id="timeLimited"/>
+        <input class="checkbox" type="checkbox" name="timeLimited" id="timeLimited" />
         <span class="label-text">Ограничение по времени</span>
     </label>
-    <div>
-        <input class="input input-bordered w-full max-w-xs hidden mb-8" name="minutesToPass"/>
-    </div>
+    <label id="minutes-to-pass-container" class="input-group hidden mb-8">
+        <input class="input input-bordered w-full max-w-[244px]" name="minutesToPass" />
+        <span>минут</span>
+    </label>
     <input class="btn" type="submit" value="Сохранить" />
+    <form method="POST" action="/testpresets/delete">
+        @* <input hidden name="presetId" value="@item.Id" /> *@
+        <input class="btn btn-error btn-outline" type="submit" value="Удалить" />
+    </form>
 </form>

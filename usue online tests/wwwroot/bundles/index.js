@@ -1025,8 +1025,8 @@ function SelectTests() {
         );
     }, []);
     return(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactSelectDefault.default, {
-        className: "react-select-container",
-        classNamePrefix: "react-select",
+        className: "react-select-tests-container",
+        classNamePrefix: "react-select-tests",
         closeMenuOnSelect: false,
         isMulti: true,
         options: tasks,
@@ -1054,6 +1054,8 @@ function SelectGroup({ input , groups  }) {
         input.value = label;
     }
     return(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactSelectDefault.default, {
+        className: "react-select-group-container",
+        classNamePrefix: "react-select-group",
         noOptionsMessage: ()=>"Пусто"
         ,
         placeholder: "Выберите...",
@@ -1084,7 +1086,7 @@ if (selects) {
                 groups: preparedGroups
             }, void 0, false, {
                 fileName: "Desktop/usue-online-tests/usue online tests/Assets/index.js",
-                lineNumber: 67,
+                lineNumber: 69,
                 columnNumber: 11
             }, undefined), select);
         });
@@ -1097,15 +1099,15 @@ themeSwitcher?.addEventListener("click", ()=>{
         else document.documentElement.dataset.theme = "light";
     });
 });
-const deleteForm = document.querySelectorAll(".test-presets-delete-form");
+const deleteTestPreset = document.getElementById("delete-test-preset");
 const timeLimitedCheckbox = document.querySelector("input[name='timeLimited']");
-const minutesToPassInput = document.querySelector("input[name='minutesToPass']");
-deleteForm?.forEach((form)=>form.addEventListener("submit", (e)=>{
+const minutesToPassContainer = document.getElementById("minutes-to-pass-container");
+deleteTestPreset?.forEach((form)=>form.addEventListener("submit", (e)=>{
         if (!confirm("Вы действительно хотите удалить этот шаблон?")) e.preventDefault();
     })
 );
 timeLimitedCheckbox?.addEventListener("change", function() {
-    minutesToPassInput.classList.toggle("hidden");
+    minutesToPassContainer.classList.toggle("hidden");
 });
 var _c, _c1;
 $RefreshReg$(_c, "SelectTests");

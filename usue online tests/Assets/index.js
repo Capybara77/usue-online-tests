@@ -18,8 +18,8 @@ function SelectTests() {
 
   return (
     <Select
-      className="react-select-container"
-      classNamePrefix="react-select"
+      className="react-select-tests-container"
+      classNamePrefix="react-select-tests"
       closeMenuOnSelect={false}
       isMulti
       options={tasks}
@@ -43,6 +43,8 @@ function SelectGroup({ input, groups }) {
 
   return (
     <Select
+      className="react-select-group-container"
+      classNamePrefix="react-select-group"
       noOptionsMessage={() => "Пусто"}
       placeholder="Выберите..."
       options={groups}
@@ -83,13 +85,13 @@ themeSwitcher?.addEventListener("click", () => {
   });
 });
 
-const deleteForm = document.querySelectorAll(".test-presets-delete-form");
+const deleteTestPreset = document.getElementById("delete-test-preset");
 const timeLimitedCheckbox = document.querySelector("input[name='timeLimited']");
-const minutesToPassInput = document.querySelector(
-  "input[name='minutesToPass']"
+const minutesToPassContainer = document.getElementById(
+  "minutes-to-pass-container"
 );
 
-deleteForm?.forEach((form) =>
+deleteTestPreset?.forEach((form) =>
   form.addEventListener("submit", (e) => {
     if (!confirm("Вы действительно хотите удалить этот шаблон?")) {
       e.preventDefault();
@@ -98,5 +100,5 @@ deleteForm?.forEach((form) =>
 );
 
 timeLimitedCheckbox?.addEventListener("change", function () {
-  minutesToPassInput.classList.toggle("hidden");
+  minutesToPassContainer.classList.toggle("hidden");
 });
