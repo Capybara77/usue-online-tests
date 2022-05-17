@@ -5,8 +5,8 @@
 
 @section Scripts
 {
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
         MathJax.Hub.Config({
             extensions: ["tex2jax.js", "/libs/forminput.js"],
             jax: ["input/TeX", "output/HTML-CSS"],
@@ -27,7 +27,7 @@
     ViewData["Title"] = "Тест";
 }
 
-<div class="prose">
+<div class="flex flex-col lg:flex-row">
     @if (Model.Test != null)
     {
         @if (Model.Test.Pictures != null)
@@ -39,54 +39,56 @@
                 byte[] data = new byte[stream.Length];
                 stream.Position = 0;
                 stream.Read(data, 0, data.Length);
-                <img class="" src="data:image/jpeg;base64,@Convert.ToBase64String(data)" />
+                <img class="lg:w-1/2 lg:mr-8" src="data:image/jpeg;base64,@Convert.ToBase64String(data)" />
                 pic.Dispose();
             }
         }
 
-        @using (Html.BeginForm("CheckAnswers", "Tests", FormMethod.Post))
-        {
-            <input hidden name="testId" value="@Model.TestId" />
-            <input hidden name="hash" value="@Model.Hash" />
-
-            var matches = Regex.Matches(Model.Test.Text, "<(.*?)>");
-            for (int i = 0; i < matches.Count; i++)
+        <div class="prose max-w-full">
+            @using (Html.BeginForm("CheckAnswers", "Tests", FormMethod.Post))
             {
-                if (matches[i].Groups[1].Value.StartsWith("CB_"))
+                <input hidden name="testId" value="@Model.TestId" />
+                <input hidden name="hash" value="@Model.Hash" />
+
+                var matches = Regex.Matches(Model.Test.Text, "<(.*?)>");
+                for (int i = 0; i < matches.Count; i++)
                 {
-                    Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
+                    if (matches[i].Groups[1].Value.StartsWith("CB_"))
+                    {
+                        Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
                         $"<label class=\"label cursor-pointer w-52\">" +
-                        $"    <input class=\"checkbox\" type=\"checkbox\" name=\"{matches[i].Groups[1].Value.Remove(0, 3)}\"/> " +
-                        $"    <span class=\"label-text\">{matches[i].Groups[1].Value.Remove(0, 3)}</span>") +
+                        $" <input class=\"checkbox\" type=\"checkbox\" name=\"{matches[i].Groups[1].Value.Remove(0, 3)}\"/> " +
+                        $" <span class=\"label-text\">{matches[i].Groups[1].Value.Remove(0, 3)}</span>") +
                         $"</label>";
+                    }
+                    else
+                    {
+                        Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
+                        $"\\FormInput[2][input input-sm mx-2 my-1][]{{{matches[i].Groups[1].Value}}}");
+                    }
+                }
+
+                <p class="overflow-x-auto overflow-y-hidden">@Html.Raw(Model.Test.Text.Replace("\n", "<br/>"))</p>
+
+                if (Model.Test.CheckBoxes != null)
+                {
+                    <input hidden name="testsCount" value="@(Model.Test.CheckBoxes.Length + matches.Count)" />
+                    foreach (var t in Model.Test.CheckBoxes)
+                    {
+                        <label class="label cursor-pointer w-52">
+                            <input class="checkbox" type="checkbox" name="@t" />
+                            <span class="label-text">@t</span>
+                        </label>
+                    }
                 }
                 else
                 {
-                    Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
-                    $"\\FormInput[2][input input-sm mx-2 my-1][]{{{matches[i].Groups[1].Value}}}");
+                    <input hidden name="testsCount" value="@matches.Count" />
                 }
-            }
 
-            <p>@Html.Raw(Model.Test.Text.Replace("\n", "<br/>"))</p>
-
-            if (Model.Test.CheckBoxes != null)
-            {
-                <input hidden name="testsCount" value="@(Model.Test.CheckBoxes.Length + matches.Count)" />
-                foreach (var t in Model.Test.CheckBoxes)
-                {
-                    <label class="label cursor-pointer w-52">
-                        <input class="checkbox" type="checkbox" name="@t" />
-                        <span class="label-text">@t</span>
-                    </label>
-                }
+                <input type="submit" class="btn" value="Завершить" />
             }
-            else
-            {
-                <input hidden name="testsCount" value="@matches.Count" />
-            }
-
-            <input type="submit" class="btn my-8" value="Завершить" />
-        }
+        </div>
     }
     else
     {

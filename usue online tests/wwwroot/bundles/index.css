@@ -893,12 +893,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 2.25rem;
   line-height: 2.5rem;
   font-weight: 800;
-}.stat-desc {
-  grid-column-start: 1;
-  white-space: nowrap;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  opacity: 0.6;
 }.swap {
   position: relative;
   display: inline-grid;
@@ -1443,9 +1437,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.progress-primary::-moz-progress-bar {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--p) / var(--tw-bg-opacity));
-}.progress-info::-moz-progress-bar {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--in) / var(--tw-bg-opacity));
 }.progress:indeterminate::after {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--n) / var(--tw-bg-opacity));
@@ -1460,9 +1451,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.progress-primary:indeterminate::after {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--p) / var(--tw-bg-opacity));
-}.progress-info:indeterminate::after {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--in) / var(--tw-bg-opacity));
 }.progress::-webkit-progress-bar {
   background-color: hsl(var(--n) / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.2;
@@ -1474,9 +1462,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.progress-primary::-webkit-progress-value {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--p) / var(--tw-bg-opacity));
-}.progress-info::-webkit-progress-value {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--in) / var(--tw-bg-opacity));
 }@keyframes progress-loading {
 
   50% {
@@ -1917,6 +1902,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-top: 0;
 }.prose > :where(:last-child):not(:where([class~="not-prose"] *)) {
   margin-bottom: 0;
+}.col-span-2 {
+  grid-column: span 2 / span 2;
 }.my-16 {
   margin-top: 4rem;
   margin-bottom: 4rem;
@@ -1945,18 +1932,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-top: 1rem;
 }.mb-8 {
   margin-bottom: 2rem;
+}.mt-12 {
+  margin-top: 3rem;
 }.mr-4 {
   margin-right: 1rem;
 }.mt-3 {
   margin-top: 0.75rem;
 }.mb-4 {
   margin-bottom: 1rem;
-}.mt-8 {
-  margin-top: 2rem;
-}.mt-16 {
-  margin-top: 4rem;
-}.mt-12 {
-  margin-top: 3rem;
+}.mr-8 {
+  margin-right: 2rem;
 }.flex {
   display: flex;
 }.grid {
@@ -1977,6 +1962,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 2.5rem;
 }.w-52 {
   width: 13rem;
+}.w-1\/2 {
+  width: 50%;
 }.max-w-sm {
   max-width: 24rem;
 }.max-w-screen-lg {
@@ -1985,6 +1972,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   max-width: 20rem;
 }.max-w-\[244px\] {
   max-width: 244px;
+}.max-w-full {
+  max-width: 100%;
 }.flex-1 {
   flex: 1 1 0%;
 }.flex-shrink-0 {
@@ -1997,6 +1986,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   list-style-position: inside;
 }.list-disc {
   list-style-type: disc;
+}.flex-row {
+  flex-direction: row;
 }.flex-col {
   flex-direction: column;
 }.items-center {
@@ -2007,12 +1998,20 @@ Ensure the default browser behavior of the `hidden` attribute.
   justify-content: space-between;
 }.gap-4 {
   gap: 1rem;
+}.gap-2 {
+  gap: 0.5rem;
+}.gap-8 {
+  gap: 2rem;
 }.space-y-4 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
 }.overflow-x-auto {
   overflow-x: auto;
+}.overflow-y-hidden {
+  overflow-y: hidden;
+}.overflow-x-scroll {
+  overflow-x: scroll;
 }.rounded-full {
   border-radius: 9999px;
 }.bg-base-100 {
@@ -2147,6 +2146,22 @@ Ensure the default browser behavior of the `hidden` attribute.
   .lg\:my-32 {
     margin-top: 8rem;
     margin-bottom: 8rem;
+  }
+
+  .lg\:mr-8 {
+    margin-right: 2rem;
+  }
+
+  .lg\:w-1\/2 {
+    width: 50%;
+  }
+
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lg\:flex-row {
+    flex-direction: row;
   }
 }
 
