@@ -21,10 +21,24 @@
     </div>
 }
 
+<script>
+    var selectedPreset = 0;
+
+    function changeSelectedPreset(a) {
+        selectedPreset = a;
+    }
+
+    function AddPostData() {
+        var formInfo = document.forms['presetForm'];
+
+        formInfo.elements["presetId"].value = selectedPreset;
+    }
+</script>
+
 <div class="grid sm:grid-cols-2 gap-4">
     @foreach (var item in Model)
     {
-        <a href="/testpresets/edit/@item.Id" class="card shadow-md hover:shadow-lg bg-base-100">
+        <a href="/testpresets/delete/@item.Id" class="card shadow-md hover:shadow-lg bg-base-100">
             <div class="card-body">
                 <h2 class="card-title">@item.Name</h2>
                 <p>В шаблон входят тесты по дисциплинам:</p>
@@ -34,27 +48,27 @@
                         <li>@creators.FirstOrDefault(creator => creator.TestID == t)?.Name</li>
                     }
                 </ul>
-                <label for="create-modal" class="btn modal-button mt-4">Начать тестирование</label>
+                <label for="create-modal" onclick="changeSelectedPreset(@item.Id); AddPostData();" class="btn modal-button mt-4">Начать тестирование</label>
             </div>
         </a>
+        <input type="checkbox" id="create-modal" class="modal-toggle" />
+        <div class="modal modal-bottom sm:modal-middle">
+            <form id="presetForm" class="modal-box" method="POST" action="/testpresets/startnew">
+                <input hidden name="presetId" value="" />
+                <h3 class="font-bold text-lg">Выберите группу и время доступности теста</h3>
+                <label class="label label-text">Группа</label>
+                <div class="select-group"></div>
+                <input name="group" hidden />
+                <label class="label label-text">Начало</label>
+                <input class="input input-bordered w-full" type="datetime-local" name="datetimeStart" />
+                <label class="label label-text">Конец </label>
+                <input class="input input-bordered w-full" type="datetime-local" name="datetimeEnd" />
+                <div class="modal-action">
+                    <input name="createExam" class="btn" type="submit" value="Начать тестирование" />
+                    <label for="create-modal" class="btn btn-ghost">Отмена</label>
+                </div>
+            </form>
+        </div>
     }
 </div>
 
-<input type="checkbox" id="create-modal" class="modal-toggle" />
-<div class="modal modal-bottom sm:modal-middle">
-    <form class="modal-box" method="POST" action="/testpresets/startnew">
-        @* <input hidden name="presetId" value="@item.Id" /> *@
-        <h3 class="font-bold text-lg">Выберите группу и время доступности теста</h3>
-        <label class="label label-text">Группа</label>
-        <div class="select-group"></div>
-        <input name="group" hidden />
-        <label class="label label-text">Начало</label>
-        <input class="input input-bordered w-full" type="datetime-local" name="datetimeStart" />
-        <label class="label label-text">Конец </label>
-        <input class="input input-bordered w-full" type="datetime-local" name="datetimeEnd" />
-        <div class="modal-action">
-            <input name="createExam" class="btn" type="submit" value="Начать тестирование" />
-            <label for="create-modal" class="btn btn-ghost">Отмена</label>
-        </div>
-    </form>
-</div>

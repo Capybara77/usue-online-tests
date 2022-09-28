@@ -12,5 +12,6 @@ namespace usue_online_tests.Models
         public TestPreset Preset { get; set; }
         public DateTime DateTimeStart { get; set; }
         public DateTime DateTimeEnd { get; set; }
+        public bool IsEnd { get; set; } = false;
     }
 }

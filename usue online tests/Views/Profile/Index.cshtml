@@ -1,4 +1,6 @@
-﻿@model usue_online_tests.Models.View.ProfileWrapper
+﻿@using usue_online_tests.Models.View
+@inject GetUserByCookie UserByCookie
+@model IProfileWrapper
 
 @{
     ViewData["Title"] = "Профиль";
@@ -7,53 +9,94 @@
 <div class="prose">
     <h1>Профиль</h1>
     <h2 class="mt-4">Здравствуйте, @Model.User.Name</h2>
-    <h3 class="mb-8">@Model.User.Group</h3>
 </div>
 
-<div class="overflow-x-auto">
-    <div class="stats shadow">
-        <div class="stat">
-            <div class="stat-title">Доступно тестов</div>
-            <div class="stat-value">0</div>
-        </div>
-        <div class="stat">
-            <div class="stat-title">Пройдено тестов</div>
-            <div class="stat-value">0</div>
-        </div>
-        <div class="stat">
-            <div class="stat-title">Коэффициент понимания</div>
-            <div class="stat-value">0</div>
+
+
+@if (Model is UserProfileWrapper userProfileWrapper)
+{
+    <div class="overflow-x-auto">
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Доступно тестов</div>
+                <div class="stat-value">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-title">Пройдено тестов</div>
+                <div class="stat-value">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-title">Коэффициент понимания</div>
+                <div class="stat-value">0</div>
+            </div>
         </div>
     </div>
-</div>
 
-@if (Model.ExamResults != null)
+    @if (userProfileWrapper.ExamResults != null)
+    {
+        <div class="grid gap-4 sm:grid-cols-2 mt-12">
+            @foreach (var examResult in userProfileWrapper.ExamResults)
+            {
+                var solved = examResult.ExamTestAnswers
+                .Where(answer => answer.CorrectAnswers != -1)
+                .Select(answer => answer.CorrectAnswers)
+                .Sum();
+
+                var total = examResult.ExamTestAnswers
+                .Where(answer => answer.CorrectAnswers != -1)
+                .Select(answer => answer.TotalAnswers)
+                .Sum();
+
+                <a class="card bg-base-100 shadow-md hover:shadow-lg" href="#">
+                    <div class="card-body">
+                        <h2 class="card-title">@examResult.Exam.Preset.Name</h2>
+                        <p class="font-bold">
+                            Выдано: <span class="font-normal">@examResult.DateTimeStart.ToString("dd.MM.yyyy")</span>
+                        </p>
+                        @if (solved > 0)
+                        {
+                            <progress class="progress progress-primary w-full mt-4" value="@solved" max="@total"></progress>
+                        }
+                    </div>
+                </a>
+            }
+        </div>
+    }
+}
+
+@if (Model is TeacherProfileWrapper profileWrapper)
 {
-    <div class="grid gap-4 sm:grid-cols-2 mt-12">
-        @foreach (var examResult in Model.ExamResults)
+    <h2>Завершенные тесты</h2>
+
+    <div class="test-results-wrapper">
+        @foreach (var exam in profileWrapper.ExamResults)
         {
-            var solved = examResult.ExamTestAnswers
-            .Where(answer => answer.CorrectAnswers != -1)
-            .Select(answer => answer.CorrectAnswers)
-            .Sum();
-
-            var total = examResult.ExamTestAnswers
-            .Where(answer => answer.CorrectAnswers != -1)
-            .Select(answer => answer.TotalAnswers)
-            .Sum();
-
-            <a class="card bg-base-100 shadow-md hover:shadow-lg" href="#">
-                <div class="card-body">
-                    <h2 class="card-title">@examResult.Exam.Preset.Name</h2>
-                    <p class="font-bold">
-                        Выдано: <span class="font-normal">@examResult.DateTimeStart.ToString("dd.MM.yyyy")</span>
-                    </p>
-                    @if (solved > 0)
-                    {
-                        <progress class="progress progress-primary w-full mt-4" value="@solved" max="@total"></progress>
-                    }
-                </div>
-            </a>
+            <form class="test-result" action="/profile/createreport" method="get">
+                <p class="group-name">@exam.Exam.Group</p>
+                <p class="date-start">@exam.Exam.DateTimeStart</p>
+                <p class="preset-name">@exam.Exam.Preset.Name</p>
+                <input hidden name="examId" value="@exam.Exam.Id" />
+                <button class="btn btn-start" type="submit">Создать отчет</button>
+            </form>
         }
     </div>
+}
+
+@{
+    var user = UserByCookie.GetUser();
+    if (user.Role == Roles.Admin)
+    {
+        <div style="display: flex; flex-wrap: wrap; flex-direction: column">
+            <a href="/users">Users</a>
+            <a href="/exams">Exams</a>
+            <a href="/testpresetsedit">Presets</a>
+            <a href="/userexamresults">UserExamResults</a>
+            <a href="/examtestanswers">ExamTestAnswers</a>
+        </div>
+    }
+}
+
+@section Scripts
+    {
+    <link type="text/css" rel="stylesheet" href="/css/profile.css" />
 }

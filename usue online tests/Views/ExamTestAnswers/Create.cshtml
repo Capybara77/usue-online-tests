@@ -1,0 +1,43 @@
+﻿@model usue_online_tests.Models.ExamTestAnswer
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>ExamTestAnswer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TestId" class="control-label"></label>
+                <input asp-for="TestId" class="form-control" />
+                <span asp-validation-for="TestId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CorrectAnswers" class="control-label"></label>
+                <input asp-for="CorrectAnswers" class="form-control" />
+                <span asp-validation-for="CorrectAnswers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalAnswers" class="control-label"></label>
+                <input asp-for="TotalAnswers" class="form-control" />
+                <span asp-validation-for="TotalAnswers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

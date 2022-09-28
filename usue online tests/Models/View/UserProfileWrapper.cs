@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace usue_online_tests.Models.View
 {
-    public class ProfileWrapper
+    public class UserProfileWrapper : IProfileWrapper
     {
         public User User { get; set; }
         public IEnumerable<UserExamResult> ExamResults { get; set; }

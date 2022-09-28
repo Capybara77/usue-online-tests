@@ -47,7 +47,7 @@ namespace usue_online_tests.Tests
                 {
                     AllTests.Add(type);
                     ITestCreator creator =
-                        (ITestCreator)type.GetConstructor(Type.EmptyTypes)?.Invoke(new object[0]);
+                        (ITestCreator)type.GetConstructor(Type.EmptyTypes)?.Invoke(Array.Empty<object>());
 
                     if (creator != null)
                     {

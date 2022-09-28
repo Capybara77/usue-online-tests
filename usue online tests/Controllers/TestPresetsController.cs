@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace usue_online_tests.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.Tests = TestsLoader.TestCreators;
-            return View(await context.Presets.Where(preset => preset.Owner.Login == UserByCookie.GetUser().Login).ToListAsync());
+            return View(await context.Presets.Where(preset => preset.Owner.Id == UserByCookie.GetUser().Id).ToListAsync());
         }
 
         // GET: TestPresets/Details/5
@@ -59,9 +60,12 @@ namespace usue_online_tests.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(string name, string tests, bool timeLimited, int minutesToPass)
+        public async Task<IActionResult> Create(string name, string tests, int minutesToPass)
         {
-            timeLimited = Request.Form["timeLimited"].FirstOrDefault() == "on";
+            if (name.Length > 30)
+                return StatusCode(400);
+
+            bool timeLimited = Request.Form["timeLimited"].FirstOrDefault() == "on";
 
             TestPreset testPreset = new TestPreset
             {
@@ -143,21 +147,45 @@ namespace usue_online_tests.Controllers
             return context.Presets.Any(e => e.Id == id);
         }
 
+        [HttpGet]
+        [Route($"/testpresets/Delete/{{presetId}}")]
+        public IActionResult DeleteConfirm(int presetId)
+        {
+            User user = UserByCookie.GetUser();
 
-        public async Task<RedirectToActionResult> Delete(int presetId)
+            if (!context.Presets.Any(preset => preset.Id == presetId && preset.Owner.Id == user.Id))
+            {
+                return Redirect("/testpresets");
+            }
+
+            TestPreset preset = context.Presets.First(testPreset => testPreset.Id == presetId);
+
+            return View("ConfirmDelete", preset);
+        }
+
+        [HttpPost]
+        public RedirectToActionResult Delete(int presetId)
         {
             var preset = context.Presets.FirstOrDefault(preset => preset.Id == presetId && preset.Owner == UserByCookie.GetUser());
 
             if (preset != null)
             {
-                var exams = context.Exams.Where(exam => exam.Preset == preset).ToArray();
-                foreach (Exam exam in exams)
-                {
-                    context.Exams.Remove(exam);
-                }
+                var data = context.UserExamResults
+                    .Where(result => result.Exam.Preset.Id == presetId)
+                    .Include(result => result.ExamTestAnswers).ToArray();
 
+                var exams = context.Exams.Where(exam => exam.Preset.Id == presetId);
+
+                //var exams = context.Exams.Where(exam => exam.Preset == preset).ToArray();
+                //foreach (Exam exam in exams)
+                //{
+                //    context.Exams.Remove(exam);
+                //}
+
+                context.UserExamResults.RemoveRange(data);
+                context.Exams.RemoveRange(exams);
                 context.Presets.Remove(preset);
-                await context.SaveChangesAsync();
+                context.SaveChanges();
             }
 
             return RedirectToAction("Index");

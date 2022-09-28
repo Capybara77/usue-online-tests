@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<form action="/login/register" method="post">
+    <h1>Регистрация студента</h1>
+    <p>ФИО:</p>
+    <input type="text" name="name"/>
+    <p>Группа:</p>
+    <input type="text" name="group"/>
+    <p>Логин:</p>
+    <input type="text" name="login"/>
+    <p>Пароль:</p>
+    <input type="password" name="password"/>
+    <button type="submit">Зарегистрироваться</button>
+</form>

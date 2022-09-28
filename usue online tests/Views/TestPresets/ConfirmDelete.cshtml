@@ -1,0 +1,28 @@
+﻿@model TestPreset
+
+<h1 style="font-size: 1.7rem">Вы действительно хотите удалить шаблон "@Model.Name"?</h1>
+<h2 style="font-size: 1rem">После удаления шаблона, пропадут все тесты и результаты тестов, связанные с этим шаблоном!</h2>
+
+<div class="btn-wrapper">
+    
+    <a class="btn" href="/testpresets">Отмена</a>
+    
+    <form action="/testpresets/delete" method="POST">
+        <input hidden name="presetId" value="@Model.Id"/>
+        <input class="btn btn-error btn-outline" type="submit" value="Удалить" />
+    </form>
+</div>
+
+
+<style>
+    .btn-wrapper {
+        display: flex;
+        flex-direction: row;
+
+    }
+
+    .btn {
+        margin-top: 20px;
+        margin-right: 20px;
+    }
+</style>

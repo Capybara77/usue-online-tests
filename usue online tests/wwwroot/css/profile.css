@@ -1,0 +1,50 @@
+﻿.test-results-wrapper {
+    margin-top: 30px;
+    display: flex;
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -o-justify-content: space-between;
+    -webkit-justify-content: space-between;
+    justify-content: flex-start;
+
+}
+
+.test-result {
+    background-color: hsl(var(--b1) / var(--tw-bg-opacity));
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border-radius: var(--rounded-box, 1rem);
+    padding: 15px 30px;
+    width: 246px;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.btn-start {
+    margin-top: 15px;
+    align-self: flex-end;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.group-name {
+    font-size: 1.5rem;
+}
+
+.date-start {
+    font-size: 0.7rem;
+}
+
+.preset-name {
+    max-height: 150px;
+}

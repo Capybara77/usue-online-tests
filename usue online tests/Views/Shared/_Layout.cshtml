@@ -5,7 +5,7 @@
     if (Context.User.Identity.IsAuthenticated)
     {
         var user = data.Users.FirstOrDefault(user1 => user1.Login == Context.User.Identity.Name);
-        if (user.IsDark)
+        if (user is { IsDark: true })
         {
             theme = "dark";
         }
@@ -21,7 +21,9 @@
     @await RenderSectionAsync("Scripts", required: false)
 </head>
 <body class="flex min-h-screen flex-col bg-base-200 px-4">
-    @{await Html.RenderPartialAsync("Navigation");}
+    @{
+        await Html.RenderPartialAsync("Navigation");
+    }
     <div class="grow max-w-screen-lg mx-auto w-full">
         @RenderBody()
     </div>

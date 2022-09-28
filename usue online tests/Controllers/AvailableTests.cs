@@ -11,7 +11,6 @@ using usue_online_tests.Models;
 namespace usue_online_tests.Controllers
 {
     [Authorize]
-    [Route("/")]
     public class AvailableTests : Controller
     {
         public DataContext Context { get; }
@@ -23,14 +22,17 @@ namespace usue_online_tests.Controllers
             GetUserByCookie = getUserByCookie;
         }
 
-        [Route("/AvailableTests")]
         public IActionResult Index()
         {
             User user = GetUserByCookie.GetUser();
+
+            var dateTimeNow = DateTime.Now;
+
             Exam[] exams = Context.Exams.Where(exam =>
                     exam.Group == user.Group &&
-                    exam.DateTimeEnd > DateTime.Now &&
-                    !Context.UserExamResults.Any(result => exam.Id == result.Exam.Id && result.IsCompleted && result.User.ID == user.ID))
+                    exam.DateTimeEnd > dateTimeNow &&
+                    exam.DateTimeStart < dateTimeNow &&
+                    !Context.UserExamResults.Any(result => exam.Id == result.Exam.Id && result.IsCompleted && result.User.Id == user.Id))
                 .Include(exam => exam.Preset)
                 .Include(exam => exam.Preset.Owner)
                 .ToArray();
@@ -39,7 +41,6 @@ namespace usue_online_tests.Controllers
         }
 
         [HttpPost]
-        [Route("/availabletests/count")]
         public int Count()
         {
             User user = GetUserByCookie.GetUser();
@@ -47,7 +48,7 @@ namespace usue_online_tests.Controllers
             return Context.Exams.Count(exam => exam.Group == user.Group &&
                                                exam.DateTimeEnd > DateTime.Now &&
                                                !Context.UserExamResults.Any(result =>
-                                                   exam.Id == result.Exam.Id && result.IsCompleted && result.User.ID == user.ID));
+                                                   exam.Id == result.Exam.Id && result.IsCompleted && result.User.Id == user.Id));
         }
     }
 }

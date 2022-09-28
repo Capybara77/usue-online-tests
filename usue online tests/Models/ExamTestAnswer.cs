@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Identity;
 
 namespace usue_online_tests.Models
@@ -9,5 +10,7 @@ namespace usue_online_tests.Models
         public int TestId { get; set; }
         public int CorrectAnswers { get; set; }
         public int TotalAnswers { get; set; }
+        public DateTime DateTimeStart { get; set; }
+        public DateTime DateTimeEnd { get; set; }
     }
 }

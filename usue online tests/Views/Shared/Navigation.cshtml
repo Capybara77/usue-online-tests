@@ -1,13 +1,13 @@
-﻿@inject GetUserByCookie _User
+﻿@inject GetUserByCookie User
 @inject DataContext context
+@inject DataContext Data
 @using System.Text
 @using usue_online_tests.Data
-@inject DataContext data
 @{
     string checkedCheckbox = "";
     if (Context.User.Identity.IsAuthenticated)
     {
-        var _user = data.Users.FirstOrDefault(user1 => user1.Login == Context.User.Identity.Name);
+        var _user = Data.Users.FirstOrDefault(user1 => user1.Login == Context.User.Identity.Name);
         if (_user.IsDark)
         {
             checkedCheckbox = "checked";
@@ -20,7 +20,7 @@
         <a class="text-xl" href="/">Аудиторные тесты</a>
     </div>
     @{
-        var user = _User.GetUser();
+        var user = User.GetUser();
         if (Context.User.Identity is { IsAuthenticated: true })
         {
             // https://mui.com/components/avatars/#letter-avatars
@@ -56,7 +56,7 @@
                     <li>
                         <a href="/tests" class="justify-between">
                             Доступные тесты
-                            <span class="badge">0</span>
+                            @*<span class="badge">0</span>*@
                         </a>
                     </li>
                     @if (user?.Role is Roles.Admin or Roles.Teacher)

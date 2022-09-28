@@ -18,4 +18,9 @@ namespace Test_Wrapper
         public string[] CheckBoxes { get; set; }
         List<Image> Pictures { get; set; }
     }
+
+    public interface ITimeLimit
+    {
+        int TimeLimitSeconds { get; set; }
+    }
 }

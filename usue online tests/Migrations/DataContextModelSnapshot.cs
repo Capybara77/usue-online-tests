@@ -16,7 +16,7 @@ namespace usue_online_tests.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.13")
+                .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("usue_online_tests.Models.Exam", b =>
@@ -34,6 +34,9 @@ namespace usue_online_tests.Migrations
 
                     b.Property<string>("Group")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsEnd")
+                        .HasColumnType("boolean");
 
                     b.Property<int?>("PresetId")
                         .HasColumnType("integer");
@@ -54,6 +57,12 @@ namespace usue_online_tests.Migrations
 
                     b.Property<int>("CorrectAnswers")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("DateTimeEnd")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DateTimeStart")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("TestId")
                         .HasColumnType("integer");
@@ -84,7 +93,7 @@ namespace usue_online_tests.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int?>("OwnerID")
+                    b.Property<int?>("OwnerId")
                         .HasColumnType("integer");
 
                     b.Property<int[]>("Tests")
@@ -95,14 +104,14 @@ namespace usue_online_tests.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerID");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Presets");
                 });
 
             modelBuilder.Entity("usue_online_tests.Models.User", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -125,7 +134,7 @@ namespace usue_online_tests.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
@@ -146,14 +155,14 @@ namespace usue_online_tests.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("UserID")
+                    b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ExamId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserExamResults");
                 });
@@ -178,7 +187,7 @@ namespace usue_online_tests.Migrations
                 {
                     b.HasOne("usue_online_tests.Models.User", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerID");
+                        .HasForeignKey("OwnerId");
 
                     b.Navigation("Owner");
                 });
@@ -191,7 +200,7 @@ namespace usue_online_tests.Migrations
 
                     b.HasOne("usue_online_tests.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Exam");
 

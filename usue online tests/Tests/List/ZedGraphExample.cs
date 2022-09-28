@@ -13,7 +13,7 @@ using ZedGraph;
 
 namespace usue_online_tests.Tests.List
 {
-    public class nplotE : ITestCreator, ITest
+    public class ZedGraphExample : ITestCreator, ITest, ITimeLimit
     {
         public int TestID { get; set; }
         public string Name { get; } = "Пример создания графиков";
@@ -34,7 +34,7 @@ namespace usue_online_tests.Tests.List
             masterPane.Add(graphPane);
             masterPane.Add(secPane);
 
-            return new nplotE
+            return new ZedGraphExample
             {
                 Text = string.Empty,
                 Pictures = new List<Image> { masterPane.GetImage(true) }
@@ -72,5 +72,6 @@ namespace usue_online_tests.Tests.List
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
         public List<Image> Pictures { get; set; }
+        public int TimeLimitSeconds { get; set; } = 20;
     }
 }

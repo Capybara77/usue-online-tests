@@ -10,9 +10,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Operations;
+using org.mariuszgromada.math.mxparser.mathcollection;
 using usue_online_tests.Data;
 using usue_online_tests.Models;
+using usue_online_tests.Report;
 using usue_online_tests.Services;
 using usue_online_tests.Tests;
 
@@ -38,11 +44,13 @@ namespace usue_online_tests
             //services.AddServerSideBlazor();
 
             services.AddHttpContextAccessor();
-            services.AddSingleton(new DataContext());
+            //services.AddScoped(typeof(DataContext), _ => new DataContext());
+            services.AddScoped<DataContext>();
             services.AddSingleton(new TestsLoader(_environment));
-            services.AddSingleton<IHostedService, TestAnalyticsService>();
-            services.AddTransient<GetUserByCookie>();
-
+            //services.AddSingleton<IHostedService, TestAnalyticsService>();
+            services.AddScoped<GetUserByCookie>();
+            services.AddScoped<ReportMaker, ExcelReportMaker>();
+            services.AddScoped<IReportDataProvider, DbDataProvider>();
 
             //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DataContext>();
 
@@ -72,15 +80,17 @@ namespace usue_online_tests
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<AccessProtectionMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
@@ -90,5 +100,75 @@ namespace usue_online_tests
                 //endpoints.MapRazorPages();
             });
         }
+    }
+
+    class AccessProtectionMiddleware
+    {
+        private readonly RequestDelegate _next;
+        private readonly IAuthorizationPolicyProvider _policyProvider;
+        private readonly List<Tuple<string, DateTime>> _requestTable = new();
+        private readonly string[] _ipException = { "91.207.247.1", "::1" };
+
+        public AccessProtectionMiddleware(RequestDelegate next, IAuthorizationPolicyProvider policyProvider)
+        {
+            _next = next ?? throw new ArgumentNullException(nameof(next));
+            _policyProvider = policyProvider ?? throw new ArgumentNullException(nameof(policyProvider));
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+            var endpoint = context.GetEndpoint();
+
+            if (endpoint == null)
+            {
+                await _next.Invoke(context);
+                return;
+            }
+
+            if (endpoint.Metadata.Any(o => o is AntiDosAttribute))
+            {
+                AntiDosAttribute attribute = (AntiDosAttribute)endpoint.Metadata.First(o => o is AntiDosAttribute);
+                if (context.Connection.RemoteIpAddress != null)
+                {
+                    string ip = context.Connection.RemoteIpAddress.ToString();
+
+                    if (_ipException.Contains(ip))
+                    {
+                        await _next.Invoke(context);
+                        return;
+                    }
+
+                    //string redirectUrl = "/Login?message=AntiDdos";
+                    string redirectUrl = "/protection/ddos";
+
+                    var tuple = _requestTable.FirstOrDefault(tuple => tuple.Item1 == ip);
+                    if (tuple == null)
+                    {
+                        _requestTable.Add(Tuple.Create(ip, DateTime.Now));
+                        await _next.Invoke(context);
+                        return;
+                    }
+
+                    if ((DateTime.Now - tuple.Item2).TotalSeconds < attribute.Delay)
+                    {
+                        _requestTable.Remove(tuple);
+                        _requestTable.Add(Tuple.Create(ip, DateTime.Now));
+                        context.Response.Redirect($"{redirectUrl}");
+                        return;
+                    }
+
+                    _requestTable.Remove(tuple);
+                    _requestTable.Add(Tuple.Create(ip, DateTime.Now));
+                }
+            }
+
+
+            await _next.Invoke(context);
+        }
+    }
+
+    class AntiDosAttribute : Attribute
+    {
+        public int Delay { get; set; } = 5;
     }
 }
