@@ -144,6 +144,7 @@ namespace usue_online_tests.Controllers
             if (exam == null) return StatusCode(405);
             TestPreset preset = exam.Preset;
 
+            // если в экзамене нет такого задания
             if (!preset.Tests.Contains(testId)) return StatusCode(406);
 
             UserExamResult userExamResult =
@@ -151,18 +152,23 @@ namespace usue_online_tests.Controllers
                     .Include(result => result.ExamTestAnswers)
                     .FirstOrDefault(result => result.User.Id == user.Id && result.Exam.Id == examId);
 
+            // если пользователь не запуска первое задание
             if (userExamResult == null)
             {
                 return StatusCode(400);
             }
 
+            // если уже ответил на этот вопрос
             if (userExamResult.ExamTestAnswers.Any(answer => answer.TestId == testId && answer.DateTimeEnd != default))
                 return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber}");
 
+            // проверка на истекшее время теста
             if (CheckTimeExpiration(preset, userExamResult)) return StatusCode(407);
 
+            // если исчез генератор
             if (creator == null) return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
 
+            // если подмена хэша
             if (CreateHash(user.Name + user.Group + exam.Id) != hash) return StatusCode(408);
 
             ITest newTest = creator.CreateTest(hash);
@@ -180,6 +186,7 @@ namespace usue_online_tests.Controllers
 
             var examTestAnswer = userExamResult.ExamTestAnswers.FirstOrDefault(answer => answer.TestId == testId);
 
+            // если пользователь не запрашивал тест
             if (examTestAnswer == null)
                 return StatusCode(410);
 
