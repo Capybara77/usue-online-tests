@@ -38,6 +38,9 @@ namespace usue_online_tests.Controllers
             if (exam == null) return StatusCode(401);
             TestPreset preset = exam.Preset;
 
+            // если пользователь из другой группы
+            if (user.Group != exam.Group) return StatusCode(411);
+
             UserExamResult userExamResult =
                 Context.UserExamResults
                     .Include(result => result.ExamTestAnswers)
