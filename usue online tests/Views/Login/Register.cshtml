@@ -2,15 +2,20 @@
     ViewData["Title"] = "Регистрация";
 }
 
-<form action="/login/register" method="post">
-    <h1>Регистрация студента</h1>
-    <p>ФИО:</p>
-    <input type="text" name="name"/>
-    <p>Группа:</p>
-    <input type="text" name="group"/>
-    <p>Логин:</p>
-    <input type="text" name="login"/>
-    <p>Пароль:</p>
-    <input type="password" name="password"/>
-    <button type="submit">Зарегистрироваться</button>
+<form class="reg-form" action="/login/register" method="post">
+    <h1 class="title">Регистрация студента</h1>
+    <p class="input-text">ФИО:</p>
+    <input class="inp" type="text" name="name"/>
+    <p class="input-text">Группа:</p>
+    <input class="inp" type="text" name="group"/>
+    <p class="input-text">Логин:</p>
+    <input class="inp" type="text" name="login"/>
+    <p class="input-text">Пароль:</p>
+    <input class="inp" type="password" name="password"/>
+    <button class="btn" type="submit">Зарегистрироваться</button>
 </form>
+
+@section Scripts
+{
+    <link rel="stylesheet" href="/css/register.css"/>
+}

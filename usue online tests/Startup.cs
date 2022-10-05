@@ -89,6 +89,17 @@ namespace usue_online_tests
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.Use(async (context, func) =>
+            {
+                var endpoint = context.GetEndpoint();
+                if (endpoint == null)
+                {
+                    context.Response.Redirect("/");
+                    return;
+                }
+
+                await func.Invoke();
+            });
 
             app.UseMiddleware<AccessProtectionMiddleware>();
 
