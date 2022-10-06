@@ -61,7 +61,7 @@ namespace usue_online_tests.Controllers
                 // ignored
             }
 
-            ITestWrapper testWrapper = new ITestWrapper
+            TestWrapper testWrapper = new TestWrapper
             {
                 Hash = hash,
                 Test = test,

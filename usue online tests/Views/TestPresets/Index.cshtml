@@ -48,6 +48,10 @@
                         <li>@creators.FirstOrDefault(creator => creator.TestID == t)?.Name</li>
                     }
                 </ul>
+                @if (item.TimeLimited)
+                {
+                    <span class="text">Время на прохождение теста ограничено!</span>
+                }
                 <label for="create-modal" onclick="changeSelectedPreset(@item.Id); AddPostData();" class="btn modal-button mt-4">Начать тестирование</label>
             </div>
         </a>
@@ -72,3 +76,7 @@
     }
 </div>
 
+@section Scripts
+{
+    <link rel="stylesheet" href="/css/presets.css"/>
+}

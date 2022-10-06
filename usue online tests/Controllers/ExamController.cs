@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using Microsoft.VisualBasic;
 using Test_Wrapper;
 using usue_online_tests.Data;
 using usue_online_tests.Models;
@@ -61,7 +62,8 @@ namespace usue_online_tests.Controllers
             }
 
             // время истекло
-            if (CheckTimeExpiration(preset, userExamResult, bonusTime: false)) return StatusCode(402);
+            if (exam.DateTimeEnd < DateTime.Now)
+                return StatusCode(413);
 
             // некорректный номер теста
             if (testNumber < 1) return StatusCode(403);
@@ -94,44 +96,26 @@ namespace usue_online_tests.Controllers
                 Context.SaveChanges();
             }
 
-
             int hash = CreateHash(user.Name + user.Group + exam.Id);
 
-            ITestWrapper test = new ITestWrapper
+            ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+
+            if (testCreator == null)
+                return StatusCode(412);
+
+            TestWrapper test = new TestWrapper
             {
                 Hash = hash,
                 Test = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId)?.CreateTest(hash),
                 TestId = testId,
                 BtnText = testNumber == preset.Tests.Length ? "Завершить" : "Следующий вопрос",
-                Link = $"/exam/CheckAnswersExam?examId={examId}&testNumber={testNumber + 1}"
+                Link = $"/exam/CheckAnswersExam?examId={examId}&testNumber={testNumber + 1}",
+                TimeLimited = exam.Preset.TimeLimited
             };
+
+            if (test.TimeLimited)
+                test.SecLimit = testCreator is ITimeLimit timeLimitCreator ? timeLimitCreator.TimeLimitSeconds : 60;
             return View(test);
-        }
-
-        private bool CheckTimeExpiration(TestPreset preset, UserExamResult userExamResult, bool bonusTime = true)
-        {
-            if (preset == null || userExamResult == null) return true;
-
-            if (bonusTime)
-            {
-                if (preset.TimeLimited &&
-                    userExamResult.DateTimeStart + new TimeSpan(0, 0, preset.MinutesToPass + 1, 0) <
-                    DateTime.Now)
-                {
-                    {
-                        return true;
-                    }
-                }
-            }
-            else
-            {
-                if (preset.TimeLimited && userExamResult.DateTimeStart < DateTime.Now)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         [HttpPost]
@@ -162,9 +146,6 @@ namespace usue_online_tests.Controllers
             if (userExamResult.ExamTestAnswers.Any(answer => answer.TestId == testId && answer.DateTimeEnd != default))
                 return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber}");
 
-            // проверка на истекшее время теста
-            if (CheckTimeExpiration(preset, userExamResult)) return StatusCode(407);
-
             // если исчез генератор
             if (creator == null) return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
 
@@ -173,7 +154,6 @@ namespace usue_online_tests.Controllers
 
             ITest newTest = creator.CreateTest(hash);
             if (new Regex("<(.*?)>").Matches(newTest.Text).Count + newTest.CheckBoxes?.Length < testsCount) return StatusCode(409);
-
 
             // create dictionary with answers
             KeyValuePair<string, StringValues>[] paramsArray = HttpContext.Request.Form.Where(pair => !skipData.Contains(pair.Key)).ToArray();
@@ -190,6 +170,23 @@ namespace usue_online_tests.Controllers
             if (examTestAnswer == null)
                 return StatusCode(410);
 
+            // проверка на истекшее время теста
+            if (exam.Preset.TimeLimited)
+            {
+                int secLimit = creator is ITimeLimit testCreatorLimit ? testCreatorLimit.TimeLimitSeconds : 60;
+
+                if (examTestAnswer.DateTimeStart + TimeSpan.FromSeconds(10 + secLimit) < DateTime.Now)
+                {
+                    examTestAnswer.TotalAnswers = testsCount;
+                    examTestAnswer.DateTimeEnd = DateTime.Now;
+                    examTestAnswer.CorrectAnswers = 0;
+
+                    AddTestResultToExamResult(userExamResult, examTestAnswer);
+                    Context.SaveChanges();
+                    return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber}");
+                }
+            }
+
             examTestAnswer.TotalAnswers = testsCount;
             examTestAnswer.DateTimeEnd = DateTime.Now;
 
@@ -202,14 +199,19 @@ namespace usue_online_tests.Controllers
                 examTestAnswer.CorrectAnswers = -1;
             }
 
-            if (userExamResult.ExamTestAnswers != null)
-                userExamResult.ExamTestAnswers.Add(examTestAnswer);
-            else
-                userExamResult.ExamTestAnswers = new List<ExamTestAnswer> { examTestAnswer };
+            AddTestResultToExamResult(userExamResult, examTestAnswer);
 
             Context.SaveChanges();
 
             return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber}");
+        }
+
+        private static void AddTestResultToExamResult(UserExamResult userExamResult, ExamTestAnswer examTestAnswer)
+        {
+            if (userExamResult.ExamTestAnswers != null)
+                userExamResult.ExamTestAnswers.Add(examTestAnswer);
+            else
+                userExamResult.ExamTestAnswers = new List<ExamTestAnswer> { examTestAnswer };
         }
 
         private static int CreateHash(string input)

@@ -60,7 +60,7 @@ namespace usue_online_tests.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(string name, string tests, int minutesToPass)
+        public async Task<IActionResult> Create(string name, string tests)
         {
             if (name.Length > 30)
                 return StatusCode(400);
@@ -72,8 +72,7 @@ namespace usue_online_tests.Controllers
                 Tests = tests.Trim().Split(',').Select(s => Convert.ToInt32(s)).ToArray(),
                 Name = name,
                 Owner = UserByCookie.GetUser(),
-                TimeLimited = timeLimited,
-                MinutesToPass = minutesToPass
+                TimeLimited = timeLimited
             };
 
             if (testPreset.Tests.Length == 0) return StatusCode(400);

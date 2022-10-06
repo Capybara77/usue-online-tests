@@ -2,11 +2,32 @@
 @using System.Drawing.Imaging
 @using System.IO
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
-@model ITestWrapper
+@model TestWrapper
 
 
 @if (Model.Test != null)
 {
+    @*TIMER*@
+    @if (Model.TimeLimited)
+    {
+        <p class="timer-wrapper">
+            Оставшееся время: <span id="time">@Model.SecLimit</span> сек.
+        </p>
+    }
+
+    <style>
+        #time {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .timer-wrapper {
+            border-bottom: solid 1px black;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+    </style>
+
     @if (Model.Test.Pictures != null)
     {
         @foreach (var pic in Model.Test.Pictures)
@@ -21,7 +42,7 @@
         }
     }
 
-    <form method="POST" action="@Model.Link">
+    <form id="answers-form" method="POST" action="@Model.Link">
         <input hidden name="testId" value="@Model.TestId" />
         <input hidden name="hash" value="@Model.Hash" />
         @{
@@ -31,13 +52,13 @@
                 if (matches[i].Groups[1].Value.StartsWith("CB_"))
                 {
                     Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
-                        $"<input type=\"checkbox\" name=\"{matches[i].Groups[1].Value.Remove(0, 3)}\" /> " +
-                        $"<label>{matches[i].Groups[1].Value.Remove(0, 3)}</label>");
+                    $"<input type=\"checkbox\" name=\"{matches[i].Groups[1].Value.Remove(0, 3)}\" /> " +
+                    $"<label>{matches[i].Groups[1].Value.Remove(0, 3)}</label>");
                 }
                 else
                 {
                     Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
-                        $"\\FormInput[2][test-start-input][]{{{matches[i].Groups[1].Value}}}");
+                    $"\\FormInput[2][test-start-input][]{{{matches[i].Groups[1].Value}}}");
                 }
             }
         }

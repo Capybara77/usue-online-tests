@@ -1,4 +1,4 @@
-﻿@model ITestWrapper
+﻿@model TestWrapper
 
 @section Scripts
 {
@@ -18,13 +18,9 @@
             messageStyle: "none"
         });
     </script>
+    
+
+    <script src="/js/timer.js"></script>
 }
-
-@*<audio autoplay>
-    <source src="/20f52df178205f2.mp3" type='audio/mpeg'>
-    <source src="20f52df178205f2.mp3" type="audio/mpeg">
-    Тег audio не поддерживается вашим браузером. <a href="audio/music.mp3">Скачайте музыку</a>.
-</audio>*@
-
 
 @{ await Html.RenderPartialAsync("Test", Model);}
