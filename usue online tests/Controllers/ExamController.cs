@@ -36,11 +36,11 @@ namespace usue_online_tests.Controllers
             User user = GetUserByCookie.GetUser();
             Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
             // если экзамена нет
-            if (exam == null) return StatusCode(401);
+            if (exam == null) return View("ErrorPage", "Нет теста");
             TestPreset preset = exam.Preset;
 
             // если пользователь из другой группы
-            if (user.Group != exam.Group) return StatusCode(411);
+            if (user.Group != exam.Group) View("ErrorPage", "Тест для другой группы");
 
             UserExamResult userExamResult =
                 Context.UserExamResults
@@ -63,10 +63,10 @@ namespace usue_online_tests.Controllers
 
             // время истекло
             if (exam.DateTimeEnd < DateTime.Now)
-                return StatusCode(413);
+                return View("ErrorPage", "Время истекло");
 
             // некорректный номер теста
-            if (testNumber < 1) return StatusCode(403);
+            if (testNumber < 1) return View("ErrorPage", "Некорректный номер теста");
 
             // сохранение результата теста
             if (preset.Tests.Length < testNumber)
@@ -101,7 +101,7 @@ namespace usue_online_tests.Controllers
             ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
 
             if (testCreator == null)
-                return StatusCode(412);
+                return View("ErrorPage", "Нет генератора в системе. Обратитесь по номеру +79533804297");
 
             TestWrapper test = new TestWrapper
             {
@@ -125,22 +125,20 @@ namespace usue_online_tests.Controllers
             ITestCreator creator = TestsLoader.TestCreators.FirstOrDefault(testCreator => testCreator.TestID == testId);
             User user = GetUserByCookie.GetUser();
             Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
-            if (exam == null) return StatusCode(405);
+            if (exam == null) return View("ErrorPage", "Нет теста");
             TestPreset preset = exam.Preset;
 
             // если в экзамене нет такого задания
-            if (!preset.Tests.Contains(testId)) return StatusCode(406);
+            if (!preset.Tests.Contains(testId)) return View("ErrorPage", "Нет такого задания в этом тесте");
 
             UserExamResult userExamResult =
                 Context.UserExamResults
                     .Include(result => result.ExamTestAnswers)
                     .FirstOrDefault(result => result.User.Id == user.Id && result.Exam.Id == examId);
 
-            // если пользователь не запуска первое задание
+            // если пользователь не запустил первое задание
             if (userExamResult == null)
-            {
-                return StatusCode(400);
-            }
+                return View("ErrorPage", "Вы не запустили тестирование");
 
             // если уже ответил на этот вопрос
             if (userExamResult.ExamTestAnswers.Any(answer => answer.TestId == testId && answer.DateTimeEnd != default))
@@ -149,11 +147,11 @@ namespace usue_online_tests.Controllers
             // если исчез генератор
             if (creator == null) return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
 
-            // если подмена хэша
-            if (CreateHash(user.Name + user.Group + exam.Id) != hash) return StatusCode(408);
+            if (CreateHash(user.Name + user.Group + exam.Id) != hash) return View("ErrorPage", "");
 
             ITest newTest = creator.CreateTest(hash);
-            if (new Regex("<(.*?)>").Matches(newTest.Text).Count + newTest.CheckBoxes?.Length < testsCount) return StatusCode(409);
+            if (new Regex("<(.*?)>").Matches(newTest.Text).Count + newTest.CheckBoxes?.Length < testsCount) 
+                return View("ErrorPage", "Некорректное количество ответов");
 
             // create dictionary with answers
             KeyValuePair<string, StringValues>[] paramsArray = HttpContext.Request.Form.Where(pair => !skipData.Contains(pair.Key)).ToArray();
@@ -168,7 +166,7 @@ namespace usue_online_tests.Controllers
 
             // если пользователь не запрашивал тест
             if (examTestAnswer == null)
-                return StatusCode(410);
+                return View("ErrorPage", "Вы не запустили тестирование");
 
             // проверка на истекшее время теста
             if (exam.Preset.TimeLimited)

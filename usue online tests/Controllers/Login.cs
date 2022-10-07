@@ -3,14 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
@@ -104,18 +107,19 @@ namespace usue_online_tests.Controllers
         }
 
         [HttpPost]
-        [AntiDos(Delay = 500)]
+        [AntiDos(Delay = 10)]
         public IActionResult Register(string name, string group, string login, string password)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(group) || string.IsNullOrEmpty(login) ||
-                string.IsNullOrEmpty(password)) return StatusCode(400);
+                string.IsNullOrEmpty(password)) return View("~/Views/Exam/ErrorPage.cshtml", "Пустой параметр");
 
             if (name.Length > 40 || group.Length > 20 || login.Length > 30
-                || password.Length > 30) return StatusCode(400);
+                || password.Length > 30) return View("~/Views/Exam/ErrorPage.cshtml", "Ошибка параметра");
 
-            if (HttpContext.User.Identity is { IsAuthenticated: true }) return StatusCode(400);
+            if (HttpContext.User.Identity is { IsAuthenticated: true }) return View("~/Views/Exam/ErrorPage.cshtml", "Вы уже авторизованы");
 
-            if (DataContext.Users.Any(user => user.Login == login || user.Name == name)) return StatusCode(400);
+            if (DataContext.Users.Any(user => user.Login == login || user.Name == name))
+                return View("~/Views/Exam/ErrorPage.cshtml", "Такой логин уже существует");
 
             DataContext.Users.Add(new User
             {

@@ -83,6 +83,7 @@ namespace usue_online_tests
                 //app.UseHsts();
             }
             //app.UseHttpsRedirection();
+            app.UseWebSockets();
             app.UseStaticFiles();
 
             app.UseRouting();

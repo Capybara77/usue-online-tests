@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
+using Test_Wrapper;
 using usue_online_tests.Models;
 using usue_online_tests.Tests;
 
@@ -119,26 +120,43 @@ namespace usue_online_tests.Report
         private int CreateExcelUsersResults(ExcelWorksheet worksheet, int y)
         {
             worksheet.Cells[y, 2].Value = $"Студент/задания";
+            int testCount = DataProvider.Exam.Preset.Tests.Length;
+
+            for (var i = 0; i < testCount; i++)
+            {
+                var testId = DataProvider.Exam.Preset.Tests[i];
+                ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+                if (testCreator == null) continue;
+
+                worksheet.Cells[y, i + 3].Value = testCreator.Name;
+            }
+
+            worksheet.Cells[y, 3 + testCount].Value = "Итог";
+            worksheet.Cells[y, 4 + testCount].Value = "Процент правильности";
 
             for (int i = 0; i < DataProvider.UsersExamResults.Length; i++)
             {
-                worksheet.Cells[y + i + 1, 2].Value = $"{DataProvider.UsersExamResults[i].User.Name}";
+                UserExamResult result = DataProvider.UsersExamResults[i];
+                ICollection<ExamTestAnswer> answers = result.ExamTestAnswers;
 
-                var answersList = new List<ExamTestAnswer>(DataProvider.UsersExamResults[i].ExamTestAnswers);
+                int totalAnswers = 0;
+                int totalCorrectAnswers = 0;
 
-                int totalCorrect = 0;
-                int total = 0;
-
-                for (int j = 0; j < answersList.Count; j++)
+                for (int j = 0; j < testCount; j++)
                 {
-                    totalCorrect += answersList[j].CorrectAnswers;
-                    total += answersList[j].TotalAnswers;
+                    int testId = DataProvider.Exam.Preset.Tests[j];
+                    ExamTestAnswer userAnswer = answers.FirstOrDefault(
+                        answer => answer.TestId == testId);
+                    if (userAnswer == null) continue;
 
-                    worksheet.Cells[y + i + 1, 3 + j].Value = $"{answersList[j].CorrectAnswers}/{answersList[j].TotalAnswers}";
+                    totalAnswers += userAnswer.TotalAnswers;
+                    totalCorrectAnswers += userAnswer.CorrectAnswers;
+
+                    worksheet.Cells[y + i + 1, 3 + j].Value = $"{userAnswer.CorrectAnswers}/{userAnswer.TotalAnswers}";
 
                     worksheet.Cells[y + 1 + i, 3 + j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
 
-                    double r = (double)answersList[j].CorrectAnswers / answersList[j].TotalAnswers;
+                    double r = (double)userAnswer.CorrectAnswers / userAnswer.TotalAnswers;
 
                     if (r > .8)
                         worksheet.Cells[y + 1 + i, 3 + j].Style.Fill.BackgroundColor.SetColor(Color.GreenYellow);
@@ -148,22 +166,8 @@ namespace usue_online_tests.Report
                         worksheet.Cells[y + 1 + i, 3 + j].Style.Fill.BackgroundColor.SetColor(Color.Red);
                 }
 
-                worksheet.Cells[y + i + 1, 3 + answersList.Count].Value = $"{totalCorrect}/{total}";
-                worksheet.Cells[y + i + 1, 4 + answersList.Count].Value = $"{(int)((double)totalCorrect / total * 100)}";
-            }
-
-            if (DataProvider.UsersExamResults.Any())
-            {
-                var answersList = new List<ExamTestAnswer>(DataProvider.UsersExamResults.First().ExamTestAnswers);
-
-                for (int i = 0; i < answersList.Count; i++)
-                {
-                    worksheet.Cells[y, 3 + i].Value = TestsLoader.TestCreators
-                        .First(creator => creator.TestID == answersList[i].TestId).Name;
-                }
-
-                worksheet.Cells[y, 3 + answersList.Count].Value = "Итог";
-                worksheet.Cells[y, 4 + answersList.Count].Value = "Процент правильности";
+                worksheet.Cells[y + i + 1, 3 + testCount].Value = $"{totalCorrectAnswers}/{totalAnswers}";
+                worksheet.Cells[y + i + 1, 4 + testCount].Value = $"{(int)((double)totalCorrectAnswers / totalAnswers * 100)}";
             }
 
             return y + DataProvider.UsersExamResults.Length;
@@ -184,13 +188,15 @@ namespace usue_online_tests.Report
             worksheet.Cells[y + 1, 2].Value = $"Дата выдачи";
             worksheet.Cells[y + 2, 2].Value = $"Дата окончания";
             worksheet.Cells[y + 3, 2].Value = $"Название шаблона";
+            worksheet.Cells[y + 4, 2].Value = $"Ограничение по времени";
 
             worksheet.Cells[y, 3].Value = $"{DataProvider.Exam.Group}";
             worksheet.Cells[y + 1, 3].Value = $"{DataProvider.Exam.DateTimeStart}";
             worksheet.Cells[y + 2, 3].Value = $"{DataProvider.Exam.DateTimeEnd}";
             worksheet.Cells[y + 3, 3].Value = $"{DataProvider.Exam.Preset.Name}";
+            worksheet.Cells[y + 4, 3].Value = $"{(DataProvider.Exam.Preset.TimeLimited ? "Да" : "Нет")}";
 
-            return y + 3;
+            return y + 4;
         }
     }
 }
