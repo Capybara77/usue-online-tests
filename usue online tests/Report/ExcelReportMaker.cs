@@ -81,12 +81,12 @@ namespace usue_online_tests.Report
 
                     int totalCorrect = DataProvider.UsersExamResults.Select(result =>
                             result.ExamTestAnswers.FirstOrDefault(answer => answer.TestId == examTestsCreators[i].TestID))
-                        .Select(answer => answer!.CorrectAnswers)
+                        .Select(answer => answer?.CorrectAnswers ?? 0)
                         .Sum();
 
                     int total = DataProvider.UsersExamResults.Select(result =>
                             result.ExamTestAnswers.FirstOrDefault(answer => answer.TestId == examTestsCreators[i].TestID))
-                        .Select(answer => answer!.TotalAnswers)
+                        .Select(answer => answer?.TotalAnswers ?? 0)
                         .Sum();
 
 

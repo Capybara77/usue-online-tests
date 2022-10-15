@@ -46,7 +46,8 @@ namespace usue_online_tests.Controllers
                 var timeNow = DateTime.Now;
 
                 Exam[] completedExams = completedExamsPairs.Where(t =>
-                        t.examResult.IsCompleted == true && t.exam.IsEnd &&
+                        //t.examResult.IsCompleted == true && 
+                        t.exam.IsEnd &&
                         t.exam.DateTimeEnd < timeNow)
                     .Select(t => t.exam).ToArray();
 
@@ -84,7 +85,7 @@ namespace usue_online_tests.Controllers
         private void FinishStartedExams()
         {
             var timeNow = DateTime.Now;
-            Exam[] exams = DataContext.Exams.Where(exam => !exam.IsEnd && exam.DateTimeEnd + TimeSpan.FromMinutes(1) < timeNow)
+            Exam[] exams = DataContext.Exams.Where(exam => !exam.IsEnd && exam.DateTimeEnd < timeNow)
                 .ToArray();
 
             foreach (var exam in exams)
