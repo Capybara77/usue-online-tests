@@ -3,8 +3,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using usue_online_tests.Data;
 using usue_online_tests.Models;
 
@@ -29,6 +31,13 @@ namespace usue_online_tests.Controllers
             }
 
             return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [Route("/time")]
+        public string Time()
+        {
+            return DateTime.Now.ToString(CultureInfo.InvariantCulture);
         }
 
         //public IActionResult Index()
