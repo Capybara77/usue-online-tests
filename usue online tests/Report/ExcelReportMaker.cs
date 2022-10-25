@@ -64,11 +64,10 @@ namespace usue_online_tests.Report
         {
             if (DataProvider.UsersExamResults.Any())
             {
-                //var examTestsCreators = DataProvider.UsersExamResults.First().ExamTestAnswers.Select(answer =>
-                //    TestsLoader.TestCreators.First(creator => creator.TestID == answer.TestId)).ToArray();
-
                 var examTestsCreators = DataProvider.Exam.Preset.Tests
-                    .Select(testId => TestsLoader.TestCreators.First(creator => creator.TestID == testId)).ToArray();
+                    .Select(testId => TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId))
+                    .Where(creator => creator != null)
+                    .ToArray();
 
                 worksheet.Cells[y, 2].Value = "Отчет по тестам";
                 worksheet.Cells[y, 3].Value = "Правильные ответы";
@@ -119,14 +118,18 @@ namespace usue_online_tests.Report
 
         private int CreateExcelUsersResults(ExcelWorksheet worksheet, int y)
         {
-            worksheet.Cells[y, 2].Value = $"Студент/задания";
+            worksheet.Cells[y, 2].Value = $"Студент/задание";
             int testCount = DataProvider.Exam.Preset.Tests.Length;
 
             for (var i = 0; i < testCount; i++)
             {
                 var testId = DataProvider.Exam.Preset.Tests[i];
                 ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
-                if (testCreator == null) continue;
+                if (testCreator == null)
+                {
+                    worksheet.Cells[y, i + 3].Value = testId;
+                    continue;
+                }
 
                 worksheet.Cells[y, i + 3].Value = testCreator.Name;
             }

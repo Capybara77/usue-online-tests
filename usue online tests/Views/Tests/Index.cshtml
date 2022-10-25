@@ -10,13 +10,35 @@
 </div>
 
 <div class="grid gap-4 sm:grid-cols-2">
-@for (int i = 0; i < Model.Count; i++)
-{
-    <a class="card bg-base-100 shadow-md hover:shadow-lg" href="/tests/start?id=@Model[i].TestID">
-        <div class="card-body">
-            <h2 class="card-title">@Model[i].Name</h2>
-            <p>@Model[i].Description</p>
-        </div>
-    </a>
-}
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        if (!(Model[i] is ITestGroup))
+        {
+            <a class="card bg-base-100 shadow-md hover:shadow-lg" href="/tests/start?id=@Model[i].TestID">
+                <div class="card-body">
+                    <h2 class="card-title">@Model[i].Name</h2>
+                    <p>@Model[i].Description</p>
+                </div>
+            </a>
+        }
+    }
+    @{
+        var groups = Model.Where(creator => creator is ITestGroup).GroupBy(
+        creator => (creator as ITestGroup).GroupName).ToList();
+
+        foreach (IGrouping<string, ITestCreator> testCreators in groups)
+        {
+            <h3>@testCreators.Key</h3>
+
+            foreach (ITestCreator testCreator in testCreators)
+            {
+                <a class="card bg-base-100 shadow-md hover:shadow-lg" href="/tests/start?id=@testCreator.TestID">
+                    <div class="card-body">
+                        <h2 class="card-title">@testCreator.Name</h2>
+                        <p>@testCreator.Description</p>
+                    </div>
+                </a>
+            }
+        }
+    }
 </div>

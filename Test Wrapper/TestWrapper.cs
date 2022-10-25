@@ -23,4 +23,9 @@ namespace Test_Wrapper
     {
         int TimeLimitSeconds { get; set; }
     }
+
+    public interface ITestGroup
+    {
+        public string GroupName { get; set; }
+    }
 }

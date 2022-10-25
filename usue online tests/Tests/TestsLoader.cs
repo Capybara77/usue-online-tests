@@ -64,7 +64,12 @@ namespace usue_online_tests.Tests
 
         private void LoadDllTests()
         {
-            string[] files = Directory.GetFiles(_webHostEnvironment.ContentRootPath + "/dll")
+            string pathToDll = _webHostEnvironment.ContentRootPath + "/dll";
+
+            if (!Directory.Exists(pathToDll))
+                Directory.CreateDirectory(pathToDll);
+
+            string[] files = Directory.GetFiles(pathToDll)
                 .Where(s => s.EndsWith(".dll")).ToArray();
 
             foreach (var file in files)
@@ -85,7 +90,6 @@ namespace usue_online_tests.Tests
                     {
                         Console.WriteLine(e);
                     }
-
                 }
             }
         }

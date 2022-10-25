@@ -36,7 +36,7 @@ namespace usue_online_tests.Controllers
             User user = GetUserByCookie.GetUser();
             Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
             // если экзамена нет
-            if (exam == null) return View("ErrorPage", "Нет теста");
+            if (exam == null) return View("ErrorPage", "Тест не существует");
             TestPreset preset = exam.Preset;
 
             // если пользователь из другой группы
@@ -85,7 +85,6 @@ namespace usue_online_tests.Controllers
             // выдача задания и фиксация времени
             userExamResult.ExamTestAnswers ??= new List<ExamTestAnswer>();
 
-
             if (userExamResult.ExamTestAnswers.All(answer => answer.TestId != testId))
             {
                 userExamResult.ExamTestAnswers.Add(new ExamTestAnswer
@@ -95,6 +94,8 @@ namespace usue_online_tests.Controllers
                 });
                 Context.SaveChanges();
             }
+
+            int spentTime = (int)(DateTime.Now - userExamResult.ExamTestAnswers.First(answer => answer.TestId == testId).DateTimeStart).TotalSeconds;
 
             int hash = CreateHash(user.Name + user.Group + exam.Id);
 
@@ -114,7 +115,8 @@ namespace usue_online_tests.Controllers
             };
 
             if (test.TimeLimited)
-                test.SecLimit = testCreator is ITimeLimit timeLimitCreator ? timeLimitCreator.TimeLimitSeconds : 60;
+                test.SecLimit = testCreator is ITimeLimit timeLimitCreator ? timeLimitCreator.TimeLimitSeconds -spentTime : 60 - spentTime;
+
             return View(test);
         }
 
@@ -181,7 +183,7 @@ namespace usue_online_tests.Controllers
 
                     AddTestResultToExamResult(userExamResult, examTestAnswer);
                     Context.SaveChanges();
-                    return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber}");
+                    return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
                 }
             }
 

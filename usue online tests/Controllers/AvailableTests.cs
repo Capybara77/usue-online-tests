@@ -32,7 +32,8 @@ namespace usue_online_tests.Controllers
                     exam.Group == user.Group &&
                     exam.DateTimeEnd > dateTimeNow &&
                     exam.DateTimeStart < dateTimeNow &&
-                    !Context.UserExamResults.Any(result => exam.Id == result.Exam.Id && result.IsCompleted && result.User.Id == user.Id))
+                    !Context.UserExamResults.Any(result =>
+                        exam.Id == result.Exam.Id && result.IsCompleted && result.User.Id == user.Id))
                 .Include(exam => exam.Preset)
                 .Include(exam => exam.Preset.Owner)
                 .ToArray();
@@ -48,7 +49,9 @@ namespace usue_online_tests.Controllers
             return Context.Exams.Count(exam => exam.Group == user.Group &&
                                                exam.DateTimeEnd > DateTime.Now &&
                                                !Context.UserExamResults.Any(result =>
-                                                   exam.Id == result.Exam.Id && result.IsCompleted && result.User.Id == user.Id));
+                                                   exam.Id == result.Exam.Id &&
+                                                   result.IsCompleted &&
+                                                   result.User.Id == user.Id));
         }
     }
 }
