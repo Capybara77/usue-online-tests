@@ -145,6 +145,8 @@ namespace usue_online_tests.Report
                 int totalAnswers = 0;
                 int totalCorrectAnswers = 0;
 
+                worksheet.Cells[y + i + 1, 2].Value = DataProvider.UsersExamResults[i].User.Name;
+
                 for (int j = 0; j < testCount; j++)
                 {
                     int testId = DataProvider.Exam.Preset.Tests[j];

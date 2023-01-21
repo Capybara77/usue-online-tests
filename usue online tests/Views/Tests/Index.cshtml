@@ -5,11 +5,16 @@
     ViewData["Title"] = "Доступные тесты";
 }
 
+@section Scripts
+{
+    <link rel="stylesheet" href="css/group.css"/>
+}
+
 <div class="prose">
     <h1 class="mb-8">Доступные тесты</h1>
 </div>
 
-<div class="grid gap-4 sm:grid-cols-2">
+<div class="flex-container">
     @for (int i = 0; i < Model.Count; i++)
     {
         if (!(Model[i] is ITestGroup))
@@ -24,11 +29,11 @@
     }
     @{
         var groups = Model.Where(creator => creator is ITestGroup).GroupBy(
-        creator => (creator as ITestGroup).GroupName).ToList();
+        creator => (creator as ITestGroup)?.GroupName).ToList();
 
         foreach (IGrouping<string, ITestCreator> testCreators in groups)
         {
-            <h3>@testCreators.Key</h3>
+            <h3 class="group-name">@testCreators.Key</h3>
 
             foreach (ITestCreator testCreator in testCreators)
             {

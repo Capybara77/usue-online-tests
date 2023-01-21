@@ -1,0 +1,26 @@
+﻿.group-name {
+    width: 100%;
+    margin-bottom: 40px;
+    font-size: 30px;
+}
+
+.flex-container {
+    display: flex;
+
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+
+    -o-justify-content: space-between;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+}
+
+.card {
+    width: 500px;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}

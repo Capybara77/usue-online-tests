@@ -31,6 +31,12 @@ namespace usue_online_tests.Controllers
         {
             User user = GetUserByCookie.GetUser();
 
+            if (user == null)
+            {
+                Response.Cookies.Delete(".AspNetCore.Cookies");
+                return LocalRedirect("/login");
+            }
+
             if (user.Role == Roles.Teacher)
             {
                 // проверяем все тесты и завершаем те, у которых вышло время на прохождение

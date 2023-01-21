@@ -15,22 +15,23 @@ namespace usue_online_tests.Models
         public string Login { get; set; }
         private string _password;
 
-        public string Password
-        {
-            get => _password;
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    _password = string.Empty;
-                    return;
-                }
-                MD5 md5Hasher = MD5.Create();
-                byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(value));
-                _password = Encoding.UTF8.GetString(hashed);
-            }
-        }
+        //public string Password
+        //{
+        //    get => _password;
+        //    set
+        //    {
+        //        if (string.IsNullOrEmpty(value))
+        //        {
+        //            _password = string.Empty;
+        //            return;
+        //        }
+        //        MD5 md5Hasher = MD5.Create();
+        //        byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(value));
+        //        _password = Encoding.Unicode.GetString(hashed);
+        //    }
+        //}
 
+        public string Password { get; set; }
         public Roles Role { get; set; }
         public string Group { get; set; }
         public bool IsDark { get; set; }

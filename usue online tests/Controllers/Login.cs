@@ -50,7 +50,7 @@ namespace usue_online_tests.Controllers
         [HttpPost]
         public IActionResult LoginIn(string login, string password)
         {
-            password = GetStrHash(password);
+            //password = GetStrHash(password);
             User user = DataContext.Users.FirstOrDefault(user1 => user1.Login == login && user1.Password == password);
 
 
@@ -119,7 +119,7 @@ namespace usue_online_tests.Controllers
             if (HttpContext.User.Identity is { IsAuthenticated: true }) return View("~/Views/Exam/ErrorPage.cshtml", "Вы уже авторизованы");
 
             if (DataContext.Users.Any(user => user.Login == login || user.Name == name))
-                return View("~/Views/Exam/ErrorPage.cshtml", "Такой логин уже существует");
+                return View("~/Views/Exam/ErrorPage.cshtml", "Такой логин или имя пользователя уже существует");
 
             DataContext.Users.Add(new User
             {
