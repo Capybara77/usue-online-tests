@@ -28,4 +28,9 @@ namespace Test_Wrapper
     {
         public string GroupName { get; set; }
     }
+
+    public interface IHidden
+    {
+        public bool IsHidden { get; set; }
+    }
 }

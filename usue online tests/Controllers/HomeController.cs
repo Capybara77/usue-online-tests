@@ -47,7 +47,7 @@ namespace usue_online_tests.Controllers
         [Route("/time")]
         public string Time()
         {
-            return DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            return DateTime.Now.ToNowEkb().ToString(CultureInfo.InvariantCulture);
         }
 
         //public IActionResult Index()

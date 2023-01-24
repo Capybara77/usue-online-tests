@@ -46,7 +46,7 @@ namespace usue_online_tests.Controllers
             return Encoding.UTF8.GetString(hashed);
         }
 
-        [AntiDos(Delay = 3)]
+        //[AntiDos(Delay = 3)]
         [HttpPost]
         public IActionResult LoginIn(string login, string password)
         {
@@ -107,7 +107,7 @@ namespace usue_online_tests.Controllers
         }
 
         [HttpPost]
-        [AntiDos(Delay = 10)]
+        //[AntiDos(Delay = 10)]
         public IActionResult Register(string name, string group, string login, string password)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(group) || string.IsNullOrEmpty(login) ||

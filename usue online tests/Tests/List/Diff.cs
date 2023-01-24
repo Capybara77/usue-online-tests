@@ -10,7 +10,7 @@ using Test_Wrapper;
 
 namespace usue_online_tests.Tests.List
 {
-    public class Diff : ITestCreator, ITest, ITestGroup
+    public class Diff : ITestCreator, ITest
     {
         public int TestID { get; set; }
         public string Name { get; } = "Дифференцирование";
@@ -51,6 +51,5 @@ namespace usue_online_tests.Tests.List
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
         public List<Image> Pictures { get; set; }
-        public string GroupName { get; set; } = "group name";
     }
 }

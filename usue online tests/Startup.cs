@@ -156,21 +156,21 @@ namespace usue_online_tests
                     var tuple = _requestTable.FirstOrDefault(tuple => tuple.Item1 == ip);
                     if (tuple == null)
                     {
-                        _requestTable.Add(Tuple.Create(ip, DateTime.Now));
+                        _requestTable.Add(Tuple.Create(ip, DateTime.Now.ToNowEkb()));
                         await _next.Invoke(context);
                         return;
                     }
 
-                    if ((DateTime.Now - tuple.Item2).TotalSeconds < attribute.Delay)
+                    if ((DateTime.Now.ToNowEkb() - tuple.Item2).TotalSeconds < attribute.Delay)
                     {
                         _requestTable.Remove(tuple);
-                        _requestTable.Add(Tuple.Create(ip, DateTime.Now));
+                        _requestTable.Add(Tuple.Create(ip, DateTime.Now.ToNowEkb()));
                         context.Response.Redirect($"{redirectUrl}");
                         return;
                     }
 
                     _requestTable.Remove(tuple);
-                    _requestTable.Add(Tuple.Create(ip, DateTime.Now));
+                    _requestTable.Add(Tuple.Create(ip, DateTime.Now.ToNowEkb()));
                 }
             }
 

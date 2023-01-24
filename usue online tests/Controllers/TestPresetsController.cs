@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using org.mariuszgromada.math.mxparser;
 using usue_online_tests.Data;
 using usue_online_tests.Models;
 using usue_online_tests.Tests;
+using usue_online_tests;
 
 namespace usue_online_tests.Controllers
 {
@@ -190,10 +193,17 @@ namespace usue_online_tests.Controllers
             return RedirectToAction("Index");
         }
 
+        private DateTime GetEkbDateTime()
+        {
+            TimeZoneInfo ekaterinburgTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Ekaterinburg Standard Time");
+            DateTime ekaterinburgDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, ekaterinburgTimeZone);
+            return ekaterinburgDateTime;
+        }
+
         [HttpPost]
         public async Task<IActionResult> StartNew(string group, DateTime dateTimeStart, DateTime dateTimeEnd, int presetId)
         {
-            if (DateTime.Now > dateTimeStart || dateTimeStart > dateTimeEnd)
+            if (DateTime.Now.ToNowEkb() > dateTimeStart || dateTimeStart > dateTimeEnd)
             {
                 HttpContext.Response.StatusCode = 400;
                 return Json("Некорректные входные данные");
@@ -210,7 +220,7 @@ namespace usue_online_tests.Controllers
             });
             await context.SaveChangesAsync();
 
-            return View((object)new string ("Успешно добавлено"));
+            return View((object)new string("Успешно добавлено"));
         }
     }
 }

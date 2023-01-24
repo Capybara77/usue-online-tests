@@ -7,7 +7,7 @@ using Test_Wrapper;
 
 namespace usue_online_tests.Tests.List
 {
-    public class Matrix : ITestCreator, ITest, ITestGroup
+    public class Matrix : ITestCreator, ITest
     {
         public int TestID { get; set; }
         public string Name { get; } = "Умножение матриц на макроуровне";
@@ -62,6 +62,5 @@ namespace usue_online_tests.Tests.List
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
         public List<Image> Pictures { get; set; }
-        public string GroupName { get; set; } = "group name";
     }
 }

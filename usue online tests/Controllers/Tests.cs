@@ -41,6 +41,10 @@ namespace usue_online_tests.Controllers
 
         public IActionResult Index()
         {
+            if (HttpContext.User.Identity is { IsAuthenticated: true } && HttpContext.User.IsInRole("User"))
+            {
+                return View(TestsLoader.TestCreators.Where(creator => !(creator is IHidden hidden) || !hidden.IsHidden).ToList());
+            }
             return View(TestsLoader.TestCreators);
         }
 

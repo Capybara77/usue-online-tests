@@ -22,14 +22,14 @@ namespace usue_online_tests.Controllers
             if (testCreator == null)
                 return StatusCode(400);
 
-            var timeStart = DateTime.Now;
+            var timeStart = DateTime.Now.ToNowEkb();
 
             for (int i = 0; i < count; i++)
             {
                 testCreator.CreateTest(i);
             }
 
-            return View((DateTime.Now - timeStart).TotalMilliseconds);
+            return View((DateTime.Now.ToNowEkb() - timeStart).TotalMilliseconds);
         }
     }
 }

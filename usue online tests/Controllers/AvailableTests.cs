@@ -26,7 +26,7 @@ namespace usue_online_tests.Controllers
         {
             User user = GetUserByCookie.GetUser();
 
-            var dateTimeNow = DateTime.Now;
+            var dateTimeNow = DateTime.Now.ToNowEkb();
 
             Exam[] exams = Context.Exams.Where(exam =>
                     exam.Group == user.Group &&
@@ -47,7 +47,7 @@ namespace usue_online_tests.Controllers
             User user = GetUserByCookie.GetUser();
 
             return Context.Exams.Count(exam => exam.Group == user.Group &&
-                                               exam.DateTimeEnd > DateTime.Now &&
+                                               exam.DateTimeEnd > DateTime.Now.ToNowEkb() &&
                                                !Context.UserExamResults.Any(result =>
                                                    exam.Id == result.Exam.Id &&
                                                    result.IsCompleted &&

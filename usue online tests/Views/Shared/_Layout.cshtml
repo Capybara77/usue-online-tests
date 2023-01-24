@@ -27,7 +27,7 @@
     <div class="grow max-w-screen-lg mx-auto w-full">
         @RenderBody()
     </div>
-    <footer class="footer footer-center p-4 text-base-content">© @(DateTime.Now.Year) - Уральский государственный экономический университет</footer>
+    <footer class="footer footer-center p-4 text-base-content">© @(DateTime.Now.ToNowEkb().Year) - Уральский государственный экономический университет</footer>
     <script src="~/bundles/index.js"></script>
 </body>
 </html>

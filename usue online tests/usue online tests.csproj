@@ -30,4 +30,8 @@
     <ProjectReference Include="..\Test Wrapper\Test Wrapper.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Tests\Tasks\" />
+  </ItemGroup>
+
 </Project>

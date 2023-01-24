@@ -31,6 +31,19 @@ namespace usue_online_tests.Controllers
             TestsLoader = testsLoader;
         }
 
+        private int[] ShuffleSequence(int arrayLength, int randomSeed)
+        {
+            int[] sequence = Enumerable.Range(1, arrayLength).ToArray();
+            Random rnd = new Random(randomSeed);
+            for (int i = 0; i < sequence.Length; i++)
+            {
+                int randomIndex = rnd.Next(i, sequence.Length);
+                (sequence[i], sequence[randomIndex]) = (sequence[randomIndex], sequence[i]);
+            }
+
+            return sequence;
+        }
+
         public IActionResult StartTest(int examId, int testNumber)
         {
             User user = GetUserByCookie.GetUser();
@@ -54,7 +67,7 @@ namespace usue_online_tests.Controllers
                 {
                     User = user,
                     Exam = exam,
-                    DateTimeStart = DateTime.Now,
+                    DateTimeStart = DateTime.Now.ToNowEkb(),
                     IsCompleted = false
                 };
                 Context.UserExamResults.Add(userExamResult);
@@ -62,7 +75,7 @@ namespace usue_online_tests.Controllers
             }
 
             // время истекло
-            if (exam.DateTimeEnd < DateTime.Now)
+            if (exam.DateTimeEnd < DateTime.Now.ToNowEkb())
                 return View("ErrorPage", "Время истекло");
 
             // некорректный номер теста
@@ -71,12 +84,15 @@ namespace usue_online_tests.Controllers
             // сохранение результата теста
             if (preset.Tests.Length < testNumber)
             {
-                userExamResult.IsCompleted = true;
-                Context.SaveChanges();
+                SaveTestResult(userExamResult);
                 return LocalRedirect("/profile");
             }
 
-            int testId = preset.Tests[testNumber - 1];
+            // создание новой последовательности тестов
+            int[] userSequenceOrder = ShuffleSequence(preset.Tests.Length, CreateHash(user.Name));
+            int currentRealTestNumber = userSequenceOrder[testNumber - 1];
+
+            int testId = preset.Tests[currentRealTestNumber - 1];
 
             //проверка на существование такого ответа
             if (userExamResult.ExamTestAnswers != null && userExamResult.ExamTestAnswers.Any(answer => answer.TestId == testId && answer.DateTimeEnd != default))
@@ -89,13 +105,13 @@ namespace usue_online_tests.Controllers
             {
                 userExamResult.ExamTestAnswers.Add(new ExamTestAnswer
                 {
-                    DateTimeStart = DateTime.Now,
+                    DateTimeStart = DateTime.Now.ToNowEkb(),
                     TestId = testId
                 });
                 Context.SaveChanges();
             }
 
-            int spentTime = (int)(DateTime.Now - userExamResult.ExamTestAnswers.First(answer => answer.TestId == testId).DateTimeStart).TotalSeconds;
+            int spentTime = (int)(DateTime.Now.ToNowEkb() - userExamResult.ExamTestAnswers.First(answer => answer.TestId == testId).DateTimeStart).TotalSeconds;
 
             int hash = CreateHash(user.Name + user.Group + exam.Id);
 
@@ -118,6 +134,12 @@ namespace usue_online_tests.Controllers
                 test.SecLimit = testCreator is ITimeLimit timeLimitCreator ? timeLimitCreator.TimeLimitSeconds -spentTime : 60 - spentTime;
 
             return View(test);
+        }
+
+        private void SaveTestResult(UserExamResult userExamResult)
+        {
+            userExamResult.IsCompleted = true;
+            Context.SaveChanges();
         }
 
         [HttpPost]
@@ -175,10 +197,10 @@ namespace usue_online_tests.Controllers
             {
                 int secLimit = creator is ITimeLimit testCreatorLimit ? testCreatorLimit.TimeLimitSeconds : 60;
 
-                if (examTestAnswer.DateTimeStart + TimeSpan.FromSeconds(10 + secLimit) < DateTime.Now)
+                if (examTestAnswer.DateTimeStart + TimeSpan.FromSeconds(10 + secLimit) < DateTime.Now.ToNowEkb())
                 {
                     examTestAnswer.TotalAnswers = testsCount;
-                    examTestAnswer.DateTimeEnd = DateTime.Now;
+                    examTestAnswer.DateTimeEnd = DateTime.Now.ToNowEkb();
                     examTestAnswer.CorrectAnswers = 0;
 
                     AddTestResultToExamResult(userExamResult, examTestAnswer);
@@ -188,7 +210,7 @@ namespace usue_online_tests.Controllers
             }
 
             examTestAnswer.TotalAnswers = testsCount;
-            examTestAnswer.DateTimeEnd = DateTime.Now;
+            examTestAnswer.DateTimeEnd = DateTime.Now.ToNowEkb();
 
             try
             {

@@ -49,7 +49,7 @@ namespace usue_online_tests.Controllers
                             .Where(result => result.Exam.Id == exam.Id && result.Exam.Preset.Owner == user),
                         (exam, examResult) => new { exam, examResult });
 
-                var timeNow = DateTime.Now;
+                var timeNow = DateTime.Now.ToNowEkb();
 
                 Exam[] completedExams = completedExamsPairs.Where(t =>
                         //t.examResult.IsCompleted == true && 
@@ -90,7 +90,7 @@ namespace usue_online_tests.Controllers
 
         private void FinishStartedExams()
         {
-            var timeNow = DateTime.Now;
+            var timeNow = DateTime.Now.ToNowEkb();
             Exam[] exams = DataContext.Exams.Where(exam => !exam.IsEnd && exam.DateTimeEnd < timeNow)
                 .ToArray();
 

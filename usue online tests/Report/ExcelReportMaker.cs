@@ -181,7 +181,7 @@ namespace usue_online_tests.Report
         private int CreateExcelStartBlock(ExcelWorksheet worksheet, int y)
         {
             worksheet.Cells[y, 1].Value = "Отчет создан:";
-            worksheet.Cells[y, 2].Value = DateTime.Now.ToString();
+            worksheet.Cells[y, 2].Value = DateTime.Now.ToNowEkb().ToString();
 
             return y;
         }

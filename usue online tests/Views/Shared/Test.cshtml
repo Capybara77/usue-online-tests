@@ -52,13 +52,13 @@
                 if (matches[i].Groups[1].Value.StartsWith("CB_"))
                 {
                     Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
-                    $"<input type=\"checkbox\" name=\"{matches[i].Groups[1].Value.Remove(0, 3)}\" /> " +
-                    $"<label>{matches[i].Groups[1].Value.Remove(0, 3)}</label>");
+                        $"<input type=\"checkbox\" name=\"{matches[i].Groups[1].Value.Remove(0, 3)}\" /> " +
+                        $"<label>{matches[i].Groups[1].Value.Remove(0, 3)}</label>");
                 }
                 else
                 {
                     Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
-                    $"\\FormInput[2][test-start-input][]{{{matches[i].Groups[1].Value}}}");
+                        $"\\FormInput[2][test-start-input][]{{{matches[i].Groups[1].Value}}}");
                 }
             }
         }
@@ -82,6 +82,16 @@
 
         <input type="submit" class="test-start-complete-button" value="@Model.BtnText" />
     </form>
+    <style>
+        .test-start-complete-button {
+            background-color: #5a6269;
+            color: white;
+            -ms-border-radius: 10px;
+            border-radius: 10px;
+            padding: 7px;
+            margin-top: 20px;
+        }
+    </style>
 }
 else
 {
