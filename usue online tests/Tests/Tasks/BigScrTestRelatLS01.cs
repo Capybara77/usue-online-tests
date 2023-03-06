@@ -109,7 +109,7 @@ namespace UserTest
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
         public List<Image> Pictures { get; set; }
-        public int TimeLimitSeconds { get; set; } = 60;
+        public int TimeLimitSeconds { get; set; } = 100;
         public bool IsHidden { get; set; } = true; 
     }
 }

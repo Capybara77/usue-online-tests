@@ -897,7 +897,7 @@ html {
     -webkit-user-select: none;
     user-select: none;
     align-items: center;
-    justify-content: space-between;
+/*    justify-content: space-between;*/
     padding-left: 0.25rem;
     padding-right: 0.25rem;
     padding-top: 0.5rem;
@@ -1706,6 +1706,7 @@ body[dir="rtl"] .checkbox {
     line-height: 1.25rem;
     --tw-text-opacity: 1;
     color: hsl(var(--bc) / var(--tw-text-opacity));
+    margin-left: 5px;
 }
 
 .label a:hover {
@@ -2131,10 +2132,13 @@ body[dir="rtl"] .checkbox {
 
 .input-sm {
     height: 2rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding-left: 0.15rem;
+    padding-right: 0.15rem;
     font-size: 0.875rem;
     line-height: 2rem;
+
+    /*width: 5px;*/
+    
 }
 
 .modal-bottom {

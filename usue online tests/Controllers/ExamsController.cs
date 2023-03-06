@@ -11,7 +11,7 @@ using usue_online_tests.Models;
 
 namespace usue_online_tests.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Teacher")]
     public class ExamsController : Controller
     {
         private readonly DataContext _context;
@@ -21,6 +21,7 @@ namespace usue_online_tests.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Exams
         public async Task<IActionResult> Index()
         {
@@ -30,6 +31,7 @@ namespace usue_online_tests.Controllers
         }
 
         // GET: Exams/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -48,6 +50,7 @@ namespace usue_online_tests.Controllers
         }
 
         // GET: Exams/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -58,6 +61,7 @@ namespace usue_online_tests.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Group,DateTimeStart,DateTimeEnd,IsEnd")] Exam exam)
         {
             if (ModelState.IsValid)
@@ -70,6 +74,7 @@ namespace usue_online_tests.Controllers
         }
 
         // GET: Exams/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -90,6 +95,7 @@ namespace usue_online_tests.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Group,DateTimeStart,DateTimeEnd,IsEnd")] Exam exam)
         {
             if (id != exam.Id)
@@ -120,6 +126,7 @@ namespace usue_online_tests.Controllers
             return View(exam);
         }
 
+        [Authorize(Roles = "Admin, Teacher")]
         // GET: Exams/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -141,12 +148,20 @@ namespace usue_online_tests.Controllers
         // POST: Exams/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Teacher")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var usersTestsResults = _context.UserExamResults
+                .Include(result => result.ExamTestAnswers)
+                .Where(result => result.Exam.Id == id);
+
+            _context.ExamTestAnswers.RemoveRange(usersTestsResults.SelectMany(result => result.ExamTestAnswers));
+            _context.UserExamResults.RemoveRange(usersTestsResults);
+
             var exam = await _context.Exams.FindAsync(id);
             _context.Exams.Remove(exam);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return LocalRedirect("/");
         }
 
         private bool ExamExists(int id)

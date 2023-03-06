@@ -49,12 +49,15 @@ namespace usue_online_tests.Controllers
                             .Where(result => result.Exam.Id == exam.Id && result.Exam.Preset.Owner == user),
                         (exam, examResult) => new { exam, examResult });
 
+                var completedExamsPairs2 = DataContext.Exams
+                    .Include(exam => exam.Preset)
+                    .Where(exam => exam.Preset.Owner.Id == user.Id).ToArray();
+
                 var timeNow = DateTime.Now.ToNowEkb();
 
                 Exam[] completedExams = completedExamsPairs.Where(t =>
-                        //t.examResult.IsCompleted == true && 
-                        t.exam.IsEnd &&
-                        t.exam.DateTimeEnd < timeNow)
+                        //t.examResult.IsCompleted == true &&
+                        true)
                     .Select(t => t.exam).ToArray();
 
                 ExamResult[] examResults = completedExams.Select(exam => new ExamResult
@@ -66,12 +69,20 @@ namespace usue_online_tests.Controllers
                         .ToArray()
                 }).Distinct(new EqualityComparerExamResult()).ToArray();
 
+                ExamResult[] examResults2 = completedExamsPairs2.Select(exam => new ExamResult
+                {
+                    Exam = exam,
+                    Results = DataContext.UserExamResults
+                        .Where(result => result.Exam == exam)
+                        .Include(result => result.User)
+                        .ToArray()
+                }).Distinct(new EqualityComparerExamResult()).ToArray();
+
                 TeacherProfileWrapper profileWrapper = new TeacherProfileWrapper()
                 {
                     User = user,
-                    ExamResults = examResults
+                    ExamResults = examResults2
                 };
-
 
                 return View(profileWrapper);
             }

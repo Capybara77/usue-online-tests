@@ -28,10 +28,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Test Wrapper\Test Wrapper.csproj" />
+    <ProjectReference Include="..\UserTest\UserTest.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Tests\Tasks\" />
+    <Folder Include="Tests\Tasks2\" />
   </ItemGroup>
 
 </Project>

@@ -15,7 +15,7 @@
 
 @if (Model is UserProfileWrapper userProfileWrapper)
 {
-    <div class="overflow-x-auto">
+    @*    <div class="overflow-x-auto">
         <div class="stats shadow">
             <div class="stat">
                 <div class="stat-title">Доступно тестов</div>
@@ -30,7 +30,7 @@
                 <div class="stat-value">0</div>
             </div>
         </div>
-    </div>
+    </div>*@
 
     @if (userProfileWrapper.ExamResults != null)
     {
@@ -56,6 +56,7 @@
                         @if (solved > 0)
                         {
                             <progress class="progress progress-primary w-full mt-4" value="@solved" max="@total"></progress>
+                            <p class="test-result-text">@solved/@total</p>
                         }
                     </div>
                 </a>
@@ -69,15 +70,27 @@
     <h2>Завершенные тесты</h2>
 
     <div class="test-results-wrapper">
-        @foreach (var exam in profileWrapper.ExamResults)
+        @foreach (var examResult in profileWrapper.ExamResults)
         {
-            <form class="test-result" action="/profile/createreport" method="get">
-                <p class="group-name">@exam.Exam.Group</p>
-                <p class="date-start">@exam.Exam.DateTimeStart</p>
-                <p class="preset-name">@exam.Exam.Preset.Name</p>
-                <input hidden name="examId" value="@exam.Exam.Id" />
-                <button class="btn btn-start" type="submit">Создать отчет</button>
-            </form>
+            <div class="test-result">
+                <p class="group-name">@examResult.Exam.Group</p>
+                <p class="date-start">@examResult.Exam.DateTimeStart</p>
+                <p class="preset-name">@examResult.Exam.Preset.Name</p>
+                <form action="/profile/createreport" method="get">
+                    <input hidden name="examId" value="@examResult.Exam.Id" />
+                    <button class="btn btn-start" type="submit">Создать отчет</button>
+                </form>
+
+                <form action="/exams/Delete" method="get">
+                    <input type="hidden" name="id" value="@examResult.Exam.Id" />
+                    <input type="submit" class="btn btn-start" value="Удалить тест" />
+                </form>
+
+                @if (!examResult.Exam.IsEnd)
+                {
+                    <p class="info-p">Тест еще не завершен</p>
+                }
+            </div>
         }
     </div>
 }

@@ -1,45 +1,36 @@
 ﻿@model usue_online_tests.Models.Exam
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Удаление теста";
 }
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
+<h3 style="font-size: larger; color: red">Вы действительно хотите удалить данный тест?
+    После этого пропадут все результаты (возможность создать отчет тоже)! Это действие невозможно отменить!</h3>
 <div>
-    <h4>Exam</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Group)
+            Группа:
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Group)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateTimeStart)
+            Время начала:
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DateTimeStart)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateTimeEnd)
+        <dt class="col-sm-2">
+            Время окончания:
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DateTimeEnd)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsEnd)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsEnd)
         </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Удалить" class="btn btn-danger" />
     </form>
 </div>

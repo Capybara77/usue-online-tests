@@ -25,11 +25,13 @@
 
 @{
     ViewData["Title"] = "Тест";
+    Dictionary<string, string> cssList = new Dictionary<string, string>();
 }
 
 <div class="flex flex-col lg:flex-row">
     @if (Model.Test != null)
     {
+        // PICTURE
         @if (Model.Test.Pictures != null)
         {
             @foreach (var pic in Model.Test.Pictures)
@@ -53,29 +55,42 @@
                 var matches = Regex.Matches(Model.Test.Text, "<(.*?)>");
                 for (int i = 0; i < matches.Count; i++)
                 {
+                    // SIZE CHECK
+                    string classId = $"{i}";
+                    string size = $"22";
+                    string inputName = matches[i].Groups[1].Value;
+                    if (matches[i].Groups[1].Value.Contains(":"))
+                    {
+                        size = $"{15 + 7 * Convert.ToInt32(matches[i].Groups[1].Value.Split(':')[1])}";
+                        inputName = matches[i].Groups[1].Value.Split(':')[0];
+                    }
+                    cssList.Add(classId, size);
+
+                    // INPUT
                     if (matches[i].Groups[1].Value.StartsWith("CB_"))
                     {
                         Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
-                        $"<label class=\"label cursor-pointer w-52\">" +
-                        $" <input class=\"checkbox\" type=\"checkbox\" name=\"{matches[i].Groups[1].Value.Remove(0, 3)}\"/> " +
-                        $" <span class=\"label-text\">{matches[i].Groups[1].Value.Remove(0, 3)}</span>") +
-                        $"</label>";
+                            $"<label class=\"label cursor-pointer\">" +
+                            $" <input class=\"checkbox\" type=\"checkbox\" name=\"{matches[i].Groups[1].Value.Remove(0, 3)}\"/> " +
+                            $" <span class=\"label-text\">{matches[i].Groups[1].Value.Remove(0, 3)}</span>") +
+                                          $"</label>";
                     }
                     else
                     {
                         Model.Test.Text = Model.Test.Text.Replace(matches[i].Groups[0].Value,
-                        $"\\FormInput[2][input input-sm mx-2 my-1][]{{{matches[i].Groups[1].Value}}}");
+                            $"\\FormInput[1][input input-sm mx-2 my-1 dynamiccssinputsize{classId}][]{{{inputName}}}");
                     }
                 }
 
                 <p class="overflow-x-auto overflow-y-hidden">@Html.Raw(Model.Test.Text.Replace("\n", "<br/>"))</p>
 
+                // CHECKBOX
                 if (Model.Test.CheckBoxes != null)
                 {
                     <input hidden name="testsCount" value="@(Model.Test.CheckBoxes.Length + matches.Count)" />
                     foreach (var t in Model.Test.CheckBoxes)
                     {
-                        <label class="label cursor-pointer w-52">
+                        <label class="label cursor-pointer">
                             <input class="checkbox" type="checkbox" name="@t" />
                             <span class="label-text">@t</span>
                         </label>
@@ -95,3 +110,12 @@
         <h2>Произошла ошибка при генерации задания</h2>
     }
 </div>
+
+@{
+    <style>
+        @foreach (var css in cssList)
+        {
+            @Html.Raw($".dynamiccssinputsize{css.Key}{{width: {css.Value}px}}")
+        }
+    </style>
+}

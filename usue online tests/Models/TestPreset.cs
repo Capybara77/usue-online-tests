@@ -12,5 +12,6 @@ namespace usue_online_tests.Models
         public string Name { get; set; }
         public User Owner { get; set; }
         public bool TimeLimited { get; set; } = false;
+        public bool IsHomework { get; set; } = false;
     }
 }

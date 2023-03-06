@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using usue_online_tests.Data;
-using usue_online_tests.Migrations;
 
 namespace usue_online_tests.Report
 {

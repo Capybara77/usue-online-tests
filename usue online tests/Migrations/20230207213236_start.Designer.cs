@@ -10,15 +10,15 @@ using usue_online_tests.Data;
 namespace usue_online_tests.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220328085522_preset2")]
-    partial class preset2
+    [Migration("20230207213236_start")]
+    partial class start
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.13")
+                .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("usue_online_tests.Models.Exam", b =>
@@ -37,6 +37,9 @@ namespace usue_online_tests.Migrations
                     b.Property<string>("Group")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsEnd")
+                        .HasColumnType("boolean");
+
                     b.Property<int?>("PresetId")
                         .HasColumnType("integer");
 
@@ -47,6 +50,38 @@ namespace usue_online_tests.Migrations
                     b.ToTable("Exams");
                 });
 
+            modelBuilder.Entity("usue_online_tests.Models.ExamTestAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("CorrectAnswers")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DateTimeEnd")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DateTimeStart")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("TestId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TotalAnswers")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UserExamResultId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserExamResultId");
+
+                    b.ToTable("ExamTestAnswers");
+                });
+
             modelBuilder.Entity("usue_online_tests.Models.TestPreset", b =>
                 {
                     b.Property<int>("Id")
@@ -54,13 +89,13 @@ namespace usue_online_tests.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("MinutesToPass")
-                        .HasColumnType("integer");
+                    b.Property<bool>("IsHomework")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int?>("OwnerID")
+                    b.Property<int?>("OwnerId")
                         .HasColumnType("integer");
 
                     b.Property<int[]>("Tests")
@@ -71,14 +106,14 @@ namespace usue_online_tests.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerID");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Presets");
                 });
 
             modelBuilder.Entity("usue_online_tests.Models.User", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -101,9 +136,37 @@ namespace usue_online_tests.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("usue_online_tests.Models.UserExamResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("DateTimeStart")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("ExamId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExamId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserExamResults");
                 });
 
             modelBuilder.Entity("usue_online_tests.Models.Exam", b =>
@@ -115,13 +178,40 @@ namespace usue_online_tests.Migrations
                     b.Navigation("Preset");
                 });
 
+            modelBuilder.Entity("usue_online_tests.Models.ExamTestAnswer", b =>
+                {
+                    b.HasOne("usue_online_tests.Models.UserExamResult", null)
+                        .WithMany("ExamTestAnswers")
+                        .HasForeignKey("UserExamResultId");
+                });
+
             modelBuilder.Entity("usue_online_tests.Models.TestPreset", b =>
                 {
                     b.HasOne("usue_online_tests.Models.User", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerID");
+                        .HasForeignKey("OwnerId");
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("usue_online_tests.Models.UserExamResult", b =>
+                {
+                    b.HasOne("usue_online_tests.Models.Exam", "Exam")
+                        .WithMany()
+                        .HasForeignKey("ExamId");
+
+                    b.HasOne("usue_online_tests.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Exam");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("usue_online_tests.Models.UserExamResult", b =>
+                {
+                    b.Navigation("ExamTestAnswers");
                 });
 #pragma warning restore 612, 618
         }

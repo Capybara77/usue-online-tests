@@ -1,0 +1,9 @@
+﻿.btn-create-studentlist {
+    margin-bottom: 20px;
+}
+
+.btn-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}

@@ -11,7 +11,7 @@ namespace UserTest
         public string Name { get; } = "Пример теста в отдельной dll";
         public string Description { get; }
 
-        public string[] Boxes { get; set; } = new[] { "Нужна галочка", "Не нужна" };
+        public string[] Boxes { get; set; } = { "Нужна галочка", "Не нужна" };
 
         public ITest CreateTest(int randomSeed)
         {

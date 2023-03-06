@@ -118,7 +118,7 @@ namespace usue_online_tests.Controllers
 
             if (HttpContext.User.Identity is { IsAuthenticated: true }) return View("~/Views/Exam/ErrorPage.cshtml", "Вы уже авторизованы");
 
-            if (DataContext.Users.Any(user => user.Login == login || user.Name == name))
+            if (DataContext.Users.Any(user => user.Login == login))
                 return View("~/Views/Exam/ErrorPage.cshtml", "Такой логин или имя пользователя уже существует");
 
             DataContext.Users.Add(new User

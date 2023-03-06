@@ -27,5 +27,11 @@ namespace usue_online_tests.Controllers
 
             return View(groups);
         }
+
+        [HttpGet]
+        public IActionResult CreatePage()
+        {
+            return View();
+        }
     }
 }
