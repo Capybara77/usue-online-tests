@@ -52,6 +52,10 @@
                 {
                     <span class="text">Время на прохождение теста ограничено!</span>
                 }
+                @if (item.IsHomework)
+                {
+                    <span class="text">Домашнее задание!</span>
+                }
                 <label for="create-modal" onclick="changeSelectedPreset(@item.Id); AddPostData();" class="btn modal-button mt-4">Начать тестирование</label>
             </div>
         </a>

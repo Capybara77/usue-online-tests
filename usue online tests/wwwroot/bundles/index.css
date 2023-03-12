@@ -918,7 +918,7 @@ html {
     line-height: 1.25rem;
     line-height: 2;
     border-width: 1px;
-    border-color: hsl(var(--bc) / var(--tw-border-opacity));
+    /*border-color: hsl(var(--bc) / var(--tw-border-opacity));*/
     --tw-border-opacity: 0;
     --tw-bg-opacity: 1;
     background-color: hsl(var(--b1) / var(--tw-bg-opacity));

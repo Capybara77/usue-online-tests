@@ -20,7 +20,7 @@ namespace usue_online_tests.Tests.List
             Random random = new Random(randomSeed);
             ITest test = new Diff();
 
-            test.Text = "Вычислите \\((\\sqrt[3]{x})' = <exp>\\)";
+            test.Text = "Вычислите \\((\\sqrt[3]{x})' = <exp:30>\\)";
             return test;
         }
 

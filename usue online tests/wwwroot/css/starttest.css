@@ -1,0 +1,44 @@
+﻿.task-list {
+    background-color: #cbcbcb;
+
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+
+    padding: 8px;
+    display: none;
+    gap: 10px;
+
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+
+    margin-bottom: 10px;
+}
+
+.task-num {
+    background-color: aliceblue;
+
+    -ms-border-radius: 8px;
+    border-radius: 8px;
+
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.show-task-list {
+    color: white;
+    padding: 5px 10px;
+    width: max-content;
+    font-style: italic;
+    cursor: pointer;
+    background-color: hsl(var(--n) / var(--tw-bg-opacity));
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.current-task {
+    background-color: #879b9b;
+}

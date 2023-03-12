@@ -16,7 +16,7 @@
                 {
                     <p class="test-card-min test-card-info">Время на прохождение ограничено!</p>
                 }
-                <a class="btn test-card-button" href="/exam/starttest?examId=@exam.Id&testNumber=1">Начать тест</a>
+                <a class="btn test-card-button" href="/exam/starttest?examId=@exam.Id&testNumber=1">@(exam.Preset.IsHomework ? "Начать выполнение домашнего задания" : "Начать тест")</a>
             </div>
         }
     </div>

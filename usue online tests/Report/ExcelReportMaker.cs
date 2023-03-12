@@ -48,12 +48,64 @@ public class ExcelReportMaker : ReportMaker
         yPosition = CreateExcelStartBlock(worksheet, yPosition) + 2;
         yPosition = CreateExcelExamInfoBlock(worksheet, yPosition) + 2;
         yPosition = CreateExcelUsersResults(worksheet, yPosition) + 2;
+        yPosition = CreateExcelTimeSpentToAnswer(worksheet, yPosition) + 2;
         yPosition = CreateExcelDoNotPass(worksheet, yPosition) + 2;
         yPosition = CreateExcelTestsInfo(worksheet, yPosition) + 2;
 
         AutoFitColumns(worksheet);
 
         excelPackage.SaveAs(memoryStream);
+    }
+
+    private int CreateExcelTimeSpentToAnswer(ExcelWorksheet worksheet, int y)
+    {
+        worksheet.Cells[y, 2].Value = $"Время, затраченное на прохождение тестов";
+        worksheet.Cells[y + 1, 2].Value = $"Студент/задание";
+        int testCount = DataProvider.Exam.Preset.Tests.Length;
+
+        for (var i = 0; i < testCount; i++)
+        {
+            var testId = DataProvider.Exam.Preset.Tests[i];
+            ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+            if (testCreator == null)
+            {
+                worksheet.Cells[y + 1, i + 3].Value = testId;
+                worksheet.Cells[y + 1, i + 3].Style.TextRotation = 90;
+                continue;
+            }
+
+            worksheet.Cells[y + 1, i + 3].Value = testCreator.Name;
+            worksheet.Cells[y + 1, i + 3].Style.TextRotation = 90;
+        }
+
+        worksheet.Cells[y + 1, 3 + testCount].Value = "Всего затрачено времени на прохождение";
+
+        for (int i = 0; i < DataProvider.UsersExamResults.Length; i++)
+        {
+            UserExamResult result = DataProvider.UsersExamResults[i];
+            ICollection<ExamTestAnswer> answers = result.ExamTestAnswers;
+
+            worksheet.Cells[y + i + 2, 2].Value = DataProvider.UsersExamResults[i].User.Name;
+
+            int totalSpentSec = 0;
+
+            for (int j = 0; j < testCount; j++)
+            {
+                int testId = DataProvider.Exam.Preset.Tests[j];
+                ExamTestAnswer userAnswer = answers.FirstOrDefault(
+                    answer => answer.TestId == testId);
+                if (userAnswer == null) continue;
+
+                int spentSec = (int)(userAnswer.DateTimeEnd - userAnswer.DateTimeStart).TotalSeconds;
+                totalSpentSec += spentSec;
+
+                worksheet.Cells[y + i + 2, 3 + j].Value = $"{spentSec}";
+            }
+
+            worksheet.Cells[y + i + 2, testCount + 3].Value = totalSpentSec;
+        }
+
+        return y + DataProvider.UsersExamResults.Length + 1;
     }
 
     private static void AutoFitColumns(ExcelWorksheet worksheet)
@@ -129,6 +181,7 @@ public class ExcelReportMaker : ReportMaker
             if (testCreator == null)
             {
                 worksheet.Cells[y, i + 3].Value = testId;
+                worksheet.Cells[y, i + 3].Style.TextRotation = 90;
                 continue;
             }
 

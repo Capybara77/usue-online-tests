@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Composition;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,6 +24,7 @@ namespace usue_online_tests.Controllers
         public DataContext Context { get; }
         public GetUserByCookie GetUserByCookie { get; }
         public TestsLoader TestsLoader { get; }
+        public Random Random { get; set; } = new();
 
         public ExamController(DataContext context, GetUserByCookie getUserByCookie, TestsLoader testsLoader)
         {
@@ -44,13 +46,15 @@ namespace usue_online_tests.Controllers
             return sequence;
         }
 
-        public IActionResult StartTest(int examId, int testNumber)
+        public async Task<IActionResult> StartTest(int examId, int testNumber)
         {
             User user = GetUserByCookie.GetUser();
             Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
             // если экзамена нет
             if (exam == null) return View("ErrorPage", "Тест не существует");
             TestPreset preset = exam.Preset;
+
+            if (preset.IsHomework) return StartHomework(examId, testNumber);
 
             // если пользователь из другой группы
             if (user.Group != exam.Group) View("ErrorPage", "Тест для другой группы");
@@ -84,7 +88,7 @@ namespace usue_online_tests.Controllers
             // сохранение результата теста
             if (preset.Tests.Length < testNumber)
             {
-                SaveTestResult(userExamResult);
+                await SaveTestResult(userExamResult);
                 return LocalRedirect("/profile");
             }
 
@@ -127,19 +131,205 @@ namespace usue_online_tests.Controllers
                 TestId = testId,
                 BtnText = testNumber == preset.Tests.Length ? "Завершить" : "Следующий вопрос",
                 Link = $"/exam/CheckAnswersExam?examId={examId}&testNumber={testNumber + 1}",
-                TimeLimited = exam.Preset.TimeLimited
+                TimeLimited = exam.Preset.TimeLimited,
+                ExamId = examId
             };
 
             if (test.TimeLimited)
-                test.SecLimit = testCreator is ITimeLimit timeLimitCreator ? timeLimitCreator.TimeLimitSeconds -spentTime : 60 - spentTime;
+                test.SecLimit = testCreator is ITimeLimit timeLimitCreator ? timeLimitCreator.TimeLimitSeconds - spentTime : 60 - spentTime;
 
             return View(test);
         }
 
-        private void SaveTestResult(UserExamResult userExamResult)
+        private IActionResult StartHomework(int examId, int testNumber)
+        {
+            User user = GetUserByCookie.GetUser();
+            Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
+            // если экзамена нет
+            if (exam == null) return View("ErrorPage", "Тест не существует");
+            TestPreset preset = exam.Preset;
+
+            // если пользователь из другой группы
+            if (user.Group != exam.Group) View("ErrorPage", "Тест для другой группы");
+
+            UserExamResult userExamResult =
+                Context.UserExamResults
+                    .Include(result => result.ExamTestAnswers)
+                    .FirstOrDefault(result => result.User.Id == user.Id && result.Exam.Id == examId);
+
+            // если это первый запуск
+            if (userExamResult == null)
+            {
+                userExamResult = new UserExamResult
+                {
+                    User = user,
+                    Exam = exam,
+                    DateTimeStart = DateTime.Now.ToNowEkb(),
+                    IsCompleted = false
+                };
+                Context.UserExamResults.Add(userExamResult);
+                Context.SaveChanges();
+            }
+
+            // время истекло
+            if (exam.DateTimeEnd < DateTime.Now.ToNowEkb())
+                return View("ErrorPage", "Время истекло");
+
+            // некорректный номер теста
+            if (testNumber < 1) return View("ErrorPage", "Некорректный номер теста");
+
+            // сохранение результата теста
+            // TODO добавить страницу с вопросом о сохрании результата
+            if (preset.Tests.Length < testNumber)
+            {
+                return View("StartHomework", new ExamWrapper()
+                {
+                    ExamId = examId,
+                    TestPreset = preset,
+                    SaveResult = true
+                });
+            }
+
+            int testId = preset.Tests[testNumber - 1];
+
+            //проверка на существование такого ответа
+            if (userExamResult.ExamTestAnswers != null &&
+                userExamResult.ExamTestAnswers.Any(answer => answer.TestId == testId && answer.DateTimeEnd != default))
+            {
+                return View("StartHomework", new ExamWrapper
+                {
+                    ExamId = examId,
+                    ChangeAnswer = true,
+                    TestPreset = preset,
+                    OldTestResult = userExamResult.ExamTestAnswers.First(answer => answer.TestId == testId && answer.DateTimeEnd != default),
+                });
+
+                return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
+            }
+
+            // выдача задания и фиксация времени
+            userExamResult.ExamTestAnswers ??= new List<ExamTestAnswer>();
+
+            if (userExamResult.ExamTestAnswers.All(answer => answer.TestId != testId))
+            {
+                userExamResult.ExamTestAnswers.Add(new ExamTestAnswer
+                {
+                    DateTimeStart = DateTime.Now.ToNowEkb(),
+                    TestId = testId
+                });
+                Context.SaveChanges();
+            }
+
+            int spentTime = (int)(DateTime.Now.ToNowEkb() - userExamResult.ExamTestAnswers.First(answer => answer.TestId == testId).DateTimeStart).TotalSeconds;
+
+            int hash = CreateHash(user.Name + user.Group + exam.Id + Random.Next());
+
+            ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+
+            if (testCreator == null)
+                return View("ErrorPage", "Нет генератора в системе. Обратитесь по номеру +79533804297");
+
+            TestWrapper test = new TestWrapper
+            {
+                Hash = hash,
+                Test = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId)?.CreateTest(hash),
+                TestId = testId,
+                BtnText = testNumber == preset.Tests.Length ? "Завершить" : "Следующий вопрос",
+                Link = $"/exam/CheckAnswersExam?examId={examId}&testNumber={testNumber + 1}",
+                TimeLimited = exam.Preset.TimeLimited,
+                ExamId = examId
+            };
+
+            if (test.TimeLimited)
+                test.SecLimit = testCreator is ITimeLimit timeLimitCreator ? timeLimitCreator.TimeLimitSeconds - spentTime : 60 - spentTime;
+
+            ExamWrapper examWrapper = new ExamWrapper
+            {
+                TestPreset = preset,
+                TestWrapper = test,
+                ExamId = examId
+            };
+
+            return View("StartHomework", examWrapper);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveHomeworkResult(int examId)
+        {
+            User user = GetUserByCookie.GetUser();
+            Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
+            // если экзамена нет
+            if (exam == null) return View("ErrorPage", "Тест не существует");
+            TestPreset preset = exam.Preset;
+
+            // если пользователь из другой группы
+            if (user.Group != exam.Group) View("ErrorPage", "Тест для другой группы");
+
+            UserExamResult userExamResult =
+                Context.UserExamResults
+                    .Include(result => result.ExamTestAnswers)
+                    .FirstOrDefault(result => result.User.Id == user.Id && result.Exam.Id == examId);
+
+            // если это первый запуск
+            if (userExamResult == null)
+            {
+                userExamResult = new UserExamResult
+                {
+                    User = user,
+                    Exam = exam,
+                    DateTimeStart = DateTime.Now.ToNowEkb(),
+                    IsCompleted = false
+                };
+                Context.UserExamResults.Add(userExamResult);
+                Context.SaveChanges();
+            }
+
+            // время истекло
+            if (exam.DateTimeEnd < DateTime.Now.ToNowEkb())
+                return View("ErrorPage", "Время истекло");
+
+
+            // сохранение результата теста
+            await SaveTestResult(userExamResult);
+            return LocalRedirect("/profile");
+        }
+
+        public async Task<IActionResult> ChangeHomeworkAnswer(int examId, int testNumber)
+        {
+            User user = GetUserByCookie.GetUser();
+            Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
+            // если экзамена нет
+            if (exam == null) return View("ErrorPage", "Тест не существует");
+            TestPreset preset = exam.Preset;
+
+            // если пользователь из другой группы
+            if (user.Group != exam.Group) View("ErrorPage", "Тест для другой группы");
+
+            UserExamResult userExamResult =
+                Context.UserExamResults
+                    .Include(result => result.ExamTestAnswers)
+                    .FirstOrDefault(result => result.User.Id == user.Id && result.Exam.Id == examId);
+
+            // время истекло
+            if (exam.DateTimeEnd < DateTime.Now.ToNowEkb())
+                return View("ErrorPage", "Время истекло");
+
+            // некорректный номер теста
+            if (testNumber < 1) return View("ErrorPage", "Некорректный номер теста");
+
+            int testId = preset.Tests[testNumber - 1];
+
+            var answers = Context.ExamTestAnswers.Where(answer => answer.TestId == testId).ToArray();
+            Context.ExamTestAnswers.RemoveRange(answers);
+            await Context.SaveChangesAsync();
+
+            return LocalRedirect($"/exam/starttest?examId={examId}&testNumber={testNumber}");
+        }
+
+        private async Task SaveTestResult(UserExamResult userExamResult)
         {
             userExamResult.IsCompleted = true;
-            Context.SaveChanges();
+            await Context.SaveChangesAsync();
         }
 
         [HttpPost]
@@ -171,10 +361,10 @@ namespace usue_online_tests.Controllers
             // если исчез генератор
             if (creator == null) return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
 
-            if (CreateHash(user.Name + user.Group + exam.Id) != hash) return View("ErrorPage", "");
+            if (CreateHash(user.Name + user.Group + exam.Id) != hash && !preset.IsHomework) return View("ErrorPage", "");
 
             ITest newTest = creator.CreateTest(hash);
-            if (new Regex("<(.*?)>").Matches(newTest.Text).Count + newTest.CheckBoxes?.Length < testsCount) 
+            if (new Regex("<(.*?)>").Matches(newTest.Text).Count + newTest.CheckBoxes?.Length < testsCount)
                 return View("ErrorPage", "Некорректное количество ответов");
 
             // create dictionary with answers

@@ -1,32 +1,96 @@
-﻿@model Homework
+﻿@using Microsoft.Extensions.Primitives
+@model ExamWrapper
 
 @section Scripts
     {
-        <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-                extensions: ["tex2jax.js", "/libs/forminput.js"],
-                jax: ["input/TeX", "output/HTML-CSS"],
-                tex2jax: {
-                    inlineMath: [
-                    ["$", "$"],
-                    ["\\(", "\\)"]
-                    ],
-                    TeX: { extensions: ["AMSmath.js", "AMSsymbols.js"] },
-                },
-                showMathMenu: false,
-                messageStyle: "none"
-            });
-        </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            extensions: ["tex2jax.js", "/libs/forminput.js"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+                inlineMath: [
+                ["$", "$"],
+                ["\\(", "\\)"]
+                ],
+                TeX: { extensions: ["AMSmath.js", "AMSsymbols.js"] },
+            },
+            showMathMenu: false,
+            messageStyle: "none"
+        });
+    </script>
 
 
+    @if (Model.TestPreset.TimeLimited)
+    {
         <script src="/js/timer.js"></script>
+    }
+    <link type="text/css" rel="stylesheet" href="/css/starttest.css" />
+    <link type="text/css" rel="stylesheet" href="/css/themestyle.css" />
+    <link type="text/css" rel="stylesheet" href="/css/alltest.css" />
 }
 
-<div class="homework-tasks-wrapper">
-    <h1>TASK LIST</h1>
-</div>
+@*Если это ДЗ то рендер списка заданий*@
+@if (Model.TestPreset.IsHomework)
+{
+    <div class="task-list">
+        @{
+            StringValues examId;
+            Context.Request.Query.TryGetValue("testNumber", out examId);
+        }
+        @for (int i = 0; i < Model.TestPreset.Tests.Length; i++)
+        {
+            @if (examId.FirstOrDefault() == (i + 1).ToString())
+            {
+                <div onclick="location.replace('/exam/starttest?examId=@Model.ExamId&amp;testNumber=@(i + 1)')" class="task-num current-task">@(i + 1)</div>
+            }
+            else
+            {
+                <div onclick="location.replace('/exam/starttest?examId=@Model.ExamId&amp;testNumber=@(i + 1)')" class="task-num">@(i + 1)</div>
+            }
+        }
+    </div>
+    <p class="show-task-list">Показать список заданий</p>
+
+    <script>
+        document.getElementsByClassName("show-task-list")[0].addEventListener("click", (e) => {
+            document.getElementsByClassName("task-list")[0].style.display = "flex";
+            e.target.style.display = "none";
+        });
+    </script>
+}
 
 @{
-    await Html.RenderPartialAsync("Test", Model.TestWrapper);
+    if (Model.ChangeAnswer && Model.OldTestResult != null)
+    {
+        <p style="margin-bottom: 10px;">Результат: @Model.OldTestResult.CorrectAnswers/@Model.OldTestResult.TotalAnswers</p>
+
+        Context.Request.Query.TryGetValue("testNumber", out StringValues testNumber);
+        int.TryParse(testNumber.FirstOrDefault(), out int testNum);
+
+        <form style="margin-bottom: 10px;" method="get" action="/exam/starttest">
+            <input hidden name="examId" value="@Model.ExamId" />
+
+            <input hidden name="testNumber" value="@(testNum + 1)" />
+            <input type="submit" class="btn" value="Следующий вопрос" />
+        </form>
+
+        <form method="get" action="/exam/ChangeHomeworkAnswer">
+            <input hidden name="examId" value="@Model.ExamId" />
+            <input hidden name="testNumber" value="@testNum" />
+            <input type="submit" class="btn" value="Ответить заново на этот тест" />
+        </form>
+    }
+    else if (Model.SaveResult)
+    {
+        <p style="margin-bottom: 10px;">Вы действительно хотите завершить выполнение домошней работы?</p>
+        <form method="post" action="/exam/SaveHomeworkResult">
+            <input hidden name="examId" value="@Model.ExamId"/>
+            <input class="btn" type="submit" value="Подтвердить"/>
+        </form>
+    }
+    else
+    {
+        await Html.RenderPartialAsync("Test", Model.TestWrapper);
+    }
 }
