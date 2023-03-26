@@ -3053,7 +3053,7 @@ body[dir="rtl"] .checkbox {
     }
 
     .lg\:flex-row {
-        flex-direction: row;
+        /*flex-direction: row;*/
     }
 }
 

@@ -1,4 +1,14 @@
 ﻿@section Scripts
     {
-    <link rel="stylesheet" href="css/studentlist.css" />
+    <link rel="stylesheet" href="/css/studentlist.css" />
 }
+
+<form action="/studentlist/createpage" method="post">
+    <div class="create_list_wrapper">
+        <label class="lb_text" name="groupname">Название группы:</label>
+        <input type="text" name="groupname" class="input_text input input-bordered" />
+        <label class="lb_text">Список студентов:</label>
+        <textarea id="confirmationText" class="input_text student-list-input input input-bordered" name="studentlist"></textarea>
+        <input type="submit" class="btn" value="Создать группу"/>
+    </div>
+</form>

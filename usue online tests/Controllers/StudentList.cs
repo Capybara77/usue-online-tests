@@ -33,5 +33,33 @@ namespace usue_online_tests.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult CreatePage(string groupName, string studentList)
+        {
+            string[] students = studentList.Split("\r\n").Distinct().ToArray();
+
+            Random random = new Random();
+
+            User[] users = new User[students.Length];
+
+            for (var i = 0; i < students.Length; i++)
+            {
+                users[i] = new User
+                {
+                    Group = groupName,
+                    IsDark = false,
+                    Login = random.Next(100000, 999999).ToString(),
+                    Name = students[i],
+                    Role = Roles.User,
+                    Password = random.Next(100000, 999999).ToString()
+                };
+            }
+
+            DataContext.Users.AddRange(users);
+            DataContext.SaveChanges();
+
+            return View("DisplayUsers", users);
+        }
     }
 }

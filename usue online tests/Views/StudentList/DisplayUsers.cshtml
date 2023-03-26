@@ -1,0 +1,37 @@
+﻿@model User[]
+
+<h2>Список студентов:</h2>
+
+<style>
+    table {
+        width: 100%;
+        font-size: 18px;
+        margin: 20px 0;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+        vertical-align: top;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+<table>
+    <tr>
+        <th>ФИО</th>
+        <th>Логин</th>
+        <th>Пароль</th>
+        <th>Группа</th>
+    </tr>
+    @foreach (var user in Model) {
+        <tr>
+            <td>@user.Name</td>
+            <td>@user.Login</td>
+            <td>@user.Password</td>
+            <td>@user.Group</td>
+        </tr>
+    }
+</table>
