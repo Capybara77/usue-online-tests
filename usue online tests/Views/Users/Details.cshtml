@@ -1,4 +1,5 @@
 ﻿@model usue_online_tests.Models.User
+@inject GetUserByCookie GetUserByCookie
 
 @{
     ViewData["Title"] = "Details";
@@ -10,40 +11,45 @@
     <h4>User</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Login)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Login)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-        <dt class = "col-sm-2">
+        @{
+            if (GetUserByCookie.GetUser().Role == Roles.Admin)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Password)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Password)
+                </dd>
+            }
+        }
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Role)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Role)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Group)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Group)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IsDark)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.IsDark)
         </dd>
     </dl>

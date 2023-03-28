@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<usue_online_tests.Models.User>
+@inject GetUserByCookie GetUserByCookie
 
 @{
     ViewData["Title"] = "Index";
@@ -18,9 +19,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.Login)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
+            @{
+                if (GetUserByCookie.GetUser().Role == Roles.Admin)
+                {
+                    <th>
+                        @Html.DisplayNameFor(model => model.Password)
+                    </th>
+                }
+            }
             <th>
                 @Html.DisplayNameFor(model => model.Role)
             </th>
@@ -34,32 +40,38 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Login)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Group)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDark)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Login)
+                </td>
+                @{
+                    if (GetUserByCookie.GetUser().Role == Roles.Admin)
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Password)
+                        </td>
+                    }
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.Role)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Group)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsDark)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

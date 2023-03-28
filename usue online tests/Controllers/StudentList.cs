@@ -34,11 +34,12 @@ namespace usue_online_tests.Controllers
             return View();
         }
 
+
         [HttpPost]
         public IActionResult CreatePage(string groupName, string studentList)
         {
             string[] students = studentList.Split("\r\n").Distinct().ToArray();
-
+            
             Random random = new Random();
 
             User[] users = new User[students.Length];

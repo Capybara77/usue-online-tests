@@ -11,7 +11,7 @@ using usue_online_tests.Models;
 
 namespace usue_online_tests.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Teacher")]
     public class UsersController : Controller
     {
         private readonly DataContext _context;
@@ -142,6 +142,12 @@ namespace usue_online_tests.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var user = await _context.Users.FindAsync(id);
+
+            var examResults = _context.UserExamResults.Include(result => result.ExamTestAnswers).Where(result => result.User.Id == id).ToArray();
+
+            _context.ExamTestAnswers.RemoveRange(examResults.SelectMany(result => result.ExamTestAnswers).ToArray());
+            _context.UserExamResults.RemoveRange(examResults);
+
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
