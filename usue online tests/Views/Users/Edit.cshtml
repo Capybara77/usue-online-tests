@@ -1,4 +1,5 @@
 ﻿@model usue_online_tests.Models.User
+@inject GetUserByCookie GetUserByCookie
 
 @{
     ViewData["Title"] = "Edit";
@@ -25,7 +26,16 @@
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input class="form-control" type="text" id="Password" name="Password" value="">
+                @{
+                    if (GetUserByCookie.GetUser().Role != Roles.Admin)
+                    {
+                        <input hidden asp-for="Password" class="form-control" />
+                    }
+                    else
+                    {
+                        <input asp-for="Password" class="form-control" />
+                    }
+                }
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -59,5 +69,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

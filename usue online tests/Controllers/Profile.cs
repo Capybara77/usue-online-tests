@@ -137,5 +137,28 @@ namespace usue_online_tests.Controllers
             DataContext.SaveChanges();
             return StatusCode(200);
         }
+
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult ChangePassword(string password)
+        {
+            User user = GetUserByCookie.GetUser();
+
+            if (string.IsNullOrEmpty(password) || password.Length < 5 || password.Length > 40)
+            {
+                return View("~/Views/Exam/ErrorPage.cshtml", "Пароль не соответствует требованиям");
+            }
+
+            user.Password = password;
+            DataContext.SaveChanges();
+
+            return LocalRedirect("/login/loginout");
+        }
     }
 }
