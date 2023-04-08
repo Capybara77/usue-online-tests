@@ -22,9 +22,9 @@ namespace usue_online_tests.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Users.ToListAsync());
+            return View(_context.Users.ToListAsync().Result.OrderBy(user => user.Name).ToList());
         }
 
         // GET: Users/Details/5

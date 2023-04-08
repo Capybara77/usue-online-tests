@@ -27,6 +27,7 @@ namespace usue_online_tests.Report
                     .SelectMany(exam => DataContext.UserExamResults.Where(result => result.Exam.Id == ExamId))
                     .Include(result => result.ExamTestAnswers)
                     .Include(result => result.User)
+                    .OrderBy(result => result.User.Name)
                     .ToArray();
             private set => _userExamResults = value;
         }

@@ -64,7 +64,7 @@ public class TestPresetsController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(string name, string tests)
     {
-        if (name.Length > 30)
+        if (name.Length > 80)
             return StatusCode(400);
 
         bool timeLimited = Request.Form["timeLimited"].FirstOrDefault() == "on";
