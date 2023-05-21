@@ -1,0 +1,244 @@
+﻿@inject IWebHostEnvironment Environment
+
+@{
+    Layout = null;
+}
+
+@using Microsoft.AspNetCore.Hosting
+@model List<string>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/newStyle.css">
+    <link rel="stylesheet" href="/css/toastify.css"/>
+    <title>Доска для рисования</title>
+    <script src="https://unpkg.com/roughjs@4.5.2/bundled/rough.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="me" class="trailer"></div>
+        <div class="confirm-wrapper" style="display: none;">
+            <div class="confirm-container">
+                <h1 class="confirm-title">Вы точно хотите очистить всю доску?</h1>
+                <div class='hr-custom'></div>
+                <div class="confirm-btns-container">
+                    <button class="confirm-btn" id="confirm-cancel">Отменить</button>
+                    <button class="confirm-btn" id="confirm-agree">Подтвердить</button>
+                </div>
+            </div>
+        </div>
+        <div class="main-container">
+            <div class='cursor-container'>
+                <div class="cursor-item" title="Курсор - 'f' или 1">
+                    <button class="top-btn active-shape" data-shape-option="pointer" id="pointer-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class='cursor-icon' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mouse-pointer"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path><path d="M13 13l6 6"></path></svg>
+                    </button>
+                </div>
+                <div class="cursor-item" title="Ластик - 'e' или 2">
+                    <button class="top-btn" data-shape-option="eraser" id="eraser-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class='cursor-icon fill-icon' viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><path d="M216,207.8H130.3l34.8-34.7h0l56.6-56.6a24.1,24.1,0,0,0,0-33.9L176.4,37.3a24,24,0,0,0-33.9,0L85.9,93.9h0L29.3,150.5a24,24,0,0,0,0,33.9l37.1,37.1a7.9,7.9,0,0,0,5.7,2.3H216a8,8,0,0,0,0-16ZM153.8,48.6a8.1,8.1,0,0,1,11.3,0l45.2,45.3a7.9,7.9,0,0,1,0,11.3l-50.9,50.9L102.9,99.5Z"></path></svg>
+                    </button>
+                </div>
+                <div class='cursor-item' title="Карандаш - 'p' или 3">
+                    <button class="top-btn" data-shape-option="pen" id='pen-btn'>
+                        <svg xmlns="http://www.w3.org/2000/svg" class='cursor-icon' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pen-tool"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+                    </button>
+                </div>
+                <div class='cursor-item'>
+                    <button class="top-btn" data-shape-option="rectangle" title="Прямоугольник - 'r' или 4" id='rectangle-btn'>
+                        <svg xmlns="http://www.w3.org/2000/svg" class='cursor-icon' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+                    </button>
+                </div>
+                <div class='cursor-item'>
+                    <button class="top-btn" data-shape-option="line" title="Прямая линия - 'v' или 5" id='line-btn'>
+                        <svg xmlns="http://www.w3.org/2000/svg" class='cursor-icon fill-icon'  viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><path d="M214.6,86.6A31.6,31.6,0,0,1,192,96a32.7,32.7,0,0,1-16.3-4.4L91.6,175.7a32,32,0,0,1-5,38.9,31.9,31.9,0,0,1-45.2,0,31.9,31.9,0,0,1,0-45.2h0a32,32,0,0,1,38.9-5l84.1-84.1a32,32,0,1,1,50.2,6.3Z"></path></svg>
+                    </button>
+                </div>
+                <div class="cursor-item" title="Окружность - 'c' или 6">
+                    <button class="top-btn" data-shape-option="ellipse" id="ellipse-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class='cursor-icon' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle"><circle cx="12" cy="12" r="10"></circle></svg>
+                    </button>
+                </div>
+                <div class="cursor-item" title="Текст - 't' или 7">
+                    <button class="top-btn" data-shape-option="text" id="text-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class='cursor-icon'  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-type"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+                    </button>
+                </div>
+                <div class="cursor-item" title="Изображение - 'i' или 8">
+                    <button class="top-btn" data-shape-option="image" id="image-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class='cursor-icon' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="options-wrapper" style="display: none;">
+                <div class="options-color-container" id="options-color-fill">
+                    <p>Цвет зарисовки</p>
+                    <div class="color-container">
+                        <div class="color-picker"></div>
+                        <div class="color-list"
+                             id="color-list"
+                             style="display: none">
+                            @foreach (var color in Model)
+                            {
+                                <div class="color-item" id="color-item"
+                                 style="background-color: @color"></div>
+                            }
+                        </div>
+                        <div class="color-picker-input">
+                            <p>#</p>
+                            <input placeholder="000000"
+                                   type="text"
+                                   id="color-picker-input" />
+                        </div>
+                    </div>
+                </div>
+                <div class="options-color-container" id="options-color-border">
+                    <p>Цвет границы</p>
+                    <div class="color-container">
+                        <div class="color-picker" id="stroke-color-picker"></div>
+                        <div class="color-list"
+                             id="stroke-color-list"
+                             style="display: none">
+                            @foreach (var color in Model)
+                            {
+                                <div class="color-item" id="stroke-color-item"
+                                 style="background-color: @color"></div>
+                            }
+                        </div>
+                        <div class="color-picker-input" id="stroke-color-picker-container"> 
+                            <p>#</p>
+                            <input placeholder="000000"
+                                   type="text"
+                                   id="stroke-color-picker-input" />
+                        </div>
+                    </div>
+                </div>
+                <div class="options-color-container" id="options-color-text" >
+                    <p>Цвет текста</p>
+                    <div class="color-container">
+                        <div class="color-picker" id="text-color-picker"></div>
+                        <div class="color-list"
+                             id="text-color-list"
+                             style="display: none">
+                            @foreach (var color in Model)
+                            {
+                                <div class="color-item" id="text-color-item"
+                                 style="background-color: @color"></div>
+                            }
+                        </div>
+                        <div class="color-picker-input" id="text-color-picker-container"> 
+                            <p>#</p>
+                            <input placeholder="000000"
+                                   type="text"
+                                   id="text-color-picker-input" />
+                        </div>
+                    </div>
+                </div>
+                <div class="options-container" id='width-options-container'>
+                    <p>Толщина линии</p>
+                    <div class="options-btns-container">
+                        <div><button class="option-btn width-btn" id="small-width-btn" data-line-width="5">smol</button></div>
+                        <div><button class="option-btn width-btn active-option" id="middle-width-btn" data-line-width="12">norm</button></div>
+                        <div><button class="option-btn width-btn" id="large-width-btn" data-line-width="20">larj</button></div>
+                    </div>
+                </div>
+                <div class="options-container" id='font-size-options-container'>
+                    <p>Размер текста</p>
+                    <div class="options-btns-container">
+                        <div><button class="option-btn font-size-btn" id="font-s-btn" data-font-size="0.875rem">S</button></div>
+                        <div><button class="option-btn font-size-btn active-option" id="font-m-btn" data-font-size="1rem">M</button></div>
+                        <div><button class="option-btn font-size-btn" id="font-l-btn" data-font-size="1.2rem">L</button></div>
+                        <div><button class="option-btn font-size-btn" id="font-xl-btn" data-font-size="1.5rem">XL</button></div>
+                    </div>
+                </div>
+                <div class="options-container" id="opacity-options-container">
+                    <p>Прозрачность линии</p>
+                    <input type="range" min="0.1" max="1" value="1" step="0.1" id="input-opacity" />
+                </div>
+                <div class="options-container" id="fill-style-options-container">
+                    <p>Стиль заливки</p>
+                    <div class="fill-style-options-container">
+                        <button class="fill-style-btn active-fill-style" data-fill-option="hachure">
+                            hachure
+                        </button>
+                        <button class="fill-style-btn" data-fill-option="solid">
+                            solid
+                        </button>
+                        <button class="fill-style-btn" data-fill-option="zigzag">
+                            zigzag
+                        </button>
+                        <button class="fill-style-btn" data-fill-option="cross-hatch">
+                            cross-hatch
+                        </button>
+                        <button class="fill-style-btn" data-fill-option="dashed">
+                            dashed
+                        </button>
+                        <button class="fill-style-btn" data-fill-option="zigzag-line">
+                            zigzag-line
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="zoom-container">
+                <button class="zoom-btn" id="zoom-decrease"><span>-</span></button>
+                <div class="zoom-current-container"><span id="zoom-current">100%</span></div>
+                <button class="zoom-btn" id="zoom-increase"><span>+</span></button>
+            </div>
+            <div class="settings-wrapper">
+                <button class="settings-show-btn" id='settings-show-btn'>
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="settings-show-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </span>
+                </button>
+                <section class="settings-container" style="display: none;">
+                    <button class="settings-item" id="save-btn">
+                        <div class="settings-item-icon">
+                            <?xml version="1.0" encoding="utf-8"?>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="cursor-icon fill-icon" viewBox="0 0 24 24" >
+                                <path d="M10 2L10 11L6 11L12 17L18 11L14 11L14 2L10 2 z M 2 20L2 22L22 22L22 20L2 20 z" />
+                            </svg>
+                        </div>
+                        <div class="settings-item-text">Сохранить файл</div>
+                        <div class="settings-item-shortcut">Ctrl+D</div>
+                    </button>
+                    <button class="settings-item" id="save-server-btn">
+                        <div class="settings-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="cursor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload-cloud"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path><polyline points="16 16 12 12 8 16"></polyline></svg>
+                        </div>
+                        <div class="settings-item-text">Сохранить доску на сервере</div>
+                        <div class="settings-item-shortcut">Ctrl+Shift+O</div>
+                    </button>
+                    <button class="settings-item" id="clear-btn">
+                        <div class="settings-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="cursor-icon fill-icon"  viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><path d="M224,56a8,8,0,0,1-8,8h-8V208a16,16,0,0,1-16,16H64a16,16,0,0,1-16-16V64H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,56ZM88,32h80a8,8,0,0,0,0-16H88a8,8,0,0,0,0,16Z"></path></svg>
+                        </div>
+                        <div class="settings-item-text">Очистить полотно</div>
+                        <div class="settings-item-shortcut">Ctrl+Shift+Del</div>
+                    </button>
+                    <hr/>
+                    <button class="settings-item" id="change-theme-btn">
+
+                        <div class="settings-item-icon" id="moon-icon-container" style="display: block;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="cursor-icon"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        </div>
+
+                        <div class="settings-item-icon" id="sun-icon-container" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="cursor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        </div>
+
+                        <div class="settings-item-text" id="theme-inner-text">Темная тема </div>
+                        <div class="settings-item-shortcut">Ctrl+Shift+T</div>
+                    </button>
+                    
+                </section>
+            </div>
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

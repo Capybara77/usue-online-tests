@@ -40,14 +40,10 @@ namespace usue_online_tests
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            //services.AddRazorPages();
-            //services.AddServerSideBlazor();
+            services.AddSingleton<DataContext>();
 
             services.AddHttpContextAccessor();
-            //services.AddScoped(typeof(DataContext), _ => new DataContext());
-            services.AddScoped<DataContext>();
             services.AddSingleton(new TestsLoader(_environment));
-            //services.AddSingleton<IHostedService, TestAnalyticsService>();
             services.AddScoped<GetUserByCookie>();
             services.AddScoped<ReportMaker, ExcelReportMaker>();
             services.AddScoped<IReportDataProvider, DbDataProvider>();
@@ -87,7 +83,6 @@ namespace usue_online_tests
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
             app.Use(async (context, func) =>

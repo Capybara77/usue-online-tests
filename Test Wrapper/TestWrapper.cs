@@ -21,7 +21,7 @@ namespace Test_Wrapper
 
     public interface ITimeLimit
     {
-        int TimeLimitSeconds { get; set; }
+        public int TimeLimitSeconds { get; set; }
     }
 
     public interface ITestGroup

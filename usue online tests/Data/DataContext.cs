@@ -26,7 +26,6 @@ namespace usue_online_tests.Data
             Configuration = configuration;
 
             Database.EnsureCreated();
-            //Database.Migrate();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

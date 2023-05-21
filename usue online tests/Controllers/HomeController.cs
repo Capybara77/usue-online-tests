@@ -55,12 +55,6 @@ namespace usue_online_tests.Controllers
         //    return View();
         //}
 
-        public IActionResult GetUserByName(string name)
-        {
-            User user = DataContext.Users.FirstOrDefault(user1 => user1.Name == name);
-            return user == null ? new NotFoundResult() : View(user);
-        }
-
         public IActionResult Privacy()
         {
             return View();
