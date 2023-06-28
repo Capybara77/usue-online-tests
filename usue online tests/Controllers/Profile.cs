@@ -43,31 +43,31 @@ namespace usue_online_tests.Controllers
                 FinishStartedExams();
 
                 // лист готовых отчетов
-                var completedExamsPairs = DataContext.Exams
-                    .Include(exam => exam.Preset)
-                    .SelectMany(exam => DataContext.UserExamResults
-                            .Where(result => result.Exam.Id == exam.Id && result.Exam.Preset.Owner == user),
-                        (exam, examResult) => new { exam, examResult });
+                //var completedExamsPairs = DataContext.Exams
+                //    .Include(exam => exam.Preset)
+                //    .SelectMany(exam => DataContext.UserExamResults
+                //            .Where(result => result.Exam.Id == exam.Id && result.Exam.Preset.Owner == user),
+                //        (exam, examResult) => new { exam, examResult });
 
                 var completedExamsPairs2 = DataContext.Exams
                     .Include(exam => exam.Preset)
                     .Where(exam => exam.Preset.Owner.Id == user.Id).ToArray();
 
-                var timeNow = DateTime.Now.ToNowEkb();
+                //var timeNow = DateTime.Now.ToNowEkb();
 
-                Exam[] completedExams = completedExamsPairs.Where(t =>
-                        //t.examResult.IsCompleted == true &&
-                        true)
-                    .Select(t => t.exam).ToArray();
+                //Exam[] completedExams = completedExamsPairs.Where(t =>
+                //        //t.examResult.IsCompleted == true &&
+                //        true)
+                //    .Select(t => t.exam).ToArray();
 
-                ExamResult[] examResults = completedExams.Select(exam => new ExamResult
-                {
-                    Exam = exam,
-                    Results = DataContext.UserExamResults
-                        .Where(result => result.Exam == exam)
-                        .Include(result => result.User)
-                        .ToArray()
-                }).Distinct(new EqualityComparerExamResult()).ToArray();
+                //ExamResult[] examResults = completedExams.Select(exam => new ExamResult
+                //{
+                //    Exam = exam,
+                //    Results = DataContext.UserExamResults
+                //        .Where(result => result.Exam == exam)
+                //        .Include(result => result.User)
+                //        .ToArray()
+                //}).Distinct(new EqualityComparerExamResult()).ToArray();
 
                 ExamResult[] examResults2 = completedExamsPairs2.Select(exam => new ExamResult
                 {

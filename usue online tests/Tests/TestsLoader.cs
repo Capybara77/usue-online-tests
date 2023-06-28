@@ -27,38 +27,14 @@ namespace usue_online_tests.Tests
 
         private void LoadTests()
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(assembly => assembly.FullName == "usue online tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
-            var all = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(assembly =>
+                assembly.FullName == "usue online tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
 
             foreach (Assembly assembly in assemblies)
             {
                 foreach (Type type in assembly.ExportedTypes)
                 {
                     CheckAndLoadCreator(type);
-                }
-            }
-        }
-
-        private void CheckAndLoadCreator(Type type)
-        {
-            Type[] interfaces = type.GetInterfaces();
-            foreach (Type i in interfaces)
-            {
-                if (i == typeof(ITestCreator))
-                {
-                    AllTests.Add(type);
-                    ITestCreator creator =
-                        (ITestCreator)type.GetConstructor(Type.EmptyTypes)?.Invoke(Array.Empty<object>());
-
-                    if (creator != null)
-                    {
-                        string mystring = creator.Name + creator.Description;
-                        MD5 md5Hasher = MD5.Create();
-                        byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(mystring));
-                        int ivalue = BitConverter.ToInt32(hashed, 0);
-                        creator.TestID = ivalue;
-                        TestCreators.Add(creator);
-                    }
                 }
             }
         }
@@ -94,5 +70,31 @@ namespace usue_online_tests.Tests
                 }
             }
         }
+
+        private void CheckAndLoadCreator(Type type)
+        {
+            Type[] interfaces = type.GetInterfaces();
+            foreach (Type i in interfaces)
+            {
+                if (i == typeof(ITestCreator))
+                {
+                    AllTests.Add(type);
+                    ITestCreator creator =
+                        (ITestCreator)type.GetConstructor(Type.EmptyTypes)?.Invoke(Array.Empty<object>());
+
+                    if (creator != null)
+                    {
+                        string mystring = creator.Name + creator.Description;
+                        MD5 md5Hasher = MD5.Create();
+                        byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(mystring));
+                        int ivalue = BitConverter.ToInt32(hashed, 0);
+                        creator.TestID = ivalue;
+                        TestCreators.Add(creator);
+                    }
+                }
+            }
+        }
+
+        
     }
 }

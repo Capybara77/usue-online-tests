@@ -8,6 +8,52 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Tests\Tasks\BigScrTestRelatLS01.cs" />
+    <Compile Remove="Tests\Tasks\BigScrTestRelatLS02.cs" />
+    <Compile Remove="Tests\Tasks\BigScrTestRelatLS03.cs" />
+    <Compile Remove="Tests\Tasks\BigScrTestRelatLS04.cs" />
+    <Compile Remove="Tests\Tasks\BigScrTestRelatLS05.cs" />
+    <Compile Remove="Tests\Tasks\BigScrTestRelatLS06.cs" />
+    <Compile Remove="Tests\Tasks\BigScrTestRelatLS07.cs" />
+    <Compile Remove="Tests\Tasks\BigScrTestRelatLS08.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Tests\Tasks\BigScrTestRelatLS01.cs">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Tests\Tasks\BigScrTestRelatLS02.cs">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Tests\Tasks\BigScrTestRelatLS03.cs">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Tests\Tasks\BigScrTestRelatLS04.cs">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Tests\Tasks\BigScrTestRelatLS05.cs">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Tests\Tasks\BigScrTestRelatLS06.cs">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Tests\Tasks\BigScrTestRelatLS07.cs">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Tests\Tasks\BigScrTestRelatLS08.cs">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EPPlus" Version="6.0.7" />
     <PackageReference Include="MathParser.org-mXparser" Version="5.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.16" />
@@ -29,12 +75,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Test Wrapper\Test Wrapper.csproj" />
-    <ProjectReference Include="..\UserTest\UserTest.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Tests\Tasks\" />
     <Folder Include="Tests\Tasks2\" />
+    <Folder Include="Tests\Ur\" />
   </ItemGroup>
 
 </Project>

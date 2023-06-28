@@ -4,6 +4,11 @@
 @if (Model != null)
 {
     <div class="test-card-wrapper">
+        @if (!Model.Any())
+        {
+            <p>Нет доступных тестов</p>
+        }
+
         @foreach (var exam in Model)
         {
             <div class="test-card">

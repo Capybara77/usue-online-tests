@@ -58,3 +58,22 @@
     font-size: 20px;
 
 }
+
+.group-container {
+    flex-basis: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    flex-direction: column
+}
+
+.test-results {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.container-name {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 auto 25px 50px;
+}

@@ -35,12 +35,12 @@ namespace usue_online_tests
         }
 
         public IConfiguration Configuration { get; }
-
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddSingleton<DataContext>();
+            services.AddScoped<DataContext>();
 
             services.AddHttpContextAccessor();
             services.AddSingleton(new TestsLoader(_environment));
@@ -57,11 +57,6 @@ namespace usue_online_tests
                 options.AccessDeniedPath = "/login/noaccess";
                 options.LoginPath = "/login/index";
                 options.LogoutPath = "/login/loginout";
-
-                options.Events.OnValidatePrincipal += context =>
-                {
-                    return Task.CompletedTask;
-                };
             });
         }
 

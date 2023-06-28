@@ -27,7 +27,15 @@
     <div class="grow max-w-screen-lg mx-auto w-full">
         @RenderBody()
     </div>
-    <footer class="footer footer-center p-4 text-base-content">© @(DateTime.Now.ToNowEkb().Year) - Уральский государственный экономический университет</footer>
+    <footer class="footer footer-center p-4 text-base-content">
+        <div class="footer-center p-4 text-base-content">
+            <p>ВКР - 2023</p>
+            <p>Серверная часть - Суетин Андрей</p>
+            <p>Клиентская часть - Скоробогач Максим</p>
+            <p>Генераторы тестов - Янабеков Александр</p>
+            © @(DateTime.Now.ToNowEkb().Year) - Уральский государственный экономический университет
+        </div>
+    </footer>
     <script src="~/bundles/index.js"></script>
 </body>
 </html>

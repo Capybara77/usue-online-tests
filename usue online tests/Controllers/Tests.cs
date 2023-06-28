@@ -20,13 +20,6 @@ namespace usue_online_tests.Controllers
     [Authorize]
     public class Tests : Controller
     {
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        static extern IntPtr OpenThread(uint dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
-
-
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        static extern bool TerminateThread(IntPtr hThread, uint dwExitCode);
-
         public List<ITestCreator> TestCreators { get; set; }
 
         public DataContext DataContext { get; }
@@ -43,7 +36,8 @@ namespace usue_online_tests.Controllers
         {
             if (HttpContext.User.Identity is { IsAuthenticated: true } && HttpContext.User.IsInRole("User"))
             {
-                return View(TestsLoader.TestCreators.Where(creator => !(creator is IHidden hidden) || !hidden.IsHidden).ToList());
+                return View(TestsLoader.TestCreators.Where(creator => !(creator is IHidden hidden) || !hidden.IsHidden)
+                    .ToList());
             }
             return View(TestsLoader.TestCreators);
         }

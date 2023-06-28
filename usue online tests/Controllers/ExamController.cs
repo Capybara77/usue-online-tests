@@ -141,6 +141,92 @@ namespace usue_online_tests.Controllers
             return View(test);
         }
 
+        [HttpPost]
+        public ActionResult CheckAnswersExam(int examId, int testNumber, int testsCount, int hash, int testId)
+        {
+            string[] skipData = { "__RequestVerificationToken", "testId", "hash", "testsCount" };
+            ITestCreator creator = TestsLoader.TestCreators.FirstOrDefault(testCreator => testCreator.TestID == testId);
+            User user = GetUserByCookie.GetUser();
+            Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
+            if (exam == null) return View("ErrorPage", "Нет теста");
+            TestPreset preset = exam.Preset;
+
+            // если в экзамене нет такого задания
+            if (!preset.Tests.Contains(testId)) return View("ErrorPage", "Нет такого задания в этом тесте");
+
+            UserExamResult userExamResult =
+                Context.UserExamResults
+                    .Include(result => result.ExamTestAnswers)
+                    .FirstOrDefault(result => result.User.Id == user.Id && result.Exam.Id == examId);
+
+            // если пользователь не запустил первое задание
+            if (userExamResult == null)
+                return View("ErrorPage", "Вы не запустили тестирование");
+
+            // если уже ответил на этот вопрос
+            if (userExamResult.ExamTestAnswers.Any(answer => answer.TestId == testId && answer.DateTimeEnd != default))
+                return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber}");
+
+            // если исчез генератор
+            if (creator == null) return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
+
+            if (CreateHash(user.Name + user.Group + exam.Id) != hash && !preset.IsHomework) return View("ErrorPage", "");
+
+            ITest newTest = creator.CreateTest(hash);
+            if (new Regex("<(.*?)>").Matches(newTest.Text).Count + newTest.CheckBoxes?.Length < testsCount)
+                return View("ErrorPage", "Некорректное количество ответов");
+
+            // create dictionary with answers
+            KeyValuePair<string, StringValues>[] paramsArray = HttpContext.Request.Form.Where(pair => !skipData.Contains(pair.Key)).ToArray();
+            Dictionary<string, string> userAnswer = new Dictionary<string, string>();
+
+            foreach (KeyValuePair<string, StringValues> keyValuePair in paramsArray)
+            {
+                userAnswer.Add(keyValuePair.Key, keyValuePair.Value);
+            }
+
+            var examTestAnswer = userExamResult.ExamTestAnswers.FirstOrDefault(answer => answer.TestId == testId);
+
+            // если пользователь не запрашивал тест
+            if (examTestAnswer == null)
+                return View("ErrorPage", "Вы не запустили тестирование");
+
+            // проверка на истекшее время теста
+            if (exam.Preset.TimeLimited)
+            {
+                int secLimit = creator is ITimeLimit testCreatorLimit ? testCreatorLimit.TimeLimitSeconds : 60;
+
+                if (examTestAnswer.DateTimeStart + TimeSpan.FromSeconds(10 + secLimit) < DateTime.Now.ToNowEkb())
+                {
+                    examTestAnswer.TotalAnswers = testsCount;
+                    examTestAnswer.DateTimeEnd = DateTime.Now.ToNowEkb();
+                    examTestAnswer.CorrectAnswers = 0;
+
+                    AddTestResultToExamResult(userExamResult, examTestAnswer);
+                    Context.SaveChanges();
+                    return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
+                }
+            }
+
+            examTestAnswer.TotalAnswers = testsCount;
+            examTestAnswer.DateTimeEnd = DateTime.Now.ToNowEkb();
+
+            try
+            {
+                examTestAnswer.CorrectAnswers = creator.CheckAnswer(hash, userAnswer);
+            }
+            catch
+            {
+                examTestAnswer.CorrectAnswers = -1;
+            }
+
+            AddTestResultToExamResult(userExamResult, examTestAnswer);
+
+            Context.SaveChanges();
+
+            return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber}");
+        }
+
         private IActionResult StartHomework(int examId, int testNumber)
         {
             User user = GetUserByCookie.GetUser();
@@ -227,7 +313,7 @@ namespace usue_online_tests.Controllers
             ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
 
             if (testCreator == null)
-                return View("ErrorPage", "Нет генератора в системе. Обратитесь по номеру +79533804297");
+                return View("ErrorPage", "Нет генератора в системе");
 
             TestWrapper test = new TestWrapper
             {
@@ -330,92 +416,6 @@ namespace usue_online_tests.Controllers
         {
             userExamResult.IsCompleted = true;
             await Context.SaveChangesAsync();
-        }
-
-        [HttpPost]
-        public ActionResult CheckAnswersExam(int examId, int testNumber, int testsCount, int hash, int testId)
-        {
-            string[] skipData = { "__RequestVerificationToken", "testId", "hash", "testsCount" };
-            ITestCreator creator = TestsLoader.TestCreators.FirstOrDefault(testCreator => testCreator.TestID == testId);
-            User user = GetUserByCookie.GetUser();
-            Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
-            if (exam == null) return View("ErrorPage", "Нет теста");
-            TestPreset preset = exam.Preset;
-
-            // если в экзамене нет такого задания
-            if (!preset.Tests.Contains(testId)) return View("ErrorPage", "Нет такого задания в этом тесте");
-
-            UserExamResult userExamResult =
-                Context.UserExamResults
-                    .Include(result => result.ExamTestAnswers)
-                    .FirstOrDefault(result => result.User.Id == user.Id && result.Exam.Id == examId);
-
-            // если пользователь не запустил первое задание
-            if (userExamResult == null)
-                return View("ErrorPage", "Вы не запустили тестирование");
-
-            // если уже ответил на этот вопрос
-            if (userExamResult.ExamTestAnswers.Any(answer => answer.TestId == testId && answer.DateTimeEnd != default))
-                return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber}");
-
-            // если исчез генератор
-            if (creator == null) return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
-
-            if (CreateHash(user.Name + user.Group + exam.Id) != hash && !preset.IsHomework) return View("ErrorPage", "");
-
-            ITest newTest = creator.CreateTest(hash);
-            if (new Regex("<(.*?)>").Matches(newTest.Text).Count + newTest.CheckBoxes?.Length < testsCount)
-                return View("ErrorPage", "Некорректное количество ответов");
-
-            // create dictionary with answers
-            KeyValuePair<string, StringValues>[] paramsArray = HttpContext.Request.Form.Where(pair => !skipData.Contains(pair.Key)).ToArray();
-            Dictionary<string, string> userAnswer = new Dictionary<string, string>();
-
-            foreach (KeyValuePair<string, StringValues> keyValuePair in paramsArray)
-            {
-                userAnswer.Add(keyValuePair.Key, keyValuePair.Value);
-            }
-
-            var examTestAnswer = userExamResult.ExamTestAnswers.FirstOrDefault(answer => answer.TestId == testId);
-
-            // если пользователь не запрашивал тест
-            if (examTestAnswer == null)
-                return View("ErrorPage", "Вы не запустили тестирование");
-
-            // проверка на истекшее время теста
-            if (exam.Preset.TimeLimited)
-            {
-                int secLimit = creator is ITimeLimit testCreatorLimit ? testCreatorLimit.TimeLimitSeconds : 60;
-
-                if (examTestAnswer.DateTimeStart + TimeSpan.FromSeconds(10 + secLimit) < DateTime.Now.ToNowEkb())
-                {
-                    examTestAnswer.TotalAnswers = testsCount;
-                    examTestAnswer.DateTimeEnd = DateTime.Now.ToNowEkb();
-                    examTestAnswer.CorrectAnswers = 0;
-
-                    AddTestResultToExamResult(userExamResult, examTestAnswer);
-                    Context.SaveChanges();
-                    return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
-                }
-            }
-
-            examTestAnswer.TotalAnswers = testsCount;
-            examTestAnswer.DateTimeEnd = DateTime.Now.ToNowEkb();
-
-            try
-            {
-                examTestAnswer.CorrectAnswers = creator.CheckAnswer(hash, userAnswer);
-            }
-            catch
-            {
-                examTestAnswer.CorrectAnswers = -1;
-            }
-
-            AddTestResultToExamResult(userExamResult, examTestAnswer);
-
-            Context.SaveChanges();
-
-            return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber}");
         }
 
         private static void AddTestResultToExamResult(UserExamResult userExamResult, ExamTestAnswer examTestAnswer)

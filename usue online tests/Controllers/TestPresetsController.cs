@@ -34,7 +34,8 @@ namespace usue_online_tests.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.Tests = TestsLoader.TestCreators;
-            return View(await context.Presets.Where(preset => preset.Owner.Id == UserByCookie.GetUser().Id).ToListAsync());
+            return View(await context.Presets.Where(preset => preset.Owner.Id == UserByCookie.GetUser().Id)
+                .ToListAsync());
         }
 
         // GET: TestPresets/Details/5

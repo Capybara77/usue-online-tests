@@ -69,7 +69,11 @@
 {
     <h2>Завершенные тесты</h2>
 
-    <div class="test-results-wrapper">
+    @*    <div class="test-results-wrapper">
+        @{
+            profileWrapper.ExamResults = profileWrapper.ExamResults.OrderBy(result => result.Exam.Group).ToArray();
+        }
+
         @foreach (var examResult in profileWrapper.ExamResults)
         {
             <div class="test-result">
@@ -77,19 +81,64 @@
                 <p class="date-start">@examResult.Exam.DateTimeStart</p>
                 <p class="preset-name">@examResult.Exam.Preset.Name</p>
                 <form action="/profile/createreport" method="get">
-                    <input hidden name="examId" value="@examResult.Exam.Id" />
+                    <input hidden name="examId" value="@examResult.Exam.Id"/>
                     <button class="btn btn-start" type="submit">Создать отчет</button>
                 </form>
 
                 <form action="/exams/Delete" method="get">
-                    <input type="hidden" name="id" value="@examResult.Exam.Id" />
-                    <input type="submit" class="btn btn-start" value="Удалить тест" />
+                    <input type="hidden" name="id" value="@examResult.Exam.Id"/>
+                    <input type="submit" class="btn btn-start" value="Удалить тест"/>
                 </form>
 
                 @if (!examResult.Exam.IsEnd)
                 {
                     <p class="info-p">Тест еще не завершен</p>
                 }
+            </div>
+        }
+    </div>*@
+
+
+
+    <div class="test-results-wrapper">
+        @{
+            var groupedResults = profileWrapper.ExamResults.GroupBy(x => x.Exam.Group).OrderBy(results => results.Key).ToArray();
+
+            IOrderedEnumerable<ExamResult>[] sortedResults = new IOrderedEnumerable<ExamResult>[groupedResults.Length];
+
+            for (int i = 0; i < sortedResults.Length; i++)
+            {
+                sortedResults[i] = groupedResults[i].OrderByDescending(exam => exam.Exam.DateTimeEnd);
+            }
+        }
+        @foreach (var group in sortedResults)
+        {
+            <div class="group-container">
+                <h2 class="container-name">@group.First().Exam.Group</h2>
+                <div class="test-results">
+                    @foreach (ExamResult result in group)
+                    {
+                        <div class="test-result">
+                            <p class="group-name">@result.Exam.Group</p>
+                            <p class="date-start">@result.Exam.DateTimeStart</p>
+                            <p class="preset-name">@result.Exam.Preset.Name</p>
+                            <form action="/profile/createreport" method="get">
+                                <input hidden name="examId" value="@result.Exam.Id" />
+                                <button class="btn btn-start" type="submit">Создать отчет</button>
+                            </form>
+
+                            <form action="/exams/Delete" method="get">
+                                <input type="hidden" name="id" value="@result.Exam.Id" />
+                                <input type="submit" class="btn btn-start" value="Удалить тест" />
+                            </form>
+
+                            @if (!result.Exam.IsEnd)
+                            {
+                                <p class="info-p">Тест еще не завершен</p>
+                            }
+                        </div>
+                    }
+                </div>
             </div>
         }
     </div>

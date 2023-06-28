@@ -13,6 +13,7 @@ namespace usue_online_tests
     {
         public IHttpContextAccessor HttpContextAccessor { get; }
         public DataContext DataContext { get; }
+        public User User { get; set; }
 
         public GetUserByCookie(IHttpContextAccessor httpContextAccessor, DataContext dataContext)
         {
@@ -22,7 +23,7 @@ namespace usue_online_tests
 
         public User GetUser()
         {
-            return DataContext.Users.FirstOrDefault(user =>
+            return User ??= DataContext.Users.FirstOrDefault(user =>
                 user.Login == HttpContextAccessor.HttpContext.User.Identity.Name);
         }
     }
