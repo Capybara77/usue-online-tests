@@ -42,7 +42,7 @@ namespace usue_online_tests.Tests.List
                 // Проверяем использовал ли он в нем der, тоесть он мог бы просто передать исходное выражение и обернуть его в der, чтобы не решать
                 if (userExpression.getExpressionString().Contains("der")) return 0;
 
-                // Добавляем значение аргумента x = 5 
+                // Добавляем значение аргумента x = 5
                 userExpression.addArguments(new Argument("x", 5));
 
                 // Вычисляем значение обоих выражений и ищем разность (в теории, если все правильно, то она должна быть равна 0)
