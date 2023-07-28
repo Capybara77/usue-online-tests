@@ -1,4 +1,5 @@
 ﻿@model TestResult
+@inject GetUserByCookie GetUserByCookie
 
 @{
     ViewData["Title"] = "Результат прохождения теста";
@@ -13,13 +14,21 @@
         <div class="stat-title">Правильные ответы</div>
         <div class="stat-value">@Model.TotalRight/@Model.Total</div>
     </div>
-@*    <div class="stat">
-        <div class="stat-title">Время</div>
-        <div class="stat-value">00:00</div>
+    @if (Model.Exception != null && GetUserByCookie.GetUser().Role is Roles.Admin or Roles.Teacher)
+    {
+        <div>
+            <h1>Произошла ошибка при проверке ответа. Текст ошибки:</h1>
+            <h2>@Model.Exception.Message</h2>
+            <h3>@Model.Exception.StackTrace</h3>
+        </div>
+    }
+    @*    <div class="stat">
+    <div class="stat-title">Время</div>
+    <div class="stat-value">00:00</div>
     </div>
     <div class="stat">
-        <div class="stat-title">Коэффициент отвлеченности</div>
-        <div class="stat-value">0</div>
+    <div class="stat-title">Коэффициент отвлеченности</div>
+    <div class="stat-value">0</div>
     </div>*@
 </div>
 <br>

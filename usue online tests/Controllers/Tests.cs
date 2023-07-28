@@ -91,9 +91,10 @@ namespace usue_online_tests.Controllers
                 {
                     testResult.TotalRight = creator.CheckAnswer(hash, userAnswer);
                 }
-                catch
+                catch (Exception e)
                 {
                     testResult.TotalRight = -1;
+                    testResult.Exception = e;
                 }
             }
 

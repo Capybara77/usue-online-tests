@@ -15,6 +15,8 @@ namespace usue_online_tests.Models
 
         public int Total { get; set; }
 
+        public Exception? Exception { get; set; }
+
         //public double[] RightNumbers { get; set; }
         //public double[] RightTextAnswers { get; set; }
     }
