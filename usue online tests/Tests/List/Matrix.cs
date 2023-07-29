@@ -53,7 +53,14 @@ namespace usue_online_tests.Tests.List
 
             for (int i = 0; i < 3; i++)
             {
-                if (ans[ids[i + 9] - 1] == Convert.ToInt32(answers["j" + (i + 1)])) total++;
+                try
+                {
+                    if (ans[ids[i + 9] - 1] == Convert.ToInt32(answers["j" + (i + 1)])) total++;
+                }
+                catch
+                {
+                    // ignored
+                }
             }
 
             return total;

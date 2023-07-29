@@ -39,49 +39,27 @@ namespace usue_online_tests.Controllers
 
             if (user.Role == Roles.Teacher)
             {
-                // проверяем все тесты и завершаем те, у которых вышло время на прохождение
                 FinishStartedExams();
 
-                // лист готовых отчетов
-                //var completedExamsPairs = DataContext.Exams
-                //    .Include(exam => exam.Preset)
-                //    .SelectMany(exam => DataContext.UserExamResults
-                //            .Where(result => result.Exam.Id == exam.Id && result.Exam.Preset.Owner == user),
-                //        (exam, examResult) => new { exam, examResult });
-
-                var completedExamsPairs2 = DataContext.Exams
+                var completedExamsPairs = DataContext.Exams
                     .Include(exam => exam.Preset)
+                    .AsNoTracking()
                     .Where(exam => exam.Preset.Owner.Id == user.Id).ToArray();
 
-                //var timeNow = DateTime.Now.ToNowEkb();
-
-                //Exam[] completedExams = completedExamsPairs.Where(t =>
-                //        //t.examResult.IsCompleted == true &&
-                //        true)
-                //    .Select(t => t.exam).ToArray();
-
-                //ExamResult[] examResults = completedExams.Select(exam => new ExamResult
-                //{
-                //    Exam = exam,
-                //    Results = DataContext.UserExamResults
-                //        .Where(result => result.Exam == exam)
-                //        .Include(result => result.User)
-                //        .ToArray()
-                //}).Distinct(new EqualityComparerExamResult()).ToArray();
-
-                ExamResult[] examResults2 = completedExamsPairs2.Select(exam => new ExamResult
+                ExamResult[] examResults = completedExamsPairs.Select(exam => new ExamResult
                 {
                     Exam = exam,
                     Results = DataContext.UserExamResults
                         .Where(result => result.Exam == exam)
                         .Include(result => result.User)
+                        .AsNoTracking()
                         .ToArray()
                 }).Distinct(new EqualityComparerExamResult()).ToArray();
 
                 TeacherProfileWrapper profileWrapper = new TeacherProfileWrapper()
                 {
                     User = user,
-                    ExamResults = examResults2
+                    ExamResults = examResults
                 };
 
                 return View(profileWrapper);
@@ -94,6 +72,7 @@ namespace usue_online_tests.Controllers
                     .Where(result => result.IsCompleted && result.User.Id == user.Id)
                     .Include(result => result.Exam.Preset)
                     .Include(result => result.ExamTestAnswers)
+                    .AsNoTracking()
             };
 
             return View(userProfileWrapper);
