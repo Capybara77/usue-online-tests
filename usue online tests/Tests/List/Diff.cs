@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
 using org.mariuszgromada.math.mxparser;
-using org.mariuszgromada.math.mxparser.mathcollection;
 using Test_Wrapper;
 
 namespace usue_online_tests.Tests.List
