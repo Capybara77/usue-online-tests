@@ -14,6 +14,12 @@
     <h1 class="mb-8">Доступные тесты</h1>
 </div>
 
+<div class="prose">
+    <form action="/compiler/LoadTestPage" method="get">
+        <input type="submit" value="Загрузить код теста" class="btn btn-active"/>
+    </form>
+</div>
+
 <div class="flex-container">
     @{
         List<IGrouping<string, ITestCreator>> groups = Model.Where(creator => creator is ITestGroup).GroupBy(

@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Net.Http.Headers;
 using Test_Wrapper;
 
 namespace usue_online_tests.Tests
 {
     public class SimpleTest : ITestCreator, ITest
     {
-        private string[] randomWords = new[] { "саня", "набеков", "стас" };
+        private string[] randomWords = { "саня", "набеков", "стас" };
 
         public int TestID { get; set; }
         public string Name { get; } = "Simple Test";

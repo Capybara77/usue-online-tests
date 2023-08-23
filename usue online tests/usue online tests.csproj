@@ -78,6 +78,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Compiler\" />
+    <Folder Include="Pages\Compiler\" />
     <Folder Include="Tests\Tasks2\" />
     <Folder Include="Tests\Ur\" />
   </ItemGroup>
