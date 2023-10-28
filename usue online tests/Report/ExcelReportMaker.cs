@@ -53,8 +53,17 @@ namespace usue_online_tests.Report
             yPosition = CreateExcelTestsInfo(worksheet, yPosition) + 2;
 
             AutoFitColumns(worksheet);
+            SetFitColumns(worksheet);
 
             excelPackage.SaveAs(memoryStream);
+        }
+
+        private void SetFitColumns(ExcelWorksheet worksheet)
+        {
+            for (int i = 4; i < 100; i++)
+            {
+                worksheet.Column(i).Width = 20;
+            }
         }
 
         private int CreateExcelTimeSpentToAnswer(ExcelWorksheet worksheet, int y)
@@ -67,15 +76,14 @@ namespace usue_online_tests.Report
             {
                 var testId = DataProvider.Exam.Preset.Tests[i];
                 ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+                worksheet.Cells[y + 1, i + 3].Style.WrapText = true;
                 if (testCreator == null)
                 {
                     worksheet.Cells[y + 1, i + 3].Value = testId;
-                    worksheet.Cells[y + 1, i + 3].Style.TextRotation = 90;
                     continue;
                 }
 
                 worksheet.Cells[y + 1, i + 3].Value = testCreator.Name;
-                worksheet.Cells[y + 1, i + 3].Style.TextRotation = 90;
             }
 
             worksheet.Cells[y + 1, 3 + testCount].Value = "Всего затрачено времени на прохождение";
@@ -184,15 +192,15 @@ namespace usue_online_tests.Report
             {
                 var testId = DataProvider.Exam.Preset.Tests[i];
                 ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+                worksheet.Cells[y, i + 3].Style.WrapText = true;
+
                 if (testCreator == null)
                 {
                     worksheet.Cells[y, i + 3].Value = testId;
-                    worksheet.Cells[y, i + 3].Style.TextRotation = 90;
                     continue;
                 }
 
                 worksheet.Cells[y, i + 3].Value = testCreator.Name;
-                worksheet.Cells[y, i + 3].Style.TextRotation = 90;
             }
 
             worksheet.Cells[y, 3 + testCount].Value = "Итог";
