@@ -1,0 +1,27 @@
+﻿@section Scripts
+    {
+    <script type="module" src="~/js/ai.js"></script>
+
+}
+
+<section id="demos" class="invisible">
+    <h2>Демо: Обнаружение изображений</h2>
+
+    <div class="blend-shapes">
+        <ul class="blend-shapes-list" id="image-blend-shapes"></ul>
+    </div>
+
+    <div id="liveView" class="videoView">
+        <button id="webcamButton" class="mdc-button mdc-button--raised">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__label">ВКЛЮЧИТЬ ОБНАРУЖЕНИЕ</span>
+        </button>
+        <div style="position: relative;">
+            <video id="webcam" style="position: abso" autoplay playsinline></video>
+            <canvas class="output_canvas" id="output_canvas" style="position: absolute; left: 0; top: 0;"></canvas>
+        </div>
+    </div>
+    <div class="blend-shapes">
+        <ul class="blend-shapes-list" id="video-blend-shapes"></ul>
+    </div>
+</section>

@@ -2,6 +2,18 @@
     ViewData["Title"] = "Аудиторные тесты";
 }
 
+@section Scripts
+{
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <!-- have a button POST a click via AJAX -->
+    <button hx-post="/clicked" hx-swap="outerHTML">
+        Click Me
+    </button>
+    
+    <div class=""></div>
+}
+
+
 <div class="my-16 lg:my-32">
     <h1 class="text-4xl font-bold">Оценка знаний студентов.<br>Объективно.<br>По любым дисциплинам.</h1>
     <p class="text-lg my-5">Создаем условия для проведения независимых исследований в области образования.</p>
