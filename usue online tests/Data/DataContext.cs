@@ -20,6 +20,8 @@ namespace usue_online_tests.Data
         public DbSet<Exam> Exams { get; set; }
         public DbSet<UserExamResult> UserExamResults { get; set; }
         public DbSet<ExamTestAnswer> ExamTestAnswers { get; set; }
+        public DbSet<PredictionResult> PredictionResults { get; set; }
+        public DbSet<PredictionCategory> PredictionCategories { get; set; }
 
         public DataContext(IConfiguration configuration)
         {
