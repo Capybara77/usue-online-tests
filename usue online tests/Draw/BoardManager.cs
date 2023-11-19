@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.IO;
 using Newtonsoft.Json;
 
-
 public class BoardManager
 {
     public string PathToSaves { get; } = "saves";
