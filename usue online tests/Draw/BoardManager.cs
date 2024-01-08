@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-public class BoardManager // class
+public class BoardManager
 {
     public string PathToSaves { get; } = "saves";
     public Dictionary<int, List<byte[]>> Boards { get; }
