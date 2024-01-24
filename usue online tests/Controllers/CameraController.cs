@@ -38,12 +38,10 @@ public class CameraController : Controller
     }
 
     [HttpPost]
-    public async Task SendData([FromBody] PredictionResult predictionResult)
+    public bool SendData([FromBody] PredictionResult predictionResult)
     {
         var eyesOpen = PredictionHelper.IsEyesOpen(predictionResult);
-        Console.WriteLine(eyesOpen);
 
-        //await _context.AddAsync(predictionResult);
-        //await _context.SaveChangesAsync();
+        return eyesOpen;
     }
 }

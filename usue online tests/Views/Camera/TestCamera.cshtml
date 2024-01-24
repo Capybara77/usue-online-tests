@@ -4,6 +4,27 @@
 
 }
 
+<style>
+    .videoView {
+        display: flex;
+        justify-content: flex-start;
+        align-items: start;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    #box {
+        display: flex;
+        border: 10px solid transparent;
+    }
+
+    #webcamButton {
+        border: 1px solid gray;
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+</style>
+
 <section id="demos" class="invisible">
     <h2>Демо: Обнаружение изображений</h2>
 
@@ -13,11 +34,11 @@
 
     <div id="liveView" class="videoView">
         <button id="webcamButton" class="mdc-button mdc-button--raised">
-            <span class="mdc-button__ripple"></span>
-            <span class="mdc-button__label">ВКЛЮЧИТЬ ОБНАРУЖЕНИЕ</span>
+            ВКЛЮЧИТЬ ОБНАРУЖЕНИЕ
         </button>
-        <div style="position: relative;">
-            <video id="webcam" style="position: abso" autoplay playsinline></video>
+        
+        <div style="position: relative;" id="box">
+            <video id="webcam" autoplay playsinline ></video>
             <canvas class="output_canvas" id="output_canvas" style="position: absolute; left: 0; top: 0;"></canvas>
         </div>
     </div>
