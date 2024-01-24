@@ -138,7 +138,7 @@ function enableCam(event) {
         enableWebcamButton.innerText = "ENABLE PREDICTIONS";
     } else {
         webcamRunning = true;
-        enableWebcamButton.innerText = "DISABLE PREDICTIONS";
+        enableWebcamButton.innerText = "ОТКЛЮЧИТЬ ОБНАРУЖЕНИЕ";
     }
 
     const constraints = {
