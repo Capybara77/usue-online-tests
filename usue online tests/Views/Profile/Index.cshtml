@@ -104,9 +104,9 @@
         @{
             var groupedResults = profileWrapper.ExamResults.GroupBy(x => x.Exam.Group).OrderBy(results => results.Key).ToArray();
 
-            IOrderedEnumerable<ExamResult>[] sortedResults = new IOrderedEnumerable<ExamResult>[groupedResults.Length];
+            var sortedResults = new IOrderedEnumerable<ExamResult>[groupedResults.Length];
 
-            for (int i = 0; i < sortedResults.Length; i++)
+            for (var i = 0; i < sortedResults.Length; i++)
             {
                 sortedResults[i] = groupedResults[i].OrderByDescending(exam => exam.Exam.DateTimeEnd);
             }
@@ -120,7 +120,7 @@
                     {
                         <div class="test-result">
                             <p class="group-name">@result.Exam.Group</p>
-                            <p class="date-start">@result.Exam.DateTimeStart</p>
+                            @*<p class="date-start">@result.Exam.DateTimeStart</p>*@
                             <p class="preset-name">@result.Exam.Preset.Name</p>
                             <form action="/profile/createreport" method="get">
                                 <input hidden name="examId" value="@result.Exam.Id" />
