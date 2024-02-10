@@ -10,30 +10,44 @@ using usue_online_tests.Data;
 using usue_online_tests.Models;
 using usue_online_tests.Tests;
 
-namespace usue_online_tests.Controllers
+namespace usue_online_tests.Controllers;
+
+[Authorize(Roles = "Admin, Teacher")]
+public class ApiController : Controller
 {
-    [Authorize(Roles = "Admin, Teacher")]
-    public class ApiController : Controller
+    public DataContext Data { get; }
+    public GetUserByCookie UserByCookie { get; }
+    public TestsLoader TestLoader { get; }
+
+    public ApiController(DataContext data, GetUserByCookie userByCookie, TestsLoader testLoader)
     {
-        public DataContext Data { get; }
-        public GetUserByCookie UserByCookie { get; }
-        public TestsLoader TestLoader { get; }
+        Data = data;
+        UserByCookie = userByCookie;
+        TestLoader = testLoader;
+    }
 
-        public ApiController(DataContext data, GetUserByCookie userByCookie, TestsLoader testLoader)
-        {
-            Data = data;
-            UserByCookie = userByCookie;
-            TestLoader = testLoader;
-        }
+    public async Task<IActionResult> GetGroupList()
+    {
+        return Json((await Data.Users.Where(user => user.Role == Roles.User).Select(user => user.Group).ToListAsync()).Distinct());
+    }
 
-        public async Task<IActionResult> GetGroupList()
-        {
-            return Json((await Data.Users.Where(user => user.Role == Roles.User).Select(user => user.Group).ToListAsync()).Distinct());
-        }
+    public IActionResult GetTasksList()
+    {
+        return Json(TestLoader.TestCreators.Select(creator => new { label = creator.Name, value = creator.TestID }).ToArray());
+    }
 
-        public IActionResult GetTasksList()
+    public IActionResult DeleteGroup(string groupName)
+    {
+        var users = Data.Users.Where(user => user.Group == groupName);
+        Data.Users.RemoveRange(users);
+        try
         {
-            return Json(TestLoader.TestCreators.Select(creator => new {label = creator.Name, value = creator.TestID}).ToArray());
+            Data.SaveChanges();
         }
+        catch (Exception e)
+        {
+            return Json(new { ok = false, message = e.Message });
+        }
+        return Json(new { ok = true, message = users.Count() });
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using usue_online_tests.Data;
@@ -11,9 +12,10 @@ using usue_online_tests.Data;
 namespace usue_online_tests.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240210160605_update foreign key")]
+    partial class updateforeignkey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,7 +77,7 @@ namespace usue_online_tests.Migrations
                     b.Property<int>("TotalAnswers")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserExamResultId")
+                    b.Property<int?>("UserExamResultId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -205,13 +207,13 @@ namespace usue_online_tests.Migrations
                     b.Property<DateTime>("DateTimeStart")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("ExamId")
+                    b.Property<int?>("ExamId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -236,13 +238,9 @@ namespace usue_online_tests.Migrations
 
             modelBuilder.Entity("usue_online_tests.Models.ExamTestAnswer", b =>
                 {
-                    b.HasOne("usue_online_tests.Models.UserExamResult", "UserExamResult")
+                    b.HasOne("usue_online_tests.Models.UserExamResult", null)
                         .WithMany("ExamTestAnswers")
-                        .HasForeignKey("UserExamResultId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserExamResult");
+                        .HasForeignKey("UserExamResultId");
                 });
 
             modelBuilder.Entity("usue_online_tests.Models.PredictionCategory", b =>
@@ -271,15 +269,11 @@ namespace usue_online_tests.Migrations
                 {
                     b.HasOne("usue_online_tests.Models.Exam", "Exam")
                         .WithMany()
-                        .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ExamId");
 
                     b.HasOne("usue_online_tests.Models.User", "User")
                         .WithMany("UserExamResults")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Exam");
 

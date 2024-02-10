@@ -34,6 +34,9 @@ for (let imageContainer of imageContainers) {
 }
 
 async function handleClick(event) {
+  const loading = document.getElementById('loading')
+  loading.style.visibility = 'visible'
+
   if (!faceLandmarker) {
     console.log('Wait for faceLandmarker to load before clicking!');
     return;
@@ -129,7 +132,7 @@ if (hasGetUserMedia()) {
 
 function enableCam(event) {
   if (!faceLandmarker) {
-    console.log('Wait! faceLandmarker not loaded yet.');
+    alert('Wait! faceLandmarker not loaded yet.');
     return;
   }
 
@@ -149,6 +152,8 @@ function enableCam(event) {
     video.srcObject = stream;
     video.addEventListener('loadeddata', predictWebcam);
   });
+
+  loading.style.visibility = 'hidden';
 }
 
 let lastVideoTime = -1;
@@ -226,7 +231,7 @@ async function predictWebcam() {
   drawBlendShapes(videoBlendShapes, results.faceBlendshapes);
 
   if (webcamRunning === true) {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     window.requestAnimationFrame(predictWebcam);
   }
 }
@@ -235,9 +240,6 @@ async function drawBlendShapes(el, blendShapes) {
   if (!blendShapes.length) {
     return;
   }
-
-  //   console.log(blendShapes[0]);
-  //   console.log(JSON.stringify(blendShapes[0]));
 
   try {
     const response = await fetch('/camera/senddata/', {
@@ -253,9 +255,6 @@ async function drawBlendShapes(el, blendShapes) {
     }
 
     const data = await response.text();
-    console.log('🚀 ~ drawBlendShapes ~ data:', data);
-    // Do something with the loaded data
-    // console.log(data);
 
     const box = document.getElementById('box');
     box.style.borderColor = data === 'true' ? 'green' : 'red';

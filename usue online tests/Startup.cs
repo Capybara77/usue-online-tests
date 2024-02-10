@@ -1,25 +1,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.Operations;
-using org.mariuszgromada.math.mxparser.mathcollection;
 using usue_online_tests.Data;
-using usue_online_tests.Models;
 using usue_online_tests.Report;
-using usue_online_tests.Services;
 using usue_online_tests.Tests;
 
 namespace usue_online_tests

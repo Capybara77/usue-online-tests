@@ -23,6 +23,10 @@
         border-radius: 5px;
         padding: 5px 10px;
     }
+
+     #loading {
+        visibility: hidden;
+    }
 </style>
 
 <section id="demos" class="invisible">
@@ -33,10 +37,15 @@
     </div>
 
     <div id="liveView" class="videoView">
+        
+        
         <button id="webcamButton" class="mdc-button mdc-button--raised">
             ВКЛЮЧИТЬ ОБНАРУЖЕНИЕ
         </button>
         
+
+        <div id='loading'>Загрузка...</div>
+
         <div style="position: relative;" id="box">
             <video id="webcam" autoplay playsinline ></video>
             <canvas class="output_canvas" id="output_canvas" style="position: absolute; left: 0; top: 0;"></canvas>

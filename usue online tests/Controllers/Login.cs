@@ -1,22 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Net.WebSockets;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Security.Policy;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
 using usue_online_tests.Data;
 using usue_online_tests.Models;
 
@@ -51,7 +42,7 @@ public class Login : Controller
     public IActionResult LoginIn(string login, string password)
     {
         //password = GetStrHash(password);
-        User user = DataContext.Users.FirstOrDefault(user1 => user1.Login == login && user1.Password == password);
+        var user = DataContext.Users.FirstOrDefault(user1 => user1.Login == login && user1.Password == password);
 
 
         if (user == null)
@@ -66,7 +57,7 @@ public class Login : Controller
         ClaimsIdentity ci = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         ClaimsPrincipal cp = new ClaimsPrincipal(ci);
 
-        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, cp, new AuthenticationProperties()
+        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, cp, new AuthenticationProperties
         {
             ExpiresUtc = DateTimeOffset.Now + new TimeSpan(365, 0, 0)
         });
