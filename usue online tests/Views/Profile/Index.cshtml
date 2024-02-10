@@ -120,7 +120,7 @@
                     {
                         <div class="test-result">
                             <p class="group-name">@result.Exam.Group</p>
-                            @*<p class="date-start">@result.Exam.DateTimeStart</p>*@
+                            <p class="date-start">@result.Exam.DateTimeStart</p>
                             <p class="preset-name">@result.Exam.Preset.Name</p>
                             <form action="/profile/createreport" method="get">
                                 <input hidden name="examId" value="@result.Exam.Id" />
