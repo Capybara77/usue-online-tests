@@ -41,3 +41,27 @@
     width: 400px;
     margin-bottom: 10px;
 }
+
+.btn-danger {
+    background-color: #d8bfd8;
+    padding: 5px;
+    height: auto;
+    font-size: 10px;
+    min-height: 0px;
+
+    margin-left: 20px;
+}
+
+.line-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.group-name {
+    margin: 20px 0;
+}
+
+.btn-danger:hover {
+    background-color: #e37be3;
+}

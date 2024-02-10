@@ -35,7 +35,12 @@
 
     @foreach (var key in usersList.Keys)
     {
-        <h3>@key</h3>
+        <div class="line-div">
+            <h3 class="group-name">@key</h3>
+            <form method="post" action="/api/deletegroup?groupname=@key">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+            </form>
+        </div>
         <ul>
             @foreach (User user in usersList[key])
             {

@@ -48,6 +48,6 @@ public class ApiController : Controller
         {
             return Json(new { ok = false, message = e.Message });
         }
-        return Json(new { ok = true, message = users.Count() });
+        return LocalRedirect("/studentlist");
     }
 }
