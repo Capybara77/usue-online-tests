@@ -32,7 +32,9 @@ namespace usue_online_tests.Report
             memoryStream.Position = 0;
             return new FileStreamResult(memoryStream, "application/octet-stream")
             {
-                FileDownloadName = $"report_{DataProvider.Exam.Preset.Name}_{DataProvider.Exam.Group}.xlsx"
+                FileDownloadName =
+                    $"report_{DataProvider.Exam.Preset.Name}_{DataProvider.Exam.Group}_" +
+                    $"{DataProvider.Exam.DateTimeStart:yy-MM-dd-HH:mm}.xlsx"
             };
         }
 
