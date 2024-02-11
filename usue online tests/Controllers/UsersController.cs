@@ -24,7 +24,11 @@ namespace usue_online_tests.Controllers
         // GET: Users
         public IActionResult Index()
         {
-            return View(_context.Users.ToListAsync().Result.OrderBy(user => user.Name).ToList());
+            return View(_context.Users
+                .ToListAsync().Result
+                .OrderBy(user => user.Group)
+                .ThenBy(user => user.Name)
+                .ToList());
         }
 
         // GET: Users/Details/5
