@@ -34,7 +34,10 @@ namespace usue_online_tests.Report
 
         public User[] GroupStudents
         {
-            get => _groupStudents ??= DataContext.Users.Where(user => user.Group == Exam.Group).ToArray();
+            get => _groupStudents ??= DataContext.Users
+                .Where(user => user.Group == Exam.Group)
+                .OrderBy(user => user.Name)
+                .ToArray();
             private set => _groupStudents = value;
         }
 

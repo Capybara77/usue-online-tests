@@ -48,9 +48,8 @@ namespace usue_online_tests.Report
 
             yPosition = CreateExcelStartBlock(worksheet, yPosition) + 2;
             yPosition = CreateExcelExamInfoBlock(worksheet, yPosition) + 2;
-            yPosition = CreateExcelUsersResults(worksheet, yPosition) + 2;
+            yPosition = CreateExcelUsersFullResults(worksheet, yPosition) + 2;
             yPosition = CreateExcelTimeSpentToAnswer(worksheet, yPosition) + 2;
-            yPosition = CreateExcelDoNotPass(worksheet, yPosition) + 2;
             yPosition = CreateExcelTestsInfo(worksheet, yPosition) + 2;
 
             AutoFitColumns(worksheet);
@@ -169,9 +168,94 @@ namespace usue_online_tests.Report
             return y;
         }
 
+        private int CreateExcelUsersFullResults(ExcelWorksheet worksheet, int y)
+        {
+            worksheet.Cells[y, 2].Value = "Студент/задание";
+            var testCount = DataProvider.Exam.Preset.Tests.Length;
+
+            for (var i = 0; i < testCount; i++)
+            {
+                var testId = DataProvider.Exam.Preset.Tests[i];
+                var testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+                worksheet.Cells[y, i + 3].Style.WrapText = true;
+
+                if (testCreator == null)
+                {
+                    worksheet.Cells[y, i + 3].Value = testId;
+                    continue;
+                }
+
+                worksheet.Cells[y, i + 3].Value = testCreator.Name;
+            }
+
+            worksheet.Cells[y, 3 + testCount].Value = "Итог";
+            worksheet.Cells[y, 4 + testCount].Value = "Процент правильности";
+
+            int rowIndex = y + 1;
+
+            foreach (var student in DataProvider.GroupStudents)
+            {
+                worksheet.Cells[rowIndex, 2].Value = student.Name;
+
+                // Поиск результата экзамена данного студента.
+                var result = DataProvider.UsersExamResults.FirstOrDefault(r => r.User.Id == student.Id);
+
+                if (result != null) // Если результаты экзамена есть
+                {
+                    var answers = result.ExamTestAnswers;
+                    var totalAnswers = 0;
+                    var totalCorrectAnswers = 0;
+
+                    for (var j = 0; j < testCount; j++)
+                    {
+                        var testId = DataProvider.Exam.Preset.Tests[j];
+                        var userAnswer = answers.FirstOrDefault(answer => answer.TestId == testId);
+
+                        if (userAnswer != null)
+                        {
+                            totalAnswers += userAnswer.TotalAnswers;
+                            totalCorrectAnswers += userAnswer.CorrectAnswers;
+                            worksheet.Cells[rowIndex, 3 + j].Value = $"{userAnswer.CorrectAnswers}/{userAnswer.TotalAnswers}";
+
+                            // Установка цвета ячейки в зависимости от процента правильных ответов.
+                            var r = totalAnswers > 0 ? (double)userAnswer.CorrectAnswers / userAnswer.TotalAnswers : 0;
+                            Color cellColor;
+                            if (r > 0.8) cellColor = Color.GreenYellow;
+                            else if (r > 0.4) cellColor = Color.Yellow;
+                            else cellColor = Color.FromArgb(255, 255, 100, 100);
+
+                            worksheet.Cells[rowIndex, 3 + j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            worksheet.Cells[rowIndex, 3 + j].Style.Fill.BackgroundColor.SetColor(cellColor);
+                        }
+                        else
+                        {
+                            worksheet.Cells[rowIndex, 3 + j].Value = "0/0";
+                        }
+                    }
+
+                    worksheet.Cells[rowIndex, 3 + testCount].Value = $"{totalCorrectAnswers}/{totalAnswers}";
+                    worksheet.Cells[rowIndex, 4 + testCount].Value = totalAnswers > 0 ? $"{(int)((double)totalCorrectAnswers / totalAnswers * 100)}%" : "0%";
+                }
+                else // Если результатов нет, заполняем все ячейки 0
+                {
+                    for (var j = 0; j < testCount; j++)
+                    {
+                        worksheet.Cells[rowIndex, 3 + j].Value = "0/0";
+                    }
+                    worksheet.Cells[rowIndex, 3 + testCount].Value = "0/0";
+                    worksheet.Cells[rowIndex, 4 + testCount].Value = "0%";
+                }
+
+                rowIndex++;
+            }
+
+            return rowIndex;
+        }
+
+
         private int CreateExcelDoNotPass(ExcelWorksheet worksheet, int y)
         {
-            worksheet.Cells[y, 2].Value = $"Студенты не прошедшие тест:";
+            worksheet.Cells[y, 2].Value = "Студенты не прошедшие тест:";
 
             var students = DataProvider.GroupStudents.Where(user =>
                 DataProvider.UsersExamResults.All(result => result.User.Id != user.Id)).ToArray();
