@@ -49,12 +49,20 @@
     font-size: 10px;
     min-height: 0px;
 
+    color: red;
+    background-color: white;
+    border-color: red;
+
     margin-left: 20px;
 }
 
 .line-div {
     display: flex;
     flex-direction: row;
+
+    -ms-align-items: center;
+    -o-align-items: center;
+    -webkit-align-items: center;
     align-items: center;
 }
 
@@ -63,5 +71,6 @@
 }
 
 .btn-danger:hover {
-    background-color: #e37be3;
+    color: white;
+    background-color: red;
 }

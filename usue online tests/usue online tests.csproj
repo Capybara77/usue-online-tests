@@ -78,6 +78,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\" />
     <Folder Include="Tests\Tasks2\" />
     <Folder Include="Tests\Ur\" />
   </ItemGroup>

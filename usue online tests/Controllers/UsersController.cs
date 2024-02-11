@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,16 +16,27 @@ namespace usue_online_tests.Controllers
     public class UsersController : Controller
     {
         private readonly DataContext _context;
+        private readonly GetUserByCookie _getUserByCookie;
 
-        public UsersController(DataContext context)
+        public UsersController(DataContext context, GetUserByCookie getUserByCookie)
         {
             _context = context;
+            _getUserByCookie = getUserByCookie;
         }
 
         // GET: Users
         public IActionResult Index()
         {
+            var currentUser = _getUserByCookie.GetUser();
+
+            Expression<Func<User, bool>> predicate = _ => true;
+            if (currentUser.Role != Roles.Admin)
+            {
+                predicate = user => user.Role == Roles.User;
+            }
+
             return View(_context.Users
+                .Where(predicate)
                 .ToListAsync().Result
                 .OrderBy(user => user.Group)
                 .ThenBy(user => user.Name)

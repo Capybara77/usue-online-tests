@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<usue_online_tests.Models.User>
-@inject GetUserByCookie GetUserByCookie
 
 @{
     ViewData["Title"] = "Index";
@@ -19,14 +18,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Login)
             </th>
-            @{
-                if (GetUserByCookie.GetUser().Role == Roles.Admin)
-                {
-                    <th>
-                        @Html.DisplayNameFor(model => model.Password)
-                    </th>
-                }
-            }
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Role)
             </th>
@@ -49,14 +43,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Login)
                 </td>
-                @{
-                    if (GetUserByCookie.GetUser().Role == Roles.Admin)
-                    {
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Password)
-                        </td>
-                    }
-                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Role)
                 </td>

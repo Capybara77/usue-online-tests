@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
 using Test_Wrapper;
 using usue_online_tests.Models;
 using usue_online_tests.Tests;
@@ -187,13 +186,13 @@ namespace usue_online_tests.Report
 
         private int CreateExcelUsersResults(ExcelWorksheet worksheet, int y)
         {
-            worksheet.Cells[y, 2].Value = $"Студент/задание";
-            int testCount = DataProvider.Exam.Preset.Tests.Length;
+            worksheet.Cells[y, 2].Value = "Студент/задание";
+            var testCount = DataProvider.Exam.Preset.Tests.Length;
 
             for (var i = 0; i < testCount; i++)
             {
                 var testId = DataProvider.Exam.Preset.Tests[i];
-                ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+                var testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
                 worksheet.Cells[y, i + 3].Style.WrapText = true;
 
                 if (testCreator == null)
@@ -208,20 +207,20 @@ namespace usue_online_tests.Report
             worksheet.Cells[y, 3 + testCount].Value = "Итог";
             worksheet.Cells[y, 4 + testCount].Value = "Процент правильности";
 
-            for (int i = 0; i < DataProvider.UsersExamResults.Length; i++)
+            for (var i = 0; i < DataProvider.UsersExamResults.Length; i++)
             {
-                UserExamResult result = DataProvider.UsersExamResults[i];
-                ICollection<ExamTestAnswer> answers = result.ExamTestAnswers;
+                var result = DataProvider.UsersExamResults[i];
+                var answers = result.ExamTestAnswers;
 
-                int totalAnswers = 0;
-                int totalCorrectAnswers = 0;
+                var totalAnswers = 0;
+                var totalCorrectAnswers = 0;
 
                 worksheet.Cells[y + i + 1, 2].Value = DataProvider.UsersExamResults[i].User.Name;
 
-                for (int j = 0; j < testCount; j++)
+                for (var j = 0; j < testCount; j++)
                 {
                     int testId = DataProvider.Exam.Preset.Tests[j];
-                    ExamTestAnswer userAnswer = answers.FirstOrDefault(
+                    var userAnswer = answers.FirstOrDefault(
                         answer => answer.TestId == testId);
                     if (userAnswer == null) continue;
 
@@ -232,7 +231,7 @@ namespace usue_online_tests.Report
 
                     worksheet.Cells[y + 1 + i, 3 + j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
 
-                    double r = (double)userAnswer.CorrectAnswers / userAnswer.TotalAnswers;
+                    var r = (double)userAnswer.CorrectAnswers / userAnswer.TotalAnswers;
 
                     if (r > .8)
                         worksheet.Cells[y + 1 + i, 3 + j].Style.Fill.BackgroundColor.SetColor(Color.GreenYellow);
