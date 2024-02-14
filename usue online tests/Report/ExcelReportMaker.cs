@@ -234,7 +234,7 @@ namespace usue_online_tests.Report
                     }
 
                     worksheet.Cells[rowIndex, 3 + testCount].Value = $"{totalCorrectAnswers}/{totalAnswers}";
-                    worksheet.Cells[rowIndex, 4 + testCount].Value = totalAnswers > 0 ? $"{(int)((double)totalCorrectAnswers / totalAnswers * 100)}%" : "0%";
+                    worksheet.Cells[rowIndex, 4 + testCount].Value = totalAnswers > 0 ? $"{(int)((double)totalCorrectAnswers / totalAnswers * 100)}" : "0";
                 }
                 else // Если результатов нет, заполняем все ячейки 0
                 {
@@ -243,7 +243,7 @@ namespace usue_online_tests.Report
                         worksheet.Cells[rowIndex, 3 + j].Value = "0/0";
                     }
                     worksheet.Cells[rowIndex, 3 + testCount].Value = "0/0";
-                    worksheet.Cells[rowIndex, 4 + testCount].Value = "0%";
+                    worksheet.Cells[rowIndex, 4 + testCount].Value = "0";
                 }
 
                 rowIndex++;
