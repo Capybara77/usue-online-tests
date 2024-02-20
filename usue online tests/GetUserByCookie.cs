@@ -9,7 +9,7 @@ public class GetUserByCookie
 {
     public IHttpContextAccessor HttpContextAccessor { get; }
     public DataContext DataContext { get; }
-    private User User { get; set; }
+    private User? User { get; set; }
 
     public GetUserByCookie(IHttpContextAccessor httpContextAccessor, DataContext dataContext)
     {
@@ -17,9 +17,9 @@ public class GetUserByCookie
         DataContext = dataContext;
     }
 
-    public User GetUser()
+    public User? GetUser()
     {
         return User ??= DataContext.Users.FirstOrDefault(user =>
-            user.Login == HttpContextAccessor.HttpContext.User.Identity.Name);
+            user.Login == HttpContextAccessor.HttpContext!.User.Identity!.Name);
     }
 }

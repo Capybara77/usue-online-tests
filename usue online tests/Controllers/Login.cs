@@ -41,9 +41,7 @@ public class Login : Controller
     [HttpPost]
     public IActionResult LoginIn(string login, string password)
     {
-        //password = GetStrHash(password);
         var user = DataContext.Users.FirstOrDefault(user1 => user1.Login == login && user1.Password == password);
-
 
         if (user == null)
             return RedirectToAction("Index", "Login", new { message = "Неправильный логин или пароль" });

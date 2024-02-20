@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +40,7 @@ namespace usue_online_tests
             services.AddScoped<GetUserByCookie>();
             services.AddScoped<ReportMaker, ExcelReportMaker>();
             services.AddScoped<IReportDataProvider, DbDataProvider>();
+            services.AddAutoMapper(ConfigMapper);
 
             //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DataContext>();
 
@@ -50,6 +52,11 @@ namespace usue_online_tests
                 options.LoginPath = "/login/index";
                 options.LogoutPath = "/login/loginout";
             });
+        }
+
+        private void ConfigMapper(IMapperConfigurationExpression obj)
+        {
+            obj.AddProfile(new MapperProfile.MapperProfile());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

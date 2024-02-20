@@ -5,6 +5,7 @@
     <RootNamespace>usue_online_tests</RootNamespace>
     <LangVersion>latest</LangVersion>
     <UserSecretsId>4ef2c77b-2493-408c-9b9e-967d85651740</UserSecretsId>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -54,6 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="EPPlus" Version="6.0.7" />
     <PackageReference Include="MathParser.org-mXparser" Version="5.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.22" />

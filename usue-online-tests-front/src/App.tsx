@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import './App.css';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    const response = await fetch('https://atusue.ru/login/loginin', {
+    const response = await fetch('/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -14,8 +15,18 @@ function App() {
       body: `login=${login}&password=${password}`,
     });
 
-    const json = await response.json()
-    console.log("🚀 ~ handleSubmit ~ json:", json)
+    const json = await response.json();
+
+    console.log("🚀 ~ handleSubmit ~ json:", json);
+
+    if (json === true) {
+      const setCookieHeader = response.headers.get('Set-Cookie');
+      if (setCookieHeader) {
+        document.cookie = setCookieHeader;
+      }
+      // Перенаправление на страницу /user
+      navigate('/user');
+    }
   };
 
   return (
