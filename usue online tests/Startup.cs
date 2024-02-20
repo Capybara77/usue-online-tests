@@ -93,6 +93,14 @@ namespace usue_online_tests
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 //endpoints.MapRazorPages();
             });
+
+            app.UseSpa(spaBuilder =>
+            {
+                if (env.IsDevelopment())
+                {
+                    spaBuilder.UseProxyToSpaDevelopmentServer("http://localhost:5173/");
+                }
+            });
         }
     }
 
