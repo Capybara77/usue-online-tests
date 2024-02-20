@@ -26,15 +26,15 @@ namespace usue_online_tests.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
-            if (HttpContext.User.Identity is { IsAuthenticated: true })
-            {
-                return RedirectToAction("Index", "Profile");
-            }
+        //public IActionResult Index()
+        //{
+        //    if (HttpContext.User.Identity is { IsAuthenticated: true })
+        //    {
+        //        return RedirectToAction("Index", "Profile");
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
 
         [Authorize(Roles = "Admin")]
         [Route("/restart")]

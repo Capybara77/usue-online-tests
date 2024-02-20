@@ -72,19 +72,21 @@ namespace usue_online_tests
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.Use(async (context, func) =>
-            {
-                var endpoint = context.GetEndpoint();
-                if (endpoint == null)
-                {
-                    context.Response.Redirect("/");
-                    return;
-                }
+            //app.Use(async (context, func) =>
+            //{
+            //    var endpoint = context.GetEndpoint();
+            //    if (endpoint == null)
+            //    {
+            //        context.Response.Redirect("/");
+            //        return;
+            //    }
 
-                await func.Invoke();
-            });
+            //    await func.Invoke();
+            //});
 
-            app.UseMiddleware<AccessProtectionMiddleware>();
+            //app.UseMiddleware<AccessProtectionMiddleware>();
+
+            app.UseEndpoints(builder => builder.MapDefaultControllerRoute());
 
             app.UseEndpoints(endpoints =>
             {
