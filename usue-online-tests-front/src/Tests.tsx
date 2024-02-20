@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import './Tests.css'; 
+import { Link } from 'react-router-dom';
 
 interface Test {
   name: string;
@@ -8,7 +10,7 @@ interface Test {
 
 function Tests() {
   const [tests, setTests] = useState<Test[]>([]);
-
+//   const navigate = useNavigate();
 
   useEffect(() => {
     fetch("/api/tests-list")
@@ -18,15 +20,15 @@ function Tests() {
   }, []);
 
   return (
-    <div>
+    <div className="tests-container">
       <h2>Доступные тесты</h2>
-      <ul>
+      <div className="tests-list">
         {tests.map((test) => (
-          <li key={test.testID}>
+          <Link key={test.testID} to={`/test?testid=${test.testID}`} className="test-item">
             <strong>{test.name}</strong>: {test.description}
-          </li>
+          </Link>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
