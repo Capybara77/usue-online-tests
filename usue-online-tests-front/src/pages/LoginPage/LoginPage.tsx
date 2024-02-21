@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Layout } from '../../components/layout/layout';
 
 export const LoginPage = () => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const response = await fetch('/api/login', {
       method: 'POST',
       headers: {
@@ -27,18 +29,30 @@ export const LoginPage = () => {
   };
 
   return (
-    <div>
-      <input
-        placeholder='login'
-        value={login}
-        onChange={(e) => setLogin(e.target.value)}
-      />
-      <input
-        placeholder='password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleSubmit}>Войти</button>
-    </div>
+    <Layout>
+      <form
+        onSubmit={handleSubmit}
+        className='space-y-4 my-28 max-w-sm mx-auto'
+      >
+        <div className='prose text-center'>
+          <h1>Вход</h1>
+        </div>
+        <input
+          placeholder='login'
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+          className='input w-full'
+        />
+        <input
+          placeholder='password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className='input w-full'
+        />
+        <button type='button' className='btn w-full'>
+          Войти
+        </button>
+      </form>
+    </Layout>
   );
 };
