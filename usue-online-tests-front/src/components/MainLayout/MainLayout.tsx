@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
-export const Layout = ({ children }: { children: ReactNode }) => {
+export const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex min-h-screen flex-col bg-base-200 px-4">
       <nav className="max-w-screen-lg mx-auto navbar p-0">

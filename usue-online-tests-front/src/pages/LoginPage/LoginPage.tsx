@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Layout } from '../../components/layout/layout';
+import { MainLayout } from '../../components/MainLayout/';
 
 export const LoginPage = () => {
   const [login, setLogin] = useState('');
@@ -29,7 +29,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <Layout>
+    <MainLayout>
       <form
         onSubmit={handleSubmit}
         className="space-y-4 my-28 max-w-sm mx-auto"
@@ -53,6 +53,6 @@ export const LoginPage = () => {
           Войти
         </button>
       </form>
-    </Layout>
+    </MainLayout>
   );
 };
