@@ -2,7 +2,14 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      padding: {
+        full: "100%",
+      },
+    },
   },
-  plugins: [],
+  plugins: [require('daisyui'), require('@tailwindcss/typography')],
+  daisyui: {
+    themes: ["light", "dark"],
+  },
 };
