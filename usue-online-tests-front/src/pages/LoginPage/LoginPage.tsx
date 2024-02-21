@@ -9,6 +9,7 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const response = await fetch('/api/login', {
       method: 'POST',
       headers: {
@@ -49,7 +50,7 @@ export const LoginPage = () => {
           onChange={(e) => setPassword(e.target.value)}
           className="input w-full"
         />
-        <button type="button" className="btn w-full">
+        <button className="btn w-full">
           Войти
         </button>
       </form>
