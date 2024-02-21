@@ -1,19 +1,7 @@
-import App from "./App";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import UserPage from "./UserPage";
-import Tests from "./Tests";
-import Test from "./Test";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
+import App from './App';
 
-const element = (
-  <Router>
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/user" element={<UserPage />} />
-      <Route path="/alltests" element={<Tests />} />
-      <Route path="/test/:testid" element={<Test />} />
-    </Routes>
-  </Router>
-);
+const container = document.getElementById('app');
+const root = createRoot(container!); // createRoot(container!) if you use TypeScript
 
-ReactDOM.render(element, document.getElementById("root"));
+root.render(<App  />);

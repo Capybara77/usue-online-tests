@@ -1,8 +1,7 @@
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
-function Test() {
+export const TestPage = () => {
   const { testid } = useParams();
-  console.log(testid)
 
   return (
     <div>
@@ -10,6 +9,4 @@ function Test() {
       <p>Test ID: {testid}</p>
     </div>
   );
-}
-
-export default Test;
+};

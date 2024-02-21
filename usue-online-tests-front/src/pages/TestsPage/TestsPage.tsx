@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import './Tests.css'; 
+import { useState, useEffect } from 'react';
+import './Tests.css';
 import { Link } from 'react-router-dom';
 
 interface Test {
@@ -8,29 +8,30 @@ interface Test {
   testID: number;
 }
 
-function Tests() {
+export const TestsPage = () => {
   const [tests, setTests] = useState<Test[]>([]);
-//   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/api/tests-list")
+    fetch('/api/tests-list')
       .then((response) => response.json())
       .then((data) => setTests(data))
-      .catch((error) => console.error("Ошибка при получении данных:", error));
+      .catch((error) => console.error('Ошибка при получении данных:', error));
   }, []);
 
   return (
-    <div className="tests-container">
+    <div className='tests-container'>
       <h2>Доступные тесты</h2>
-      <div className="tests-list">
+      <div className='tests-list'>
         {tests.map((test) => (
-          <Link key={test.testID} to={`/test?testid=${test.testID}`} className="test-item">
+          <Link
+            key={test.testID}
+            to={`/test?testid=${test.testID}`}
+            className='test-item'
+          >
             <strong>{test.name}</strong>: {test.description}
           </Link>
         ))}
       </div>
     </div>
   );
-}
-
-export default Tests;
+};
