@@ -1,3 +1,4 @@
+import { MainLayout } from '@/components/MainLayout';
 import { useState, useEffect } from 'react';
 
 export const UserPage = () => {
@@ -11,9 +12,9 @@ export const UserPage = () => {
   }, []);
 
   return (
-    <div>
+    <MainLayout>
       <h2>Профиль пользователя</h2>
       <p>Здравствуйте, {userName}</p>
-    </div>
+    </MainLayout>
   );
 };
