@@ -1,6 +1,6 @@
+import { MainLayout } from '@/components/MainLayout';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MainLayout } from '../../components/MainLayout/';
 
 export const LoginPage = () => {
   const [login, setLogin] = useState('');
