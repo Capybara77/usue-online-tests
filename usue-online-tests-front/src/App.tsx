@@ -5,6 +5,7 @@ import { TestsPage } from './pages/TestsPage';
 import { TestPage } from './pages/TestPage';
 
 function App() {
+  // TODO lazy loading
   return (
     <Router>
       <Routes>
