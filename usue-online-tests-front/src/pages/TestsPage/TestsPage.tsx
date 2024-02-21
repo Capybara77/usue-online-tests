@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Tests.css';
 import { Link } from 'react-router-dom';
+import { MainLayout } from '@/components/MainLayout';
 
 interface Test {
   name: string;
@@ -19,19 +20,21 @@ export const TestsPage = () => {
   }, []);
 
   return (
-    <div className="tests-container">
-      <h2>Доступные тесты</h2>
-      <div className="tests-list">
-        {tests.map((test) => (
-          <Link
-            key={test.testID}
-            to={`/test?testid=${test.testID}`}
-            className="test-item"
-          >
-            <strong>{test.name}</strong>: {test.description}
-          </Link>
-        ))}
+    <MainLayout>
+      <div className="tests-container">
+        <h2>Доступные тесты</h2>
+        <div className="tests-list">
+          {tests.map((test) => (
+            <Link
+              key={test.testID}
+              to={`/test/${test.testID}`}
+              className="test-item"
+            >
+              <strong>{test.name}</strong>: {test.description}
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
+    </MainLayout>
   );
 };

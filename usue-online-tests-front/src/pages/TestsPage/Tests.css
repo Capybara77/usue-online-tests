@@ -13,7 +13,6 @@
 }
 
 .test-item {
-  background-color: #f0f0f0;
   padding: 10px;
   border-radius: 5px;
   font-family: 'Roboto', sans-serif; /* Шрифт Roboto */
@@ -24,7 +23,6 @@
 }
 
 .test-item:hover {
-  background-color: #e0e0e0; /* Цвет при наведении */
   transform: translateY(-2px); /* Поднятие на 2 пикселя */
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2); /* Увеличенная тень */
 }
