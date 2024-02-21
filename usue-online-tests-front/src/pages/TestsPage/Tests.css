@@ -1,29 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 .tests-container {
-    max-width: 600px;
-    margin: auto;
- }
- 
- .tests-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Два столбца */
-    gap: 10px; /* Расстояние между элементами */
-    padding: 0;
- }
- 
- .test-item {
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 5px;
-    font-family: "Roboto", sans-serif; /* Шрифт Roboto */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Эффект при наведении */
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Легкая тень */
- }
- 
- .test-item:hover {
-    background-color: #e0e0e0; /* Цвет при наведении */
-    transform: translateY(-2px); /* Поднятие на 2 пикселя */
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2); /* Увеличенная тень */
- }
- 
+  max-width: 600px;
+  margin: auto;
+}
+
+.tests-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Два столбца */
+  gap: 10px; /* Расстояние между элементами */
+  padding: 0;
+}
+
+.test-item {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: 'Roboto', sans-serif; /* Шрифт Roboto */
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease; /* Эффект при наведении */
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Легкая тень */
+}
+
+.test-item:hover {
+  background-color: #e0e0e0; /* Цвет при наведении */
+  transform: translateY(-2px); /* Поднятие на 2 пикселя */
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2); /* Увеличенная тень */
+}

@@ -4,12 +4,12 @@ export default {
   theme: {
     extend: {
       padding: {
-        full: "100%",
+        full: '100%',
       },
     },
   },
   plugins: [require('daisyui'), require('@tailwindcss/typography')],
   daisyui: {
-    themes: ["light", "dark"],
+    themes: ['light', 'dark'],
   },
 };

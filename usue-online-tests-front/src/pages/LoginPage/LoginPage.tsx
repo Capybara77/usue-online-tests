@@ -32,24 +32,24 @@ export const LoginPage = () => {
     <Layout>
       <form
         onSubmit={handleSubmit}
-        className='space-y-4 my-28 max-w-sm mx-auto'
+        className="space-y-4 my-28 max-w-sm mx-auto"
       >
-        <div className='prose text-center'>
+        <div className="prose text-center">
           <h1>Вход</h1>
         </div>
         <input
-          placeholder='login'
+          placeholder="login"
           value={login}
           onChange={(e) => setLogin(e.target.value)}
-          className='input w-full'
+          className="input w-full"
         />
         <input
-          placeholder='password'
+          placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className='input w-full'
+          className="input w-full"
         />
-        <button type='button' className='btn w-full'>
+        <button type="button" className="btn w-full">
           Войти
         </button>
       </form>

@@ -19,14 +19,14 @@ export const TestsPage = () => {
   }, []);
 
   return (
-    <div className='tests-container'>
+    <div className="tests-container">
       <h2>Доступные тесты</h2>
-      <div className='tests-list'>
+      <div className="tests-list">
         {tests.map((test) => (
           <Link
             key={test.testID}
             to={`/test?testid=${test.testID}`}
-            className='test-item'
+            className="test-item"
           >
             <strong>{test.name}</strong>: {test.description}
           </Link>
