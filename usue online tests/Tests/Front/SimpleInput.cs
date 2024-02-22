@@ -7,8 +7,8 @@ namespace usue_online_tests.Tests.Front;
 public class SimpleInput : ITestCreator, ITest
 {
     public int TestID { get; set; }
-    public string Name { get; }
-    public string Description { get; }
+    public string Name { get; } = "front";
+    public string Description { get; } = "input";
     public ITest CreateTest(int randomSeed)
     {
         var test = new SimpleInput
