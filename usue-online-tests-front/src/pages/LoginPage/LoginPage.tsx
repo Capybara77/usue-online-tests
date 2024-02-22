@@ -1,5 +1,5 @@
 import { MainLayout } from '@/components/MainLayout';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const LoginPage = () => {
@@ -29,6 +29,17 @@ export const LoginPage = () => {
     }
   };
 
+  useEffect(() => {
+    const checkUser = async () => {
+      const userResponse = await fetch('/api/current-user');
+      const userJson = await userResponse.json();
+      if (userJson.login) {
+        navigate('/user');
+      }
+    };
+    checkUser();
+  }, []);
+
   return (
     <MainLayout>
       <form
@@ -50,9 +61,7 @@ export const LoginPage = () => {
           onChange={(e) => setPassword(e.target.value)}
           className="input w-full"
         />
-        <button className="btn w-full">
-          Войти
-        </button>
+        <button className="btn w-full">Войти</button>
       </form>
     </MainLayout>
   );

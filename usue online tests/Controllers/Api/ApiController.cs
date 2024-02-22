@@ -20,6 +20,7 @@ public class ApiController : Controller
 {
     private readonly IMapper _mapper;
     private readonly TestsLoader _testsLoader;
+    private readonly Random _random;
     public DataContext Data { get; }
     public GetUserByCookie UserByCookie { get; }
     public TestsLoader TestLoader { get; }
@@ -32,6 +33,7 @@ public class ApiController : Controller
         Data = data;
         UserByCookie = userByCookie;
         TestLoader = testLoader;
+        _random = new Random();
     }
 
     /*LOGIN*/
@@ -64,6 +66,14 @@ public class ApiController : Controller
         return Json(true);
     }
 
+    [Route("logout")]
+    [HttpPost]
+    public async Task<JsonResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return Json(true);
+    }
+
     /*COMMON*/
     [Route("current-user")]
     [HttpGet]
@@ -89,6 +99,22 @@ public class ApiController : Controller
         }));
     }
 
+    /*START TEST*/
+    [Route("create-test")]
+    [HttpGet]
+    public JsonResult CreateTestById(int testId)
+    {
+        var testCreator = TestLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+        if (testCreator == null)
+        {
+            return Json(new { error = "invalid test id" });
+        }
+
+        var hash = _random.Next();
+        var test = testCreator.CreateTest(hash);
+
+        return Json(new { text = test.Text });
+    }
 
     public async Task<IActionResult> GetGroupList()
     {
