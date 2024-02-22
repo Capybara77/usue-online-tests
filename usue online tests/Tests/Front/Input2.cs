@@ -4,18 +4,17 @@ using Test_Wrapper;
 
 namespace usue_online_tests.Tests.Front;
 
-public class SimpleInput : ITestCreator, ITest
+public class Input2 : ITestCreator, ITest
 {
     public int TestID { get; set; }
     public string Name { get; } = "front";
-    public string Description { get; } = "custom input";
+    public string Description { get; } = "front FormInput";
     public ITest CreateTest(int randomSeed)
     {
-        var test = new SimpleInput
+        var test = new Input2
         {
-            Text = "\\(<inp>\\)"
+            Text = "\\(\\FormInput[1][input input-sm mx-2 my-1][]{name}\\)"
         };
-
         return test;
     }
 
