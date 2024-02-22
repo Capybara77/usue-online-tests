@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using Test_Wrapper;
 
 namespace usue_online_tests.Tests.Front;
@@ -11,6 +12,7 @@ public class SimpleFormula : ITestCreator, ITest
     public string Description { get; } = "formula";
     public ITest CreateTest(int randomSeed)
     {
+        Thread.Sleep(2000);
         var test = new SimpleFormula
         {
             Text = "\\(x^2=43_2\\)"
