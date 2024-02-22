@@ -113,7 +113,11 @@ public class ApiController : Controller
         var hash = _random.Next();
         var test = testCreator.CreateTest(hash);
 
-        return Json(new { text = test.Text });
+        var testDto = _mapper.Map<TestDto>(test);
+        testDto.Hash = hash;
+        testDto.TestID = testId;
+
+        return Json(testDto);
     }
 
     public async Task<IActionResult> GetGroupList()

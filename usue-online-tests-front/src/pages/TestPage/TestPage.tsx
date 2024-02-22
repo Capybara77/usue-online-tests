@@ -2,7 +2,7 @@ import { MainLayout } from '@/components/MainLayout';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { MathJaxComponent } from '../MathJaxComponent/MathJaxComponent';
-// import { MathJax as BetterReactMathJax } from 'better-react-mathjax';
+import React from 'react';
 
 export const TestPage = () => {
   const { testid } = useParams();
@@ -12,59 +12,57 @@ export const TestPage = () => {
     const createTest = async () => {
       const userResponse = await fetch('/api/create-test?testid=' + testid);
       const testJson = await userResponse.json();
-      console.log("set text");
+      console.log('set text');
 
       setTestText(testJson.text);
     };
     createTest();
   }, [testid]);
 
-  const [count, setCount] = useState(0);
+  function decodeHtmlEntities(encodedString:string) {
+    return encodedString.replace(/&#(\d+);/g, function(match, dec) {
+        return String.fromCharCode(dec);
+    });
+}
 
-  // useEffect(() => {
-  //   // Create a script element
-  //   const script = document.createElement('script');
-  //   script.src = 'https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-  //   script.type = 'text/javascript';
+  const renderInputs = (testText: string) => {
+    let tempTestText = testText;
+    const matches = testText.match(/<(.*?)>/g);
+    if (!matches) return tempTestText;
 
-  //   // Configure MathJax
-  //   script.innerHTML = `
-  //     MathJax.Hub.Config({
-  //       extensions: ["tex2jax.js"],
-  //       jax: ["input/TeX", "output/HTML-CSS"],
-  //       tex2jax: {
-  //         inlineMath: [["$", "$"], ["\\(", "\\)"]],
-  //         TeX: { extensions: ["AMSmath.js", "AMSsymbols.js"] },
-  //       },
-  //       showMathMenu: false,
-  //       messageStyle: "none"
-  //     });
-  //   `;
+    for (let i = 0; i < matches.length; i++) {
+      const inputName = matches[i].replace(/[<>]/g, '');
 
-  //   // Append the script to the document body
-  //   document.body.appendChild(script);
-  // }, []); // Empty dependency array ensures this runs only once on component mount
+      // Replace input tags
+      tempTestText = tempTestText.replace(
+        matches[i],
+        `\\FormInput[1][input input-sm mx-2 my-1][]{${inputName}}`
+      );
+    }
 
+    console.log(decodeHtmlEntities(tempTestText));
+    return decodeHtmlEntities(tempTestText);
+  };
 
   if (!testText) {
-    console.log("no render " + testText);
+    console.log('no render ' + testText);
     return null;
   }
-  console.log("render " + testText);
+  console.log('render ' + testText);
   return (
     <MainLayout>
       <div>
-        <button onClick={() => setCount((prev) => prev + 1)}>
-          count {count}
-        </button>
-        <h1>TEST</h1>
-        <p>Test ID: {testid}</p>
-        <p>{testText}</p>
-        <div></div>
-        <p>Math JAX</p>
-        {/* <BetterReactMathJax>{testText}</BetterReactMathJax> */}
-        {/* <h2>Basic MathJax example with Latex</h2>
-        <MathJax>{'\\(\\frac{10}{4x} \\approx 2^{12}\\)'}</MathJax> */}
+        <p className="overflow-x-auto overflow-y-hidden">
+          {renderInputs(testText)
+            .split('\n')
+            .map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))}
+        </p>
+
         <MathJaxComponent></MathJaxComponent>
       </div>
     </MainLayout>
