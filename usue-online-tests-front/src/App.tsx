@@ -3,18 +3,21 @@ import { LoginPage } from './pages/LoginPage';
 import { UserPage } from './pages/UserPage';
 import { TestsPage } from './pages/TestsPage';
 import { TestPage } from './pages/TestPage';
+import { MathJaxContext } from 'better-react-mathjax';
 
 function App() {
   // TODO lazy loading
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/user" element={<UserPage />} />
-        <Route path="/alltests" element={<TestsPage />} />
-        <Route path="/test/:testid" element={<TestPage />} />
-      </Routes>
-    </Router>
+    <MathJaxContext>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/user" element={<UserPage />} />
+          <Route path="/alltests" element={<TestsPage />} />
+          <Route path="/test/:testid" element={<TestPage />} />
+        </Routes>
+      </Router>
+    </MathJaxContext>
   );
 }
 
