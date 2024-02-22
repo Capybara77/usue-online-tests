@@ -1,7 +1,8 @@
 import { MainLayout } from '@/components/MainLayout';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { MathJax as BetterReactMathJax } from 'better-react-mathjax';
+import { MathJaxComponent } from '../MathJaxComponent/MathJaxComponent';
+// import { MathJax as BetterReactMathJax } from 'better-react-mathjax';
 
 export const TestPage = () => {
   const { testid } = useParams();
@@ -11,9 +12,9 @@ export const TestPage = () => {
     const createTest = async () => {
       const userResponse = await fetch('/api/create-test?testid=' + testid);
       const testJson = await userResponse.json();
+      console.log("set text");
 
       setTestText(testJson.text);
-      MathJax.Hub.Typeset()
     };
     createTest();
   }, [testid]);
@@ -44,8 +45,12 @@ export const TestPage = () => {
   //   document.body.appendChild(script);
   // }, []); // Empty dependency array ensures this runs only once on component mount
 
-  console.log('render');
 
+  if (!testText) {
+    console.log("no render " + testText);
+    return null;
+  }
+  console.log("render " + testText);
   return (
     <MainLayout>
       <div>
@@ -57,9 +62,10 @@ export const TestPage = () => {
         <p>{testText}</p>
         <div></div>
         <p>Math JAX</p>
-        <BetterReactMathJax>{testText}</BetterReactMathJax>
+        {/* <BetterReactMathJax>{testText}</BetterReactMathJax> */}
         {/* <h2>Basic MathJax example with Latex</h2>
         <MathJax>{'\\(\\frac{10}{4x} \\approx 2^{12}\\)'}</MathJax> */}
+        <MathJaxComponent></MathJaxComponent>
       </div>
     </MainLayout>
   );
