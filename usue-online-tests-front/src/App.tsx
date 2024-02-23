@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { LoginPage } from './pages/LoginPage';
 import { UserPage } from './pages/UserPage';
 import { TestsPage } from './pages/TestsPage';
-import { TestPage } from './pages/TestPage';
+import { TrainingTest } from './pages/Test/TrainingTest';
 
 function App() {
   // TODO lazy loading
@@ -12,7 +12,7 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/user" element={<UserPage />} />
         <Route path="/alltests" element={<TestsPage />} />
-        <Route path="/test/:testid" element={<TestPage />} />
+        <Route path="/test/:testid" element={<TrainingTest />} />
       </Routes>
     </Router>
   );
