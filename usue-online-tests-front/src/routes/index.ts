@@ -9,6 +9,7 @@ const LoginPage = React.lazy(() => import('../pages/LoginPage'));
 const UserPage = React.lazy(() => import('../pages/UserPage'));
 const TestsPage = React.lazy(() => import('../pages/TestsPage'));
 const TrainingTestPage = React.lazy(() => import('../pages/TrainingTestPage'));
+const PageNotFound = React.lazy(() => import('../pages/PageNotFound'));
 
 export const routes: TRoute[] = [
   {
@@ -27,4 +28,8 @@ export const routes: TRoute[] = [
     path: '/test/:testid',
     element: TrainingTestPage,
   },
+  {
+    path: "*",
+    element: PageNotFound
+  }
 ];
