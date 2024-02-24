@@ -75,15 +75,11 @@ const TrainingTestPage = () => {
     createTest();
   }, [testid]);
 
-  if (!testText) {
-    return null;
-  }
-
   return (
     <MainLayout>
       <h1 className="italic">Режим тренировки</h1>
       <form onSubmit={handleSubmit} action="/sadf">
-        <ViewTest text={testText} checkBoxes={checkboxes}></ViewTest>
+        {testText && <ViewTest text={testText} checkBoxes={checkboxes} />}
         <button type="submit" disabled={submitting}>
           {submitting ? 'Отправка...' : 'Отправить'}
         </button>

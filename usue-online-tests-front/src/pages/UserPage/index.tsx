@@ -29,12 +29,10 @@ const UserPage = () => {
     getUser();
   }, []);
 
-  if (!user) return;
-
   return (
     <MainLayout>
       <h2>Профиль пользователя</h2>
-      <p>Здравствуйте, {user.name}</p>
+      <p>Здравствуйте, {user?.name}</p>
     </MainLayout>
   );
 };
