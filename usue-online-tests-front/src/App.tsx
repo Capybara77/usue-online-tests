@@ -1,51 +1,43 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import React, { ReactNode, Suspense } from 'react';
+import React, { Suspense } from 'react';
+import { routes } from './routes';
+import { MainLayout } from './components/MainLayout';
 
-const LoginPage = React.lazy(() => import('./pages/LoginPage'));
-const UserPage = React.lazy(() => import('./pages/UserPage'));
-const TestsPage = React.lazy(() => import('./pages/TestsPage'));
-const TrainingTestPage = React.lazy(() => import('./pages/TrainingTestPage'));
+const Loading = () => {
+  return (
+    <MainLayout>
+      <h1>Загрузка...</h1>
+    </MainLayout>
+  );
+};
 
-const SuspenseComponent = ({ children }: { children: ReactNode }) => {
-  return <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>;
+const SuspenseComponent = ({
+  children,
+}: {
+  children: React.LazyExoticComponent<() => JSX.Element>;
+}) => {
+  const Component = children;
+
+  return (
+    <Suspense fallback={<Loading />}>
+      <Component />
+    </Suspense>
+  );
 };
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <SuspenseComponent>
-              <LoginPage />
-            </SuspenseComponent>
-          }
-        />
-        <Route
-          path="/user"
-          element={
-            <SuspenseComponent>
-              <UserPage />
-            </SuspenseComponent>
-          }
-        />
-        <Route
-          path="/alltests"
-          element={
-            <SuspenseComponent>
-              <TestsPage />
-            </SuspenseComponent>
-          }
-        />
-        <Route
-          path="/test/:testid"
-          element={
-            <SuspenseComponent>
-              <TrainingTestPage />
-            </SuspenseComponent>
-          }
-        />
+        {routes.map((route) => {
+          return (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={<SuspenseComponent>{route.element}</SuspenseComponent>}
+            />
+          );
+        })}
       </Routes>
     </Router>
   );
