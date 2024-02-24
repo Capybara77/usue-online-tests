@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 
 export const TrainingTest = () => {
   const { testid } = useParams();
-  const [testText, setTestText] = useState('');
+  const [testText, setTestText] = useState();
+  const [hash, setHash] = useState();
   const [checkboxes, setCheckboxes] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
@@ -15,12 +16,18 @@ export const TrainingTest = () => {
 
     try {
       const formData = gatherFormData(); // Сбор данных формы
+      const requestData = {
+        testId: testid,
+        hash: hash,
+        formData: formData
+      };
+
       const response = await fetch('/api/check-test-result', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requestData),
       });
 
       if (response.ok) {
@@ -62,6 +69,7 @@ export const TrainingTest = () => {
 
       setTestText(testJson.text);
       setCheckboxes(testJson.checkBoxes);
+      setHash(testJson.hash);
     };
     createTest();
   }, [testid]);

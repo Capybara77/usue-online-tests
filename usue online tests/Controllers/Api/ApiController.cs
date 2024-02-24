@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using usue_online_tests.Data;
 using usue_online_tests.Dto;
 using usue_online_tests.Models;
+using usue_online_tests.Requests;
 using usue_online_tests.Tests;
 
 namespace usue_online_tests.Controllers.Api;
@@ -118,6 +119,21 @@ public class ApiController : Controller
         testDto.TestID = testId;
 
         return Json(testDto);
+    }
+
+    [Route("check-test-result")]
+    [HttpPost]
+    public JsonResult CheckTestResult([FromBody] GetTestResultRequest testResultRequest)
+    {
+        var test = TestLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testResultRequest.TestId);
+        if (test == null)
+        {
+            return Json("invalid test id");
+        }
+
+        var correctAnswers = test.CheckAnswer(testResultRequest.Hash, testResultRequest.FormData);
+
+        return Json(correctAnswers);
     }
 
     public async Task<IActionResult> GetGroupList()
