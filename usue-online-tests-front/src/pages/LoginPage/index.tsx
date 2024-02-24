@@ -3,8 +3,8 @@ import { FormEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
-  const [login, setLogin] = useState<string | undefined>();
-  const [password, setPassword] = useState<string | undefined>();
+  const [login, setLogin] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -33,7 +33,7 @@ const LoginPage = () => {
     const checkUser = async () => {
       const userResponse = await fetch('/api/current-user');
       const userJson = await userResponse.json();
-      if (userJson.login) {
+      if (userJson && userJson.login) {
         navigate('/user');
       }
     };
@@ -84,7 +84,7 @@ const LoginPage = () => {
             className="grow"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder='Пароль'
+            placeholder="Пароль"
           />
         </label>
         <button className="btn w-full">Войти</button>
