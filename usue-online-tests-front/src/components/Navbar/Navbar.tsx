@@ -1,0 +1,124 @@
+import { links } from '@/navigation/links';
+import { useNavigate, Link } from 'react-router-dom';
+
+export const NavBar = () => {
+  const navigation = useNavigate();
+
+  const logout = async () => {
+    const response = await fetch('/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const json = await response.json();
+
+    if (json) {
+      navigation('/', {});
+    }
+    console.log('🚀 ~ logout ~ json:', json);
+  };
+
+  return (
+    <div className="navbar max-w-screen-lg mx-auto p-0">
+      <div className="navbar-start">
+        <div className="dropdown">
+          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            {links.map((link) => (
+              <li key={link.name}>
+                {link.sublinks?.length ? (
+                  <>
+                    <Link to={link.to}>{link.name}</Link>
+                    <ul className="p-2">
+                      {link.sublinks.map((sublink) => (
+                        <li key={sublink.to}>
+                          <Link to={sublink.to}>{sublink.name}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <Link key={link.name} to={link.to}>
+                    {link.name}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <Link to={'/'} className="text-xl link link-hover">
+          Аудиторные тесты
+        </Link>
+      </div>
+      <div className="navbar-center hidden lg:flex">
+        <ul className="menu menu-horizontal px-1">
+          {links.map((link) => (
+            <li key={link.to}>
+              {link.sublinks?.length ? (
+                <details>
+                  <summary>{link.name}</summary>
+                  <ul className="p-2">
+                    {link.sublinks.map((sublink) => (
+                      <li key={sublink.to}>
+                        <Link to={sublink.to}>{sublink.name}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : (
+                <Link key={link.name} to={link.to}>
+                  {link.name}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="navbar-end">
+        <div className="dropdown dropdown-end">
+          <div className="avatar placeholder cursor-pointer">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost rounded-full bg-neutral "
+            >
+              <span className="text-xl text-neutral-content">AI</span>
+            </div>
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4"
+          >
+            <li>
+              <a>Item 1</a>
+            </li>
+            <div className="divider my-0"></div>
+            <li onClick={logout}>
+              <span>Выйти</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
