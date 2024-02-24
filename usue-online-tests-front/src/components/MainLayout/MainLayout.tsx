@@ -1,8 +1,26 @@
 import { links } from '@/navigation/links';
 import { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
+  const navigation = useNavigate();
+
+  const logout = async () => {
+    const response = await fetch('/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const json = await response.json();
+
+    if (json) {
+      navigation('/', {});
+    }
+    console.log('🚀 ~ logout ~ json:', json);
+  };
+
   return (
     <div className="navbar max-w-screen-lg mx-auto p-0">
       <div className="navbar-start">
@@ -56,7 +74,7 @@ const NavBar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           {links.map((link) => (
-            <li>
+            <li key={link.to}>
               {link.sublinks?.length ? (
                 <details>
                   <summary>{link.name}</summary>
@@ -95,8 +113,9 @@ const NavBar = () => {
             <li>
               <a>Item 1</a>
             </li>
-            <li>
-              <a>Item 2</a>
+            <div className="divider my-0"></div> 
+            <li onClick={logout}>
+              <span>Выйти</span>
             </li>
           </ul>
         </div>
