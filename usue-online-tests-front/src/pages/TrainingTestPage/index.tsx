@@ -1,16 +1,16 @@
 import { MainLayout } from '@/components/MainLayout';
-import { ViewTest } from './ViewTest';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
+import ViewTest from '../ViewTestPage';
 
-export const TrainingTest = () => {
+const TrainingTestPage = () => {
   const { testid } = useParams();
   const [testText, setTestText] = useState();
   const [hash, setHash] = useState();
   const [checkboxes, setCheckboxes] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitting(true);
 
@@ -19,7 +19,7 @@ export const TrainingTest = () => {
       const requestData = {
         testId: testid,
         hash: hash,
-        formData: formData
+        formData: formData,
       };
 
       const response = await fetch('/api/check-test-result', {
@@ -37,29 +37,30 @@ export const TrainingTest = () => {
         console.error('Ошибка при отправке данных:', response.status);
         // здесь вы можете обработать ошибку, если необходимо
       }
+
+      console.log('Отправка формы:', formData);
     } catch (error) {
       console.error('Ошибка при отправке данных:', error);
       // здесь вы можете обработать ошибку, если необходимо
     }
 
     setSubmitting(false);
-    console.log('Отправка формы:', formData);
   };
 
   const gatherFormData = () => {
-    const formData = {};
-    const inputs = document.querySelectorAll('input[name]'); // Выбор всех input элементов с атрибутом name
-    inputs.forEach((input) => {
-        // Если у input есть значение и нет записи в formData, сохранить его значение
-        if (input.value && !formData.hasOwnProperty(input.name)) {
-          formData[input.name] = input.value;
-        } else if (!formData.hasOwnProperty(input.name)) {
-          // Если нет значения и нет записи в formData, добавить пустую строку
-          formData[input.name] = '';
-        }
-        // В случае наличия значения, но запись уже существует, не менять её
-      });
-    return formData;
+    // const formData = {};
+    // const inputs = document.querySelectorAll('input[name]'); // Выбор всех input элементов с атрибутом name
+    // inputs.forEach((input) => {
+    //   // Если у input есть значение и нет записи в formData, сохранить его значение
+    //   if (input.value && !formData.hasOwnProperty(input.name)) {
+    //     formData[input.name] = input.value;
+    //   } else if (!formData.hasOwnProperty(input.name)) {
+    //     // Если нет значения и нет записи в formData, добавить пустую строку
+    //     formData[input.name] = '';
+    //   }
+    //   // В случае наличия значения, но запись уже существует, не менять её
+    // });
+    // return formData;
   };
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export const TrainingTest = () => {
   if (!testText) {
     return null;
   }
+
   return (
     <MainLayout>
       <h1 className="italic">Режим тренировки</h1>
@@ -89,3 +91,5 @@ export const TrainingTest = () => {
     </MainLayout>
   );
 };
+
+export default TrainingTestPage;

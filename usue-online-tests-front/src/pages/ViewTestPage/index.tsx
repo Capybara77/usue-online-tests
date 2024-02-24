@@ -1,7 +1,7 @@
 import { MathJaxComponent } from '../MathJaxComponent/MathJaxComponent';
 import React from 'react';
 
-export const ViewTest = ({
+const ViewTest = ({
   text,
   checkBoxes,
 }: {
@@ -60,3 +60,5 @@ export const ViewTest = ({
     </div>
   );
 };
+
+export default ViewTest;

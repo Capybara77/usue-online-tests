@@ -2,7 +2,7 @@ import { MainLayout } from '@/components/MainLayout';
 import { FormEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const LoginPage = () => {
+const LoginPage = () => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -66,3 +66,5 @@ export const LoginPage = () => {
     </MainLayout>
   );
 };
+
+export default LoginPage;

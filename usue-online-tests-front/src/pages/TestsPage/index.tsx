@@ -8,7 +8,7 @@ interface Test {
   testID: number;
 }
 
-export const TestsPage = () => {
+const TestsPage = () => {
   const [tests, setTests] = useState<Test[]>([]);
 
   useEffect(() => {
@@ -37,3 +37,5 @@ export const TestsPage = () => {
     </MainLayout>
   );
 };
+
+export default TestsPage;

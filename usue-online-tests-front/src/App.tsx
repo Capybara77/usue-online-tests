@@ -1,8 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { LoginPage } from './pages/LoginPage';
-import { UserPage } from './pages/UserPage';
-import { TestsPage } from './pages/TestsPage';
-import { TrainingTest } from './pages/Test/TrainingTest';
+import React from 'react';
+
+const LoginPage = React.lazy(() => import('./pages/LoginPage'));
+const UserPage = React.lazy(() => import('./pages/UserPage'));
+const TestsPage = React.lazy(() => import('./pages/TestsPage'));
+const TrainingTestPage = React.lazy(() => import('./pages/TrainingTestPage'));
 
 function App() {
   // TODO lazy loading
@@ -12,7 +14,7 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/user" element={<UserPage />} />
         <Route path="/alltests" element={<TestsPage />} />
-        <Route path="/test/:testid" element={<TrainingTest />} />
+        <Route path="/test/:testid" element={<TrainingTestPage />} />
       </Routes>
     </Router>
   );
