@@ -1,41 +1,6 @@
+import { links } from '@/navigation/links';
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-
-type TLink = {
-  name: string;
-  to: string;
-  sublinks?: TLink[];
-};
-
-const links: TLink[] = [
-  {
-    name: 'Профиль',
-    to: '/profile',
-  },
-  {
-    name: 'Тесты',
-    to: '/alltests',
-    sublinks: [
-      {
-        name: 'Alltests',
-        to: '/alltests',
-      },
-      {
-        name: 'Доступные тесты',
-        to: '/tests',
-      },
-      {
-        name: 'Тесты для прохождений',
-        to: '/availabletests',
-      },
-    ],
-  },
-
-  {
-    name: 'Поменять пароль',
-    to: '/changepassword',
-  },
-];
 
 const NavBar = () => {
   return (

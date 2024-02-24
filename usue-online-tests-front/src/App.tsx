@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import React, { Suspense } from 'react';
-import { routes } from './routes';
+import { routes } from './navigation/routes';
 import { MainLayout } from './components/MainLayout';
 
 const Loading = () => {
