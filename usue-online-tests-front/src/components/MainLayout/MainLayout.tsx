@@ -1,6 +1,42 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
+type TLink = {
+  name: string;
+  to: string;
+  sublinks?: TLink[];
+};
+
+const links: TLink[] = [
+  {
+    name: 'Профиль',
+    to: '/profile',
+  },
+  {
+    name: 'Тесты',
+    to: '/alltests',
+    sublinks: [
+      {
+        name: 'Alltests',
+        to: '/alltests',
+      },
+      {
+        name: 'Доступные тесты',
+        to: '/tests',
+      },
+      {
+        name: 'Тесты для прохождений',
+        to: '/availabletests',
+      },
+    ],
+  },
+
+  {
+    name: 'Поменять пароль',
+    to: '/changepassword',
+  },
+];
+
 const NavBar = () => {
   return (
     <div className="navbar max-w-screen-lg mx-auto p-0">
@@ -26,7 +62,27 @@ const NavBar = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
-            <li>
+            {links.map((link) => (
+              <li>
+                {link.sublinks?.length ? (
+                  <>
+                    <Link to={link.to}>{link.name}</Link>
+                    <ul className="p-2">
+                      {link.sublinks.map((sublink) => (
+                        <li key={sublink.to}>
+                          <Link to={sublink.to}>{sublink.name}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <Link key={link.name} to={link.to}>
+                    {link.name}
+                  </Link>
+                )}
+              </li>
+            ))}
+            {/* <li>
               <a>Item 1</a>
             </li>
             <li>
@@ -42,7 +98,7 @@ const NavBar = () => {
             </li>
             <li>
               <a>Item 3</a>
-            </li>
+            </li> */}
           </ul>
         </div>
         <Link to={'/'} className="text-xl link link-hover">
@@ -51,7 +107,27 @@ const NavBar = () => {
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
-          <li>
+          {links.map((link) => (
+            <li>
+              {link.sublinks?.length ? (
+                <details>
+                  <summary>{link.name}</summary>
+                  <ul className="p-2">
+                    {link.sublinks.map((sublink) => (
+                      <li key={sublink.to}>
+                        <Link to={sublink.to}>{sublink.name}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : (
+                <Link key={link.name} to={link.to}>
+                  {link.name}
+                </Link>
+              )}
+            </li>
+          ))}
+          {/* <li>
             <a>Item 1</a>
           </li>
           <li>
@@ -69,7 +145,7 @@ const NavBar = () => {
           </li>
           <li>
             <a>Item 3</a>
-          </li>
+          </li> */}
         </ul>
       </div>
       <div className="navbar-end">
@@ -102,9 +178,11 @@ const NavBar = () => {
 
 export const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="flex min-h-screen flex-col bg-base-200 px-4">
+    <div className="flex min-h-screen flex-col bg-base-200 px-4 gap-8">
       <NavBar />
-      <div className="grow max-w-screen-lg mx-auto w-full px-4 lg:px-0">{children}</div>
+      <div className="grow max-w-screen-lg mx-auto w-full px-4 lg:px-0">
+        {children}
+      </div>
       <footer className="footer footer-center p-4 text-base-content">
         <div className="footer-center p-4 text-base-content">
           © 2024 - ФГАОУ ВО «УрФУ имени первого Президента России Б.Н. Ельцина»
