@@ -86,7 +86,7 @@ const LoginPage = () => {
             placeholder="Пароль"
           />
         </label>
-        <button className="btn w-full">Войти</button>
+        <button className="btn btn-neutral w-full">Войти</button>
       </form>
     </MainLayout>
   );
