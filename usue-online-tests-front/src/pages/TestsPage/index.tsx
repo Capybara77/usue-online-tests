@@ -27,7 +27,7 @@ const TestsPage = () => {
           <Link
             key={test.testID}
             to={`/test/${test.testID}`}
-            className="p-[10px] rounded-md transition-all shadow-sm hover:-translate-y-1 hover:shadow"
+            className="text-lg bg-base-100 px-[32px] py-[25px] rounded-md transition-all shadow-sm hover:-translate-y-1 hover:shadow"
           >
             <strong>{test.name}</strong>: {test.description}
           </Link>

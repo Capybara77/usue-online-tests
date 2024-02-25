@@ -22,18 +22,18 @@ public class ApiController : Controller
     private readonly IMapper _mapper;
     private readonly TestsLoader _testsLoader;
     private readonly Random _random;
-    public DataContext Data { get; }
-    public GetUserByCookie UserByCookie { get; }
-    public TestsLoader TestLoader { get; }
+    private readonly DataContext _dbContext;
+    private readonly GetUserByCookie _getUserService;
+    private readonly TestsLoader _testLoader;
 
-    public ApiController(DataContext data, GetUserByCookie userByCookie, TestsLoader testLoader, IMapper mapper,
+    public ApiController(DataContext dbContext, GetUserByCookie getUserService, TestsLoader testLoader, IMapper mapper,
         TestsLoader testsLoader)
     {
         _mapper = mapper;
         _testsLoader = testsLoader;
-        Data = data;
-        UserByCookie = userByCookie;
-        TestLoader = testLoader;
+        _dbContext = dbContext;
+        _getUserService = getUserService;
+        _testLoader = testLoader;
         _random = new Random();
     }
 
@@ -42,7 +42,7 @@ public class ApiController : Controller
     [HttpPost]
     public async Task<JsonResult> Login(string login, string password)
     {
-        var user = Data.Users
+        var user = _dbContext.Users
             .FirstOrDefault(user1 => user1.Password == password && user1.Login == login);
 
         if (user == null)
@@ -80,7 +80,7 @@ public class ApiController : Controller
     [HttpGet]
     public JsonResult GetCurrentUser()
     {
-        var currentUser = UserByCookie.GetUser();
+        var currentUser = _getUserService.GetUser();
         var userDto = _mapper.Map<UserInfoDto>(currentUser);
         return Json(userDto);
     }
@@ -105,7 +105,7 @@ public class ApiController : Controller
     [HttpGet]
     public JsonResult CreateTestById(int testId)
     {
-        var testCreator = TestLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+        var testCreator = _testLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
         if (testCreator == null)
         {
             return Json(new { error = "invalid test id" });
@@ -125,7 +125,7 @@ public class ApiController : Controller
     [HttpPost]
     public JsonResult CheckTestResult([FromBody] GetTestResultRequest testResultRequest)
     {
-        var test = TestLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testResultRequest.TestId);
+        var test = _testLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testResultRequest.TestId);
         if (test == null)
         {
             return Json("invalid test id");
@@ -138,21 +138,21 @@ public class ApiController : Controller
 
     public async Task<IActionResult> GetGroupList()
     {
-        return Json((await Data.Users.Where(user => user.Role == Roles.User).Select(user => user.Group).ToListAsync()).Distinct());
+        return Json((await _dbContext.Users.Where(user => user.Role == Roles.User).Select(user => user.Group).ToListAsync()).Distinct());
     }
 
     public IActionResult GetTasksList()
     {
-        return Json(TestLoader.TestCreators.Select(creator => new { label = creator.Name, value = creator.TestID }).ToArray());
+        return Json(_testLoader.TestCreators.Select(creator => new { label = creator.Name, value = creator.TestID }).ToArray());
     }
 
     public IActionResult DeleteGroup(string groupName)
     {
-        var users = Data.Users.Where(user => user.Group == groupName);
-        Data.Users.RemoveRange(users);
+        var users = _dbContext.Users.Where(user => user.Group == groupName);
+        _dbContext.Users.RemoveRange(users);
         try
         {
-            Data.SaveChanges();
+            _dbContext.SaveChanges();
         }
         catch (Exception e)
         {
