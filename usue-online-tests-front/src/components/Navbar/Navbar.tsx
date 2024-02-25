@@ -114,7 +114,7 @@ export const NavBar = () => {
               {link.sublinks?.length ? (
                 <details>
                   <summary>{link.name}</summary>
-                  <ul className="p-2">
+                  <ul className="p-2 z-[1]">
                     {link.sublinks.map((sublink) => (
                       <li key={sublink.to}>
                         <Link to={sublink.to}>{sublink.name}</Link>
