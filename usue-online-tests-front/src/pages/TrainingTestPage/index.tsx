@@ -80,8 +80,15 @@ const TrainingTestPage = () => {
       <h1 className="italic">Режим тренировки</h1>
       <form onSubmit={handleSubmit} action="/sadf">
         {testText && <ViewTest text={testText} checkBoxes={checkboxes} />}
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Отправка...' : 'Отправить'}
+        <button className="btn btn-neutral" type="submit" disabled={submitting}>
+          {submitting ? (
+            <>
+              <span className="loading loading-spinner"></span>
+              Отправка...
+            </>
+          ) : (
+            'Отправить'
+          )}
         </button>
       </form>
     </MainLayout>
