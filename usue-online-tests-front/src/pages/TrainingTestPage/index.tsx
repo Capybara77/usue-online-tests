@@ -21,7 +21,6 @@ const TrainingTestPage = () => {
         hash: hash,
         formData: formData,
       };
-
       const response = await fetch('/api/check-test-result', {
         method: 'POST',
         headers: {
@@ -32,35 +31,32 @@ const TrainingTestPage = () => {
 
       if (response.ok) {
         console.log('Данные успешно отправлены');
-        // здесь вы можете выполнить какие-либо дополнительные действия после успешной отправки
       } else {
         console.error('Ошибка при отправке данных:', response.status);
-        // здесь вы можете обработать ошибку, если необходимо
       }
 
       console.log('Отправка формы:', formData);
     } catch (error) {
       console.error('Ошибка при отправке данных:', error);
-      // здесь вы можете обработать ошибку, если необходимо
+    } finally {
+      setSubmitting(false);
     }
-
-    setSubmitting(false);
   };
 
   const gatherFormData = () => {
-    // const formData = {};
-    // const inputs = document.querySelectorAll('input[name]'); // Выбор всех input элементов с атрибутом name
-    // inputs.forEach((input) => {
-    //   // Если у input есть значение и нет записи в formData, сохранить его значение
-    //   if (input.value && !formData.hasOwnProperty(input.name)) {
-    //     formData[input.name] = input.value;
-    //   } else if (!formData.hasOwnProperty(input.name)) {
-    //     // Если нет значения и нет записи в formData, добавить пустую строку
-    //     formData[input.name] = '';
-    //   }
-    //   // В случае наличия значения, но запись уже существует, не менять её
-    // });
-    // return formData;
+    const formData: { [key: string]: string } = {};
+    const inputs = document.querySelectorAll<HTMLInputElement>('input[name]');
+    inputs.forEach((input) => {
+      if (
+        input.value &&
+        !Object.prototype.hasOwnProperty.call(formData, input.name)
+      ) {
+        formData[input.name] = input.value;
+      } else if (!Object.prototype.hasOwnProperty.call(formData, input.name)) {
+        formData[input.name] = '';
+      }
+    });
+    return formData;
   };
 
   useEffect(() => {
