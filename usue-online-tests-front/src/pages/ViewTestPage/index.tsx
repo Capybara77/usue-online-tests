@@ -1,4 +1,4 @@
-import { MathJaxComponent } from '../MathJaxComponent/MathJaxComponent';
+import { MathJaxComponent } from '../MathJaxComponent/';
 import React from 'react';
 
 const ViewTest = ({

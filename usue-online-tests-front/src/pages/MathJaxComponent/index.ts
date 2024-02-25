@@ -1,0 +1,1 @@
+export { MathJaxComponent } from './MathJaxComponent';
