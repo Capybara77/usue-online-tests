@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { NavBar } from '../Navbar/Navbar';
+import { NavBar } from '../Navbar/';
 
 export const MainLayout = ({ children }: { children: ReactNode }) => {
   return (

@@ -1,4 +1,5 @@
 import { MainLayout } from '@/components/MainLayout';
+import { PageHeader } from '@/components/PageHeader';
 import { FormEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -46,9 +47,7 @@ const LoginPage = () => {
         onSubmit={handleSubmit}
         className="space-y-4 my-28 max-w-sm mx-auto"
       >
-        <div className="prose text-center">
-          <h1>Вход</h1>
-        </div>
+        <PageHeader className="text-center">Вход</PageHeader>
         <label className="input input-bordered flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"

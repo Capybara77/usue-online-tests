@@ -1,4 +1,5 @@
 import { MainLayout } from '@/components/MainLayout';
+import { PageHeader } from '@/components/PageHeader';
 import { useState, useEffect } from 'react';
 
 type TUserRole = 'User';
@@ -31,7 +32,7 @@ const UserPage = () => {
 
   return (
     <MainLayout>
-      <h2>Профиль пользователя</h2>
+      <PageHeader>Профиль пользователя</PageHeader>
       <p>Здравствуйте, {user?.name}</p>
     </MainLayout>
   );
