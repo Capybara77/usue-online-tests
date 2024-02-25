@@ -18,8 +18,8 @@ const TrainingTestPage = () => {
       const formData = gatherFormData(); // Сбор данных формы
       const requestData = {
         testId: testid,
-        hash: hash,
-        formData: formData,
+        hash,
+        formData,
       };
       const response = await fetch('/api/check-test-result', {
         method: 'POST',
@@ -46,6 +46,7 @@ const TrainingTestPage = () => {
   const gatherFormData = () => {
     const formData: { [key: string]: string } = {};
     const inputs = document.querySelectorAll<HTMLInputElement>('input[name]');
+
     inputs.forEach((input) => {
       if (
         input.value &&
@@ -56,6 +57,7 @@ const TrainingTestPage = () => {
         formData[input.name] = '';
       }
     });
+
     return formData;
   };
 
