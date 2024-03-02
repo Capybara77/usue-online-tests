@@ -13,6 +13,7 @@ using usue_online_tests.Dto;
 using usue_online_tests.Models;
 using usue_online_tests.Requests;
 using usue_online_tests.Tests;
+using Test_Wrapper;
 
 namespace usue_online_tests.Controllers.Api;
 
@@ -96,8 +97,11 @@ public class ApiController : Controller
         {
             test.Name,
             test.Description,
-            test.TestID
-        }));
+            test.TestID,
+            group = test is ITestGroup group ? group.GroupName : string.Empty
+        })
+        .GroupBy(arg => arg.group)
+        .ToDictionary(grouping => grouping.Key));
     }
 
     /*START TEST*/
