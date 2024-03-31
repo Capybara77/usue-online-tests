@@ -1,0 +1,27 @@
+name: .NET Build and Test
+
+on:
+  push:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore "usue online tests/usue online tests.csproj"
+      working-directory: "./usue online tests"
+
+    - name: Build
+      run: dotnet build "usue online tests/usue online tests.csproj" --no-restore -c Release
+      working-directory: "./usue online tests"
