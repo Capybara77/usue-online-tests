@@ -19,9 +19,7 @@ jobs:
         dotnet-version: '6.0.x'
 
     - name: Restore dependencies
-      working-directory: ./usue-online-tests
       run: dotnet restore "usue online tests.sln"
 
     - name: Build
-      working-directory: ./usue-online-tests
       run: dotnet build "usue online tests.sln" --no-restore -c Release
