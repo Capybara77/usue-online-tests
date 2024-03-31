@@ -1,4 +1,4 @@
-name: .NET Build and Test
+name: .NET Build
 
 on:
   push:
@@ -19,9 +19,9 @@ jobs:
         dotnet-version: '6.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore "usue online tests/usue online tests.csproj"
-      working-directory: "./usue online tests"
+      working-directory: ./usue online tests
+      run: dotnet restore "usue online tests.csproj"
 
     - name: Build
-      run: dotnet build "usue online tests/usue online tests.csproj" --no-restore -c Release
-      working-directory: "./usue online tests"
+      working-directory: ./usue online tests
+      run: dotnet build "usue online tests.csproj" --no-restore -c Release
