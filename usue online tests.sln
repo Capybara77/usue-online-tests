@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "usue online tests", "usue online tests\usue online tests.csproj", "{14D029CC-24C6-4FD2-8DB2-65F076954224}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "usue-online-tests", "usue-online-tests\usue-online-tests.csproj", "{14D029CC-24C6-4FD2-8DB2-65F076954224}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test Wrapper", "Test Wrapper\Test Wrapper.csproj", "{EB9B6028-C7C2-408D-96E2-520FD52A76C2}"
 EndProject

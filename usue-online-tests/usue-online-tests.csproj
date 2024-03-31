@@ -5,6 +5,7 @@
     <RootNamespace>usue_online_tests</RootNamespace>
     <LangVersion>latest</LangVersion>
     <UserSecretsId>4ef2c77b-2493-408c-9b9e-967d85651740</UserSecretsId>
+    <AssemblyName>usue-online-tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
