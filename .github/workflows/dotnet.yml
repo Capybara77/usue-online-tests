@@ -20,8 +20,8 @@ jobs:
 
     - name: Restore dependencies
       working-directory: ./usue-online-tests
-      run: dotnet restore "usue-online-tests.csproj"
+      run: dotnet restore "usue online tests.sln"
 
     - name: Build
       working-directory: ./usue-online-tests
-      run: dotnet build "usue-online-tests.csproj" --no-restore -c Release
+      run: dotnet build "usue online tests.sln" --no-restore -c Release
