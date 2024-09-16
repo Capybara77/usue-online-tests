@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Test_Wrapper;
 
@@ -30,9 +29,9 @@ namespace usue_online_tests.Tests
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(assembly =>
                 assembly.FullName == "usue-online-tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
 
-            foreach (Assembly assembly in assemblies)
+            foreach (var assembly in assemblies)
             {
-                foreach (Type type in assembly.ExportedTypes)
+                foreach (var type in assembly.ExportedTypes)
                 {
                     CheckAndLoadCreator(type);
                 }
@@ -41,24 +40,24 @@ namespace usue_online_tests.Tests
 
         private void LoadDllTests()
         {
-            string pathToDll = _webHostEnvironment.ContentRootPath + "/dll";
+            var pathToDll = _webHostEnvironment.ContentRootPath + "/dll";
 
             if (!Directory.Exists(pathToDll))
                 Directory.CreateDirectory(pathToDll);
 
-            string[] files = Directory.GetFiles(pathToDll)
+            var files = Directory.GetFiles(pathToDll)
                 .Where(s => s.EndsWith(".dll")).ToArray();
 
             foreach (var file in files)
             {
-                Assembly assembly = Assembly.LoadFrom(file);
-                Module[] modules = assembly.GetLoadedModules();
+                var assembly = Assembly.LoadFrom(file);
+                var modules = assembly.GetLoadedModules();
 
-                foreach (Module module in modules)
+                foreach (var module in modules)
                 {
                     try
                     {
-                        foreach (Type assemblyExportedType in module.Assembly.ExportedTypes)
+                        foreach (var assemblyExportedType in module.Assembly.ExportedTypes)
                         {
                             CheckAndLoadCreator(assemblyExportedType);
                         }
@@ -73,28 +72,32 @@ namespace usue_online_tests.Tests
 
         private void CheckAndLoadCreator(Type type)
         {
-            Type[] interfaces = type.GetInterfaces();
-            foreach (Type i in interfaces)
-            {
-                if (i == typeof(ITestCreator))
-                {
-                    AllTests.Add(type);
-                    ITestCreator creator =
-                        (ITestCreator)type.GetConstructor(Type.EmptyTypes)?.Invoke(Array.Empty<object>());
+            var interfaces = type.GetInterfaces();
 
-                    if (creator != null)
-                    {
-                        string mystring = creator.Name + creator.Description;
-                        MD5 md5Hasher = MD5.Create();
-                        byte[] hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(mystring));
-                        int ivalue = BitConverter.ToInt32(hashed, 0);
-                        creator.TestID = ivalue;
-                        TestCreators.Add(creator);
-                    }
+            foreach (var i in interfaces)
+            {
+                if (i != typeof(ITestCreator))
+                {
+                    continue;
                 }
+
+                AllTests.Add(type);
+                var creator =
+                    (ITestCreator)type.GetConstructor(Type.EmptyTypes)?.Invoke(Array.Empty<object>());
+
+                if (creator == null)
+                {
+                    continue;
+                }
+
+                var myString = creator.Name + creator.Description;
+                var md5Hasher = MD5.Create();
+                var hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(myString));
+                var intHash = BitConverter.ToInt32(hashed, 0);
+
+                creator.TestID = intHash;
+                TestCreators.Add(creator);
             }
         }
-
-        
     }
 }
