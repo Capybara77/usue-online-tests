@@ -23,6 +23,7 @@ namespace usue_online_tests.Report
         public override IActionResult CreateReport(int examId)
         {
             DataProvider.SetExamId(examId);
+            DataProvider.GetData();
 
             MemoryStream memoryStream = new MemoryStream();
 
@@ -173,6 +174,9 @@ namespace usue_online_tests.Report
             worksheet.Cells[y, 2].Value = "Студент/задание";
             var testCount = DataProvider.Exam.Preset.Tests.Length;
 
+            // Добавляем заголовок для столбца "% списывания"
+            worksheet.Cells[y, 5 + testCount].Value = "% списывания";
+
             for (var i = 0; i < testCount; i++)
             {
                 var testId = DataProvider.Exam.Preset.Tests[i];
@@ -199,6 +203,10 @@ namespace usue_online_tests.Report
 
                 // Поиск результата экзамена данного студента.
                 var result = DataProvider.UsersExamResults.FirstOrDefault(r => r.User.Id == student.Id);
+
+                // Получение данных о списывании для данного студента и экзамена
+                var studentPredictionResults = DataProvider.PredictionResults.Where(p =>
+                    p.ExаmId == DataProvider.Exam.Id && p.UserId == student.Id).ToArray();
 
                 if (result != null) // Если результаты экзамена есть
                 {
@@ -244,6 +252,18 @@ namespace usue_online_tests.Report
                     }
                     worksheet.Cells[rowIndex, 3 + testCount].Value = "0/0";
                     worksheet.Cells[rowIndex, 4 + testCount].Value = "0";
+                }
+
+                // Расчет и вывод процента списывания
+                if (studentPredictionResults.Length > 0)
+                {
+                    var cheatingCount = studentPredictionResults.Count(p => p.IsCheating);
+                    var cheatingPercentage = (int)(((double)cheatingCount / studentPredictionResults.Length) * 100);
+                    worksheet.Cells[rowIndex, 5 + testCount].Value = $"{cheatingPercentage}%";
+                }
+                else
+                {
+                    worksheet.Cells[rowIndex, 5 + testCount].Value = "0%"; // Или "-" если нет данных
                 }
 
                 rowIndex++;

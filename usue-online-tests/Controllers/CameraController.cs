@@ -38,10 +38,31 @@ public class CameraController : Controller
     }
 
     [HttpPost]
-    public bool SendData([FromBody] PredictionResult predictionResult)
+    public bool SendData([FromBody] RequestData data)
     {
-        var eyesOpen = PredictionHelper.IsEyesOpen(predictionResult);
+        var isCheating = false;
 
-        return eyesOpen;
+        try
+        {
+            isCheating = PredictionHelper.IsEyesOpen(data.blendShapes);
+
+            var examId = Convert.ToInt32(data.ExamId);
+            var userId = Convert.ToInt32(data.UserId);
+
+            _context.PredictionResults.Add(new PredictionResult
+            {
+                IsCheating = !isCheating,
+                ExаmId = examId,
+                UserId = userId,
+            });
+
+            _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine();
+        }
+
+        return isCheating;
     }
 }

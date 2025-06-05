@@ -24,9 +24,54 @@
     <link type="text/css" rel="stylesheet" href="/css/starttest.css" />
     <link type="text/css" rel="stylesheet" href="/css/themestyle.css" />
     <link type="text/css" rel="stylesheet" href="/css/alltest.css" />
+    <script type="module" src="~/js/ai2.js"></script>
 }
 
 
 @{
     await Html.RenderPartialAsync("Test", Model);
 }
+
+<style>
+    .videoView {
+        display: flex;
+        justify-content: flex-start;
+        align-items: start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    #box {
+        display: flex;
+        border: 4px solid transparent;
+    }
+
+    #webcamButton {
+        border: 1px solid gray;
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+
+     #loading {
+        visibility: hidden;
+    }
+</style>
+
+<section id="demos" class="invisible">
+    <div class="blend-shapes">
+        <ul class="blend-shapes-list" id="image-blend-shapes"></ul>
+    </div>
+
+    <div id="liveView" class="videoView">
+        <div style="position: relative;" id="box">
+            <video id="webcam" autoplay playsinline ></video>
+            <canvas class="output_canvas" id="output_canvas" style="position: absolute; left: 0; top: 0;"></canvas>
+        </div>
+    </div>
+    <div class="blend-shapes">
+        <ul class="blend-shapes-list" id="video-blend-shapes"></ul>
+    </div>
+
+    <input hidden name="examId" value="@Model.ExamId"/>
+    <input hidden name="userId" value="@Model.UserId"/>
+</section>

@@ -12,14 +12,14 @@ using usue_online_tests.Data;
 namespace usue_online_tests.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240210160605_update foreign key")]
-    partial class updateforeignkey
+    [Migration("20240624102143_start")]
+    partial class start
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.22")
+                .HasAnnotation("ProductVersion", "6.0.26")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -77,7 +77,7 @@ namespace usue_online_tests.Migrations
                     b.Property<int>("TotalAnswers")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("UserExamResultId")
+                    b.Property<int>("UserExamResultId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -124,11 +124,20 @@ namespace usue_online_tests.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("ExаmId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("HeadIndex")
                         .HasColumnType("integer");
 
                     b.Property<string>("HeadName")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsCheating")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -207,13 +216,13 @@ namespace usue_online_tests.Migrations
                     b.Property<DateTime>("DateTimeStart")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("ExamId")
+                    b.Property<int>("ExamId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -238,9 +247,13 @@ namespace usue_online_tests.Migrations
 
             modelBuilder.Entity("usue_online_tests.Models.ExamTestAnswer", b =>
                 {
-                    b.HasOne("usue_online_tests.Models.UserExamResult", null)
+                    b.HasOne("usue_online_tests.Models.UserExamResult", "UserExamResult")
                         .WithMany("ExamTestAnswers")
-                        .HasForeignKey("UserExamResultId");
+                        .HasForeignKey("UserExamResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserExamResult");
                 });
 
             modelBuilder.Entity("usue_online_tests.Models.PredictionCategory", b =>
@@ -269,11 +282,15 @@ namespace usue_online_tests.Migrations
                 {
                     b.HasOne("usue_online_tests.Models.Exam", "Exam")
                         .WithMany()
-                        .HasForeignKey("ExamId");
+                        .HasForeignKey("ExamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("usue_online_tests.Models.User", "User")
                         .WithMany("UserExamResults")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Exam");
 

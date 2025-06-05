@@ -17,7 +17,7 @@ namespace usue_online_tests.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.22")
+                .HasAnnotation("ProductVersion", "6.0.26")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -122,11 +122,20 @@ namespace usue_online_tests.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("ExаmId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("HeadIndex")
                         .HasColumnType("integer");
 
                     b.Property<string>("HeadName")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsCheating")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

@@ -17,5 +17,6 @@ namespace usue_online_tests.Models
         public bool TimeLimited { get; set; } = false;
         public int SecLimit { get; set; } = 60;
         public int ExamId { get; set; }
+        public int UserId { get; set; }
     }
 }

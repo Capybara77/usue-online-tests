@@ -11,5 +11,9 @@ namespace usue_online_tests.Report
 
         public void SetExamId(int examId);
         Tuple<Exam, UserExamResult[]> GetReportData(int examId);
+
+        PredictionResult[] PredictionResults { get; set; }
+
+        void GetData();
     }
 }

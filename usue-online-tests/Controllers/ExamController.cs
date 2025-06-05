@@ -132,7 +132,8 @@ namespace usue_online_tests.Controllers
                 BtnText = testNumber == preset.Tests.Length ? "Завершить" : "Следующий вопрос",
                 Link = $"/exam/CheckAnswersExam?examId={examId}&testNumber={testNumber + 1}",
                 TimeLimited = exam.Preset.TimeLimited,
-                ExamId = examId
+                ExamId = examId,
+                UserId = user.Id,
             };
 
             if (test.TimeLimited)
@@ -323,7 +324,8 @@ namespace usue_online_tests.Controllers
                 BtnText = testNumber == preset.Tests.Length ? "Завершить" : "Следующий вопрос",
                 Link = $"/exam/CheckAnswersExam?examId={examId}&testNumber={testNumber + 1}",
                 TimeLimited = exam.Preset.TimeLimited,
-                ExamId = examId
+                ExamId = examId,
+                UserId = user.Id
             };
 
             if (test.TimeLimited)
