@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.IO;
 using Test_Wrapper;
 
 namespace usue_online_tests.Tests
@@ -40,6 +40,6 @@ namespace usue_online_tests.Tests
 
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
-        public List<Image> Pictures { get; set; }
+        public List<MemoryStream> Pictures { get; set; }
     }
 }

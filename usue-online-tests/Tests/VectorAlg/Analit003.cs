@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using SkiaSharp;
 using Test_Wrapper;
 
 namespace usue_online_tests.Tests.List
@@ -14,10 +12,8 @@ namespace usue_online_tests.Tests.List
         public string Name { get; } = "Аналитическая геометрия 003";
         public string Description { get; } = "Упражнение по аналитической геометрии";
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>")]
         public ITest CreateTest(int randomSeed)
         {
-            //randomSeed = 1028797245;
             Random random = new Random(randomSeed);
             ITest test = new Analit003();
 
@@ -42,25 +38,101 @@ namespace usue_online_tests.Tests.List
 
             if (positionYV2 == 3 && positionXV2 == 3) positionYV2 = 5;
 
-            Image img = Image.FromFile(Environment.CurrentDirectory + "\\wwwroot\\generators\\alalitGeom.png");
+            var imagePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "generators", "alalitGeom.png");
 
-            Graphics graphics = Graphics.FromImage(img);
-            //darw ellipse
-            graphics.DrawEllipse(new Pen(Color.Blue, 4), (startV - 120) * 40, 280, 40, 40);
+            using var stream = File.OpenRead(imagePath);
+            using var backgroundImage = SKImage.FromEncodedData(stream);
 
-            //draw line
-            Pen pen = new Pen(Color.Green, 5);
-            pen.EndCap = LineCap.ArrowAnchor;
-            graphics.DrawLine(pen, positionXV1 * 40 - 20 + 40 * 3, positionYV1 * 40 - 20 + 40 * 4,
-                (positionXV1 + positionXV2 - 3) * 40 - 20 + 40 * 3, (positionYV1 + positionYV2 - 3) * 40 - 20 + 40 * 4);
-            test.Pictures.Add(img);
+            using var surface = SKSurface.Create(new SKImageInfo(backgroundImage.Width, backgroundImage.Height));
+            var canvas = surface.Canvas;
+
+            canvas.DrawImage(backgroundImage, 0, 0);
+
+            using var ellipsePaint = new SKPaint
+            {
+                Color = SKColors.Blue,
+                StrokeWidth = 4,
+                Style = SKPaintStyle.Stroke,
+                IsAntialias = true
+            };
+
+            using var linePaint = new SKPaint
+            {
+                Color = SKColors.Green,
+                StrokeWidth = 5,
+                Style = SKPaintStyle.Stroke,
+                IsAntialias = true
+            };
+
+            // --- ИСПРАВЛЕННЫЙ БЛОК РИСОВАНИЯ ЭЛЛИПСА ---
+            // System.Drawing.DrawEllipse использует координаты верхнего левого угла и размеры.
+            // SKCanvas.DrawOval использует координаты центра и радиусы.
+            // Необходимо скорректировать координаты для соответствия оригиналу.
+
+            float topLeftX = (startV - 120) * 40;
+            float topLeftY = 280;
+            float width = 40;
+            float height = 40;
+
+            // Вычисляем центр (cx, cy) и радиусы (rx, ry) из координат верхнего левого угла
+            float centerX = topLeftX + width / 2;
+            float centerY = topLeftY + height / 2;
+            float radiusX = width / 2;
+            float radiusY = height / 2;
+
+            canvas.DrawOval(centerX, centerY, radiusX, radiusY, ellipsePaint);
+            // --- КОНЕЦ ИСПРАВЛЕННОГО БЛОКА ---
+
+            var startPoint = new SKPoint(
+                positionXV1 * 40 - 20 + 40 * 3,
+                positionYV1 * 40 - 20 + 40 * 4
+            );
+            var endPoint = new SKPoint(
+                (positionXV1 + positionXV2 - 3) * 40 - 20 + 40 * 3,
+                (positionYV1 + positionYV2 - 3) * 40 - 20 + 40 * 4
+            );
+
+            DrawArrow(canvas, startPoint, endPoint, linePaint);
+
+            var ms = new MemoryStream();
+            using (var image = surface.Snapshot())
+            using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
+            {
+                data.SaveTo(ms);
+            }
+            ms.Position = 0;
+            test.Pictures.Add(ms);
 
             test.Text = $"Прямая задана параметрическими уравнениями с начальной точкой с номером {startV}," +
                         $" и направляющим вектором \\(\\overline{{p}}\\). Тогда значению параметра {par1} соответствует точка с" +
                         $" номером \\(<point1>\\), а значению параметра {par2} соответствует точка с номером \\(<point2>\\)";
 
-
             return test;
+        }
+
+        private void DrawArrow(SKCanvas canvas, SKPoint start, SKPoint end, SKPaint paint, float arrowHeadLength = 15f, float arrowHeadAngle = 30.0f)
+        {
+            canvas.DrawLine(start, end, paint);
+
+            var angle = Math.Atan2(end.Y - start.Y, end.X - start.X);
+
+            using var path = new SKPath();
+
+            var radians = arrowHeadAngle * Math.PI / 180;
+            var p1 = new SKPoint(
+                (float)(end.X - arrowHeadLength * Math.Cos(angle - radians)),
+                (float)(end.Y - arrowHeadLength * Math.Sin(angle - radians))
+            );
+            var p2 = new SKPoint(
+                (float)(end.X - arrowHeadLength * Math.Cos(angle + radians)),
+                (float)(end.Y - arrowHeadLength * Math.Sin(angle + radians))
+            );
+
+            path.MoveTo(p1);
+            path.LineTo(end);
+            path.LineTo(p2);
+
+            canvas.DrawPath(path, paint);
         }
 
         public int CheckAnswer(int randomSeed, Dictionary<string, string> answers)
@@ -98,6 +170,7 @@ namespace usue_online_tests.Tests.List
             }
             catch
             {
+                // ignored
             }
 
             try
@@ -109,6 +182,7 @@ namespace usue_online_tests.Tests.List
             }
             catch
             {
+                // ignored
             }
 
             return total;
@@ -116,6 +190,6 @@ namespace usue_online_tests.Tests.List
 
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
-        public List<Image> Pictures { get; set; } = new List<Image>();
+        public List<MemoryStream> Pictures { get; set; } = new();
     }
 }

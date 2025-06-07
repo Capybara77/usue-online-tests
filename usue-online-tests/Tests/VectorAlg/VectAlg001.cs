@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Drawing;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using SkiaSharp;
 using Test_Wrapper;
 
 public class Analit3 : ITestCreator, ITest
@@ -16,7 +16,6 @@ public class Analit3 : ITestCreator, ITest
     public int answer8;
     public int answer9;
 
-
     public int TestID { get; set; }
     public string Name { get; } = "Аналитическая геометрия13";
     public string Description { get; } = "Упражнение по аналитической геометрии";
@@ -26,46 +25,20 @@ public class Analit3 : ITestCreator, ITest
         Random random = new Random(randomSeed);
         ITest test = new Analit3();
 
-        Bitmap img = new Bitmap(510, 510);
-        Graphics graphics = Graphics.FromImage(img);
+        var imageInfo = new SKImageInfo(510, 510);
+        using var surface = SKSurface.Create(imageInfo);
+        var canvas = surface.Canvas;
+        canvas.Clear(SKColors.White);
 
+        DrawCrosses(canvas);
 
-
-        int size = 17;
-        int gap = 30;
-
-        int horizontalCount = 530 / gap;
-        int verticalCount = 530 / gap;
-
-        int xOffset = 15;
-        int yOffset = 15;
-
-        for (int i = 0; i < horizontalCount; i++)
-        {
-            for (int j = 0; j < verticalCount; j++)
-            {
-                int x = i * gap + xOffset;
-                int y = j * gap + yOffset;
-
-                graphics.DrawLine(Pens.Black, x - size / 2, y, x + size / 2, y);
-
-                graphics.DrawLine(Pens.Black, x, y - size / 2, x, y + size / 2);
-            }
-        }
-
-        int centerX = img.Width / 2;
-        int centerY = img.Height / 2;
-
-
-
+        int centerX = imageInfo.Width / 2;
+        int centerY = imageInfo.Height / 2;
 
         int sign = random.Next(0, 2) == 0 ? -1 : 1;
-        int sign1 = random.Next(0, 2) == 0 ? -1 : 1;
 
-
-        int vectorEndX, vectorEndY, vectorStartX, vectorStartY, vectorEndX2, vectorEndY2;
+        int vectorEndX, vectorEndY, vectorStartX, vectorStartY;
         int pointAx, pointAy, pointBx, pointBy;
-
 
         vectorStartX = centerX - 30 * random.Next(4, 7);
         vectorStartY = centerY - 30 * random.Next(4, 7);
@@ -74,11 +47,6 @@ public class Analit3 : ITestCreator, ITest
 
         if (vectorStartY < 105)
             vectorEndY = vectorStartY - 30 * 2;
-
-
-
-        var sign2 = sign == -1 ? 1 : -1;
-        var sign3 = sign1 == -1 ? 1 : -1;
 
         pointAx = centerX - 30 * random.Next(2, 3);
         pointAy = centerY + 30 * random.Next(2, 3);
@@ -90,28 +58,33 @@ public class Analit3 : ITestCreator, ITest
         answer2 = 8 - pointAy / 30;
         answer3 = Math.Abs(vectorEndX - vectorStartX) / 30;
         answer4 = Math.Abs(vectorEndY - vectorStartY) / 30;
-
         answer9 = sign;
 
+        // Внимание: Этот блок, как и в оригинальном коде, меняет координаты,
+        // если sign == -1. Ниже есть еще один такой же блок, что, вероятно, является ошибкой,
+        // но сохранено для полного соответствия логике оригинала.
         if (sign == -1)
         {
             pointBx = pointAx;
-            pointBy = pointAy ;
+            pointBy = pointAy;
             pointAx = pointBx - Math.Abs(vectorEndX - vectorStartX);
             pointAy = pointBy + Math.Abs(vectorEndY - vectorStartY);
         }
 
+        // --- Настройка объектов SkiaSharp для рисования ---
+        using var font = new SKFont(SKTypeface.FromFamilyName("Arial"), 15);
+        using var font1 = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Italic), 25);
+        using var font2 = new SKFont(SKTypeface.FromFamilyName("Arial"), 23);
 
+        using var blackPaint = new SKPaint { Color = SKColors.Black, IsAntialias = true };
+        using var pinkPaint = new SKPaint { Color = SKColors.DeepPink, IsAntialias = true };
 
-        Font font = new Font("Arial", 15, FontStyle.Regular, GraphicsUnit.Pixel);
-        Font font1 = new Font("Arial", 25, FontStyle.Italic, GraphicsUnit.Pixel);
-        Font font2 = new Font("Arial", 23, FontStyle.Regular, GraphicsUnit.Pixel);
-        Brush brush = Brushes.Black;
-        Brush brush2 = Brushes.DeepPink;
+        using var axisPen = new SKPaint { Color = SKColors.Black, StrokeWidth = 2, IsAntialias = true, Style = SKPaintStyle.Stroke };
+        using var vectorPen = new SKPaint { Color = SKColors.DeepPink, StrokeWidth = 3, IsAntialias = true, Style = SKPaintStyle.Stroke };
 
+        // --- Рисование ---
         int offsetX = 0;
         int offsetY = 0;
-        int offsetY_a;
 
         if (vectorEndY < 105)
         {
@@ -124,38 +97,41 @@ public class Analit3 : ITestCreator, ITest
             offsetX = 5;
         }
 
+        // Рисование чисел на осях
         for (int i = -1; i > -9; i--)
         {
-            graphics.DrawString(i.ToString(), font, brush, centerX - 7 + 30 * i, centerY + 6);
-            graphics.DrawString(i.ToString(), font, brush, centerY + 6, centerX - 7 - 30 * i);
+            canvas.DrawText(i.ToString(), centerX - 7 + 30 * i, centerY + 20, font, blackPaint);
+            canvas.DrawText(i.ToString(), centerY + 6, centerX - 5 - 30 * i, font, blackPaint);
         }
-
-        graphics.DrawString(0.ToString(), font, brush, centerY + 3, centerX + 3);
-
+        canvas.DrawText(0.ToString(), centerY + 3, centerX + 18, font, blackPaint);
         for (int i = 1; i < 9; i++)
         {
-            graphics.DrawString(i.ToString(), font, brush, centerX - 7 + 30 * i, centerY + 6);
-            graphics.DrawString(i.ToString(), font, brush, centerY + 6, centerX - 7 - 30 * i);
+            canvas.DrawText(i.ToString(), centerX - 7 + 30 * i, centerY + 20, font, blackPaint);
+            canvas.DrawText(i.ToString(), centerY + 6, centerX - 5 - 30 * i, font, blackPaint);
         }
-        graphics.DrawString("x", font1, brush, 494, centerY - 30);
-        graphics.DrawString("y", font1, brush, centerX - 25, -5);
-        graphics.DrawString("v", font2, brush, vectorEndX + offsetX, vectorEndY + offsetY);
+
+        // Рисование подписей
+        canvas.DrawText("x", 494, centerY - 15, font1, blackPaint);
+        canvas.DrawText("y", centerX - 25, 20, font1, blackPaint);
+        canvas.DrawText("v", vectorEndX + offsetX, vectorEndY + offsetY + 20, font2, blackPaint);
 
         if (sign == -1)
         {
+            // Внимание: Этот блок, как и в оригинальном коде, ПОВТОРНО применяет
+            // смещение координат, а затем пересчитывает ответы.
             pointBx = pointAx;
             pointBy = pointAy;
             pointAx = pointBx - Math.Abs(vectorEndX - vectorStartX);
-            pointAy = pointBy + Math.Abs(vectorEndY - vectorStartY);    
+            pointAy = pointBy + Math.Abs(vectorEndY - vectorStartY);
             answer1 = -8 + pointBx / 30;
             answer2 = 8 - pointBy / 30;
-            graphics.DrawString("B", font2, brush, pointAx + offsetX, pointAy + offsetY);
-            graphics.DrawString("A", font2, brush, pointBx + offsetX, pointBy + offsetY);
+            canvas.DrawText("B", pointAx + offsetX, pointAy + offsetY + 20, font2, blackPaint);
+            canvas.DrawText("A", pointBx + offsetX, pointBy + offsetY + 20, font2, blackPaint);
         }
         else
         {
-            graphics.DrawString("A", font2, brush, pointAx + offsetX, pointAy + offsetY);
-            graphics.DrawString("B", font2, brush, pointBx + offsetX, pointBy + offsetY);
+            canvas.DrawText("A", pointAx + offsetX, pointAy + offsetY + 20, font2, blackPaint);
+            canvas.DrawText("B", pointBx + offsetX, pointBy + offsetY + 20, font2, blackPaint);
         }
 
         answer5 = answer1;
@@ -163,55 +139,92 @@ public class Analit3 : ITestCreator, ITest
         answer7 = answer2;
         answer8 = answer4;
 
-        Pen vectorPen = new Pen(Color.Black, 2);
-        Pen vectorPen2 = new Pen(Color.Black, 3);
-        Pen vectorPen3 = new Pen(Color.DeepPink, 3);
-        Pen vectorPen4 = new Pen(Color.Black, 2);
+        // Рисование осей и вектора
+        DrawArrow(canvas, new SKPoint(0, centerY), new SKPoint(510, centerY), axisPen);
+        DrawArrow(canvas, new SKPoint(centerX, 510), new SKPoint(centerX, 0), axisPen);
+        DrawArrow(canvas, new SKPoint(vectorStartX, vectorStartY), new SKPoint(vectorEndX, vectorEndY), vectorPen, 15, 20);
 
-        CustomLineCap bigArrow = new AdjustableArrowCap(6, 6, true);
-        vectorPen.CustomEndCap = bigArrow;
-
-        CustomLineCap bigArrow2 = new AdjustableArrowCap(5, 5, true);
-        vectorPen2.CustomEndCap = bigArrow;
-
-        CustomLineCap bigArrow3 = new AdjustableArrowCap(5, 5, true);
-        vectorPen3.CustomEndCap = bigArrow3;
-
-
-
-        graphics.DrawLine(vectorPen, 0, centerY, 510, centerX);
-        graphics.DrawLine(vectorPen, centerX, 510, centerY, 0);
-        graphics.DrawLine(vectorPen3, vectorStartX, vectorStartY, vectorEndX, vectorEndY);
-
+        // Рисование точек
         int radius = 4;
-        graphics.FillEllipse(brush2, pointAx - radius, pointAy - radius, radius * 2, radius * 2);
+        canvas.DrawCircle(pointAx, pointAy, radius, pinkPaint);
+        canvas.DrawCircle(pointBx, pointBy, radius, pinkPaint);
 
-        graphics.FillEllipse(brush2, pointBx - radius, pointBy - radius, radius * 2, radius * 2);
-
-
-
-
-        test.Pictures.Add(img);
+        // Сохранение изображения
+        var ms = new MemoryStream();
+        using (var image = surface.Snapshot())
+        using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
+        {
+            data.SaveTo(ms);
+        }
+        ms.Position = 0;
+        test.Pictures.Add(ms);
 
         string questionText = $"Парамерическое уравнение данной прямой с начальной точкой А и направляющим вектором \\(\\overline{{v}}\\) имеет вид:\r\n" +
             $"\\( x \\overline{{i}} + y\\overline{{j}} = <answer1>\\overline{{i}} +<answer2>\\overline{{j}}+\\)" +
             $"\\(t\\left(<answer3>\\overline{{i}}+<answer4>\\overline{{j}}\\right)\\), т.е." +
-            $"\\(\\left\\{{\\begin{{array}}{{l}}"+
-            $"  x = <answer5>+<answer6>t,\\\\"+
-            $"  y = <answer7>+<answer8>t.\\\\"+
-            $" \\end{{array}}\\right.\\) "+
+            $"\\(\\left\\{{\\begin{{array}}{{l}}" +
+            $"  x = <answer5>+<answer6>t,\\\\" +
+            $"  y = <answer7>+<answer8>t.\\\\" +
+            $" \\end{{array}}\\right.\\) " +
             $"Точка \\(B\\) получается при \\(t = <answer9>\\).";
-
 
         test.Text = questionText;
 
         return test;
     }
 
+    private static void DrawCrosses(SKCanvas canvas)
+    {
+        var size = 17;
+        var gap = 30;
+        var horizontalCount = 530 / gap;
+        var verticalCount = 530 / gap;
+        var xOffset = 15;
+        var yOffset = 15;
+
+        using var crossPaint = new SKPaint { Color = SKColors.Black, StrokeWidth = 1 };
+
+        for (var i = 0; i < horizontalCount; i++)
+            for (var j = 0; j < verticalCount; j++)
+            {
+                var x = i * gap + xOffset;
+                var y = j * gap + yOffset;
+                canvas.DrawLine(x - size / 2f, y, x + size / 2f, y, crossPaint);
+                canvas.DrawLine(x, y - size / 2f, x, y + size / 2f, crossPaint);
+            }
+    }
+
+    private void DrawArrow(SKCanvas canvas, SKPoint start, SKPoint end, SKPaint paint, float arrowHeadLength = 12f, float arrowHeadAngle = 25.0f)
+    {
+        canvas.DrawLine(start, end, paint);
+        var angle = Math.Atan2(end.Y - start.Y, end.X - start.X);
+        using var path = new SKPath();
+        var radians = arrowHeadAngle * Math.PI / 180;
+        var p1 = new SKPoint(
+            (float)(end.X - arrowHeadLength * Math.Cos(angle - radians)),
+            (float)(end.Y - arrowHeadLength * Math.Sin(angle - radians))
+        );
+        var p2 = new SKPoint(
+            (float)(end.X - arrowHeadLength * Math.Cos(angle + radians)),
+            (float)(end.Y - arrowHeadLength * Math.Sin(angle + radians))
+        );
+        path.MoveTo(p1);
+        path.LineTo(end);
+        path.LineTo(p2);
+        path.Close();
+        using var arrowPaint = new SKPaint
+        {
+            Style = SKPaintStyle.Fill,
+            Color = paint.Color,
+            IsAntialias = true
+        };
+        canvas.DrawPath(path, arrowPaint);
+    }
+
     public int CheckAnswer(int randomSeed, Dictionary<string, string> answers)
     {
+        // Метод не использует графику и остается без изменений
         int total = 0;
-
         foreach (var answer in answers)
         {
             if (answer.Key == "answer1" && answer.Value == answer1.ToString() ||
@@ -225,11 +238,10 @@ public class Analit3 : ITestCreator, ITest
                 answer.Key == "answer9" && answer.Value == answer9.ToString())
                 total += 1;
         }
-
         return total;
     }
 
     public string Text { get; set; }
     public string[] CheckBoxes { get; set; }
-    public List<Image> Pictures { get; set; } = new List<Image>();
+    public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
 }

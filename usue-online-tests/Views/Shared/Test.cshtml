@@ -35,15 +35,10 @@
         // PICTURE
         @if (Model.Test.Pictures != null)
         {
-            @foreach (var pic in Model.Test.Pictures)
+            @foreach (var stream in Model.Test.Pictures)
             {
-                MemoryStream stream = new MemoryStream();
-                pic.Save(stream, ImageFormat.Png);
-                byte[] data = new byte[stream.Length];
-                stream.Position = 0;
-                stream.Read(data, 0, data.Length);
-                <img class="lg:w-1/2 lg:mr-8" src="data:image/jpeg;base64,@Convert.ToBase64String(data)" />
-                pic.Dispose();
+                <img class="lg:w-1/2 lg:mr-8" src="data:image/jpeg;base64,@Convert.ToBase64String(stream.ToArray())" />
+                stream.Dispose();
             }
         }
 

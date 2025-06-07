@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Drawing;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using SkiaSharp;
 using Test_Wrapper;
 
 public class Vector002 : ITestCreator, ITest
@@ -19,38 +19,18 @@ public class Vector002 : ITestCreator, ITest
         Random random = new Random(randomSeed);
         ITest test = new Vector002();
 
-        Bitmap img = new Bitmap(510, 510);
-        Graphics graphics = Graphics.FromImage(img);
+        var imageInfo = new SKImageInfo(510, 510);
+        using var surface = SKSurface.Create(imageInfo);
+        var canvas = surface.Canvas;
+        canvas.Clear(SKColors.White);
 
-        int size = 17;
-        int gap = 30;
+        DrawCrosses(canvas);
 
-        int horizontalCount = 530 / gap;
-        int verticalCount = 530 / gap;
-
-        int xOffset = 15;
-        int yOffset = 15;
-
-        for (int i = 0; i < horizontalCount; i++)
-        {
-            for (int j = 0; j < verticalCount; j++)
-            {
-                int x = i * gap + xOffset;
-                int y = j * gap + yOffset;
-
-                graphics.DrawLine(Pens.Black, x - size / 2, y, x + size / 2, y);
-
-                graphics.DrawLine(Pens.Black, x, y - size / 2, x, y + size / 2);
-            }
-        }
-
-        int centerX = img.Width / 2;
-        int centerY = img.Height / 2;
-
+        int centerX = imageInfo.Width / 2;
+        int centerY = imageInfo.Height / 2;
 
         int sign = random.Next(0, 2) == 0 ? -1 : 1;
         int sign1 = random.Next(0, 2) == 0 ? -1 : 1;
-
 
         int vectorEndX, vectorEndY, vectorEndX2, vectorEndY2;
 
@@ -62,48 +42,51 @@ public class Vector002 : ITestCreator, ITest
             vectorEndY2 = centerY - 30 * random.Next(2, 5) * sign1;
         } while (vectorEndX == vectorEndX2 && vectorEndY == vectorEndY2);
 
+        // --- Вся логика вычислений оставлена без изменений ---
         var vector = Math.Abs(8 - (vectorEndX / 30));
 
-        vectorA = 0;
+        this.vectorA = 0; // Используем this.vectorA для соответствия оригиналу
         while (vector > 0)
         {
-            vectorA++;
+            this.vectorA++;
             vector -= Math.Abs(8 - (vectorEndX2 / 30));
         }
 
-
         var vector2 = Math.Abs(8 - (vectorEndY / 30));
 
-        vectorB = 1;
-        vectorA1 = 0;
+        this.vectorB = 1;
+        this.vectorA1 = 0;
         while (vector2 > 0)
         {
-            vectorA1++;
+            this.vectorA1++;
             vector2 -= Math.Abs(8 - (vectorEndY2 / 30));
         }
 
         var sign2 = sign == -1 ? 1 : -1;
         var sign3 = sign1 == -1 ? 1 : -1;
 
-        int vectorEndX3 = centerX + 30 * vector * sign2;
-        int vectorEndY3 = centerY + 30 * vector2 * sign3;
+        int vectorEndX3 = centerX + 30 * (int)vector * sign2;
+        int vectorEndY3 = centerY + 30 * (int)vector2 * sign3;
 
-
-        if (vectorA1 > vectorA)
+        if (this.vectorA1 > this.vectorA)
         {
-            vectorA = vectorA1;
-            vectorEndX3 = centerX - 30 * (-vector + Math.Abs(8 - (vectorEndX / 30))) * sign2;
+            this.vectorA = this.vectorA1;
+            vectorEndX3 = centerX - 30 * (int)(-vector + Math.Abs(8 - (vectorEndX / 30))) * sign2;
         }
 
+        // --- Настройка объектов SkiaSharp для рисования ---
+        using var font = new SKFont(SKTypeface.FromFamilyName("Arial"), 25);
+        using var textPaint = new SKPaint { Color = SKColors.Black, IsAntialias = true };
 
-        Font font = new Font("Arial", 25, FontStyle.Regular, GraphicsUnit.Pixel);
-        Brush brush = Brushes.Black;
+        using var redPen = new SKPaint { Color = SKColors.Red, StrokeWidth = 3, Style = SKPaintStyle.Stroke, IsAntialias = true };
+        using var blackPen = new SKPaint { Color = SKColors.Black, StrokeWidth = 3, Style = SKPaintStyle.Stroke, IsAntialias = true };
 
+        // --- Рисование ---
         int offsetX = 10;
         int offsetY_c;
         int offsetY_a;
 
-        if (vectorEndY < img.Height / 2)
+        if (vectorEndY < imageInfo.Height / 2)
         {
             offsetY_c = vectorEndY - 30;
             offsetY_a = vectorEndY2 - 30;
@@ -114,46 +97,84 @@ public class Vector002 : ITestCreator, ITest
             offsetY_a = vectorEndY2;
         }
 
-        graphics.DrawString("c", font, brush, vectorEndX + offsetX, offsetY_c);
-        graphics.DrawString("a", font, brush, vectorEndX2 + offsetX, offsetY_a);
-        graphics.DrawString("b", font, brush, vectorEndX3 + offsetX, vectorEndY3);
+        canvas.DrawText("c", vectorEndX + offsetX, offsetY_c + font.Size, font, textPaint);
+        canvas.DrawText("a", vectorEndX2 + offsetX, offsetY_a + font.Size, font, textPaint);
+        canvas.DrawText("b", vectorEndX3 + offsetX, vectorEndY3 + font.Size, font, textPaint);
 
+        // Рисуем векторы со стрелками
+        DrawArrow(canvas, new SKPoint(centerX, centerY), new SKPoint(vectorEndX, vectorEndY), redPen);
+        DrawArrow(canvas, new SKPoint(centerX, centerY), new SKPoint(vectorEndX2, vectorEndY2), blackPen);
+        DrawArrow(canvas, new SKPoint(centerX, centerY), new SKPoint(vectorEndX3, vectorEndY3), blackPen);
 
-
-
-        Pen vectorPen = new Pen(Color.Red, 3);
-        Pen vectorPen2 = new Pen(Color.Black, 3);
-        Pen vectorPen3 = new Pen(Color.Black, 3);
-
-        CustomLineCap bigArrow = new AdjustableArrowCap(5, 5, true);
-        vectorPen.CustomEndCap = bigArrow;
-
-        CustomLineCap bigArrow2 = new AdjustableArrowCap(5, 5, true);
-        vectorPen2.CustomEndCap = bigArrow;
-
-        CustomLineCap bigArrow3 = new AdjustableArrowCap(5, 5, true);
-        vectorPen3.CustomEndCap = bigArrow;
-
-        graphics.DrawLine(vectorPen, centerX, centerY, vectorEndX, vectorEndY);
-        graphics.DrawLine(vectorPen2, centerX, centerY, vectorEndX2, vectorEndY2);
-        graphics.DrawLine(vectorPen3, centerX, centerY, vectorEndX3, vectorEndY3);
-
-
-
-
-
-        test.Pictures.Add(img);
+        // Сохранение изображения
+        var ms = new MemoryStream();
+        using (var image = surface.Snapshot())
+        using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
+        {
+            data.SaveTo(ms);
+        }
+        ms.Position = 0;
+        test.Pictures.Add(ms);
 
         string questionText = $"В разложении \\(\\overline{{c}}\\) в линейную комбинацию введите числа(коэффициенты):" +
-            $" \\(\\overline{{c}}\\) = \\({vectorA}\\)\\(<vectorA>\\)\\(\\overline{{a}}\\) +   \\({vectorB}\\)\\(<vectorB>\\)\\(\\overline{{b}}\\).";
+            $" \\(\\overline{{c}}\\) = \\({this.vectorA}\\)\\(<vectorA>\\)\\(\\overline{{a}}\\) +   \\({this.vectorB}\\)\\(<vectorB>\\)\\(\\overline{{b}}\\).";
 
         test.Text = questionText;
 
         return test;
     }
 
+    private static void DrawCrosses(SKCanvas canvas)
+    {
+        var size = 17;
+        var gap = 30;
+        var horizontalCount = 530 / gap;
+        var verticalCount = 530 / gap;
+        var xOffset = 15;
+        var yOffset = 15;
+
+        using var crossPaint = new SKPaint { Color = SKColors.Black, StrokeWidth = 1 };
+
+        for (var i = 0; i < horizontalCount; i++)
+            for (var j = 0; j < verticalCount; j++)
+            {
+                var x = i * gap + xOffset;
+                var y = j * gap + yOffset;
+                canvas.DrawLine(x - size / 2f, y, x + size / 2f, y, crossPaint);
+                canvas.DrawLine(x, y - size / 2f, x, y + size / 2f, crossPaint);
+            }
+    }
+
+    private void DrawArrow(SKCanvas canvas, SKPoint start, SKPoint end, SKPaint paint, float arrowHeadLength = 12f, float arrowHeadAngle = 25.0f)
+    {
+        canvas.DrawLine(start, end, paint);
+        var angle = Math.Atan2(end.Y - start.Y, end.X - start.X);
+        using var path = new SKPath();
+        var radians = arrowHeadAngle * Math.PI / 180;
+        var p1 = new SKPoint(
+            (float)(end.X - arrowHeadLength * Math.Cos(angle - radians)),
+            (float)(end.Y - arrowHeadLength * Math.Sin(angle - radians))
+        );
+        var p2 = new SKPoint(
+            (float)(end.X - arrowHeadLength * Math.Cos(angle + radians)),
+            (float)(end.Y - arrowHeadLength * Math.Sin(angle + radians))
+        );
+        path.MoveTo(p1);
+        path.LineTo(end);
+        path.LineTo(p2);
+        path.Close();
+        using var arrowPaint = new SKPaint
+        {
+            Style = SKPaintStyle.Fill,
+            Color = paint.Color,
+            IsAntialias = true
+        };
+        canvas.DrawPath(path, arrowPaint);
+    }
+
     public int CheckAnswer(int randomSeed, Dictionary<string, string> answers)
     {
+        // Логика проверки оставлена без изменений
         int total = 0;
 
         foreach (var answer in answers)
@@ -168,5 +189,5 @@ public class Vector002 : ITestCreator, ITest
 
     public string Text { get; set; }
     public string[] CheckBoxes { get; set; }
-    public List<Image> Pictures { get; set; } = new List<Image>();
+    public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
 }

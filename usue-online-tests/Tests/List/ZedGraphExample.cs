@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Test_Wrapper;
 using ZedGraph;
 
@@ -34,10 +29,13 @@ namespace usue_online_tests.Tests.List
             masterPane.Add(graphPane);
             masterPane.Add(secPane);
 
+            var ms = new MemoryStream();
+            masterPane.GetImage(true).Save(ms, ImageFormat.Png);
+
             return new ZedGraphExample
             {
                 Text = string.Empty,
-                Pictures = new List<Image> { masterPane.GetImage(true) }
+                Pictures = new List<MemoryStream> { ms }
             };
         }
 
@@ -71,7 +69,7 @@ namespace usue_online_tests.Tests.List
 
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
-        public List<Image> Pictures { get; set; }
+        public List<MemoryStream> Pictures { get; set; }
         public int TimeLimitSeconds { get; set; } = 20;
     }
 }

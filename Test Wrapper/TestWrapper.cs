@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 
 namespace Test_Wrapper
 {
@@ -16,7 +16,7 @@ namespace Test_Wrapper
     {
         string Text { get; set; }
         public string[] CheckBoxes { get; set; }
-        List<Image> Pictures { get; set; }
+        List<MemoryStream> Pictures { get; set; }
     }
 
     public interface ITimeLimit
