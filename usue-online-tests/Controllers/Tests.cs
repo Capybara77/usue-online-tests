@@ -54,9 +54,10 @@ namespace usue_online_tests.Controllers
                     test = creator.CreateTest(hash);
                 }
             }
-            catch
+            catch (Exception e)
             {
-                // ignored
+                Console.WriteLine($"Ошибка при создании теста {e.Message}");
+                Console.WriteLine(e.StackTrace);
             }
 
             TestWrapper testWrapper = new TestWrapper
