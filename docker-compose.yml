@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # Сервис для базы данных PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: usue-postgres-db
+    restart: always
+    environment:
+      - POSTGRES_USER=usueuser        # Имя пользователя для подключения к БД
+      - POSTGRES_PASSWORD=padmin  # Пароль для пользователя
+      - POSTGRES_DB=usue_online_tests            # Имя базы данных, которая будет создана при первом запуске
+    ports:
+      - "5432:5432" # Пробрасываем порт для подключения с хост-машины (например, для DBeaver)
+    volumes:
+      - postgres-data:/var/lib/postgresql/data # Сохраняем данные БД на хост-машине
+
+  # Сервис для вашего ASP.NET приложения
+  app:
+    build: . # Собирать образ из Dockerfile в текущей директории
+    container_name: usue-app
+    restart: always
+    ports:
+      - "8081:8080" # Связываем порт 8081 на хосте с портом 8080 в контейнере
+    environment:
+      # --- ВАША СТРОКА ПОДКЛЮЧЕНИЯ ---
+      - pgConnectionString=Host=db;Port=5432;Database=usue_online_tests;Username=usueuser;Password=padmin
+    depends_on:
+      - db # Запускать этот сервис только после того, как сервис 'db' будет запущен
+
+# Описание томов (volumes) для хранения данных
+volumes:
+  postgres-data:
+    driver: local
