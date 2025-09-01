@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using org.mariuszgromada.math.mxparser;
 using Test_Wrapper;
 
@@ -10,7 +11,7 @@ namespace FinField
 	{
 		public string Text { get; set; }
 		public string[] CheckBoxes { get; set; }
-		public List<Image> Pictures { get; set; }
+		public List<MemoryStream> Pictures { get; set; }
 		public int TestID { get; set; }
 		public string Name { get; } = "Конечные поля: тест 2 ";
 		public string Description { get; }

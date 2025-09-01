@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Test_Wrapper;
@@ -54,7 +55,7 @@ namespace usue_online_tests.Tests.List
             pen.EndCap = LineCap.ArrowAnchor;
             graphics.DrawLine(pen, positionXV1 * 40 - 20 + 40 * 3, positionYV1 * 40 - 20 + 40 * 4,
                 (positionXV1 + positionXV2 - 3) * 40 - 20 + 40 * 3, (positionYV1 + positionYV2 - 3) * 40 - 20 + 40 * 4);
-            test.Pictures.Add(img);
+            //test.Pictures.Add(img);
 
             test.Text = $"Прямая задана параметрическими уравнениями с начальной точкой с номером {startV}," +
                         $" и направляющим вектором \\(\\overline{{p}}\\). Тогда значению параметра {par1} соответствует точка с" +
@@ -117,7 +118,7 @@ namespace usue_online_tests.Tests.List
 
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
-        public List<Image> Pictures { get; set; } = new List<Image>();
+        public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
         public int TimeLimitSeconds { get; set; } = 60;
         public bool IsHidden { get; set; } = false;
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using Test_Wrapper;
 
@@ -268,7 +269,7 @@ using (Graphics graphics = Graphics.FromImage(img))
                 
             
 
-            test.Pictures.Add(img); // Добавляем картинку в тест
+            //test.Pictures.Add(img); // Добавляем картинку в тест
 
             // Формирование текста задания
             test.Text = $"В прямоугольном параллелепипеде {data.PAa}{data.PBa}{data.PCa}{data.PDa}{data.PAb}{data.PBb}{data.PCb}{data.PDb} " +
@@ -417,7 +418,7 @@ using (Graphics graphics = Graphics.FromImage(img))
         // Дополнительные свойства теста
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
-        public List<Image> Pictures { get; set; } = new List<Image>();
+        public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
         public int TimeLimitSeconds { get; set; } = 120; // Ограничение по времени
         public bool IsHidden { get; set; } = false; // Видимость теста
     }

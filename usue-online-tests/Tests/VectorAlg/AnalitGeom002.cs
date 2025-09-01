@@ -2,7 +2,10 @@ using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Drawing;
 using System;
+using System.IO;
 using Test_Wrapper;
+
+namespace usue_online_tests.Tests.VectorAlg2;
 
 public class Analit3 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 {
@@ -192,7 +195,7 @@ public class Analit3 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 
 
 
-        test.Pictures.Add(img);
+        //test.Pictures.Add(img);
 
         string questionText = $"Парамерическое уравнение данной прямой с начальной точкой А и направляющим вектором \\(\\overline{{v}}\\) имеет вид:\r\n" +
             $"\\( x \\overline{{i}} + y\\overline{{j}} = <answer1>\\overline{{i}} +<answer2>\\overline{{j}}+\\)" +
@@ -232,7 +235,7 @@ public class Analit3 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 
     public string Text { get; set; }
     public string[] CheckBoxes { get; set; }
-    public List<Image> Pictures { get; set; } = new List<Image>();
+    public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
     public int TimeLimitSeconds { get; set; } = 60;
     public bool IsHidden { get; set; } = false;
 }

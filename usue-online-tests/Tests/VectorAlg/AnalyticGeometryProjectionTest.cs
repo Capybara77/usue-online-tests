@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using Test_Wrapper;
 
 namespace UserTest
@@ -173,7 +174,7 @@ namespace UserTest
                 g.DrawLine(vectorPen, start, end);
             }
 
-            test.Pictures.Add(img);
+            //test.Pictures.Add(img);
 
             test.Text =
                 $"Прямая, проходящая через точку {data.Aname} ортогонально изображённому вектору (из точки ), " +
@@ -220,7 +221,7 @@ namespace UserTest
 
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
-        public List<Image> Pictures { get; set; } = new List<Image>();
+        public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
         public int TimeLimitSeconds { get; set; } = 60;
         public bool IsHidden { get; set; } = false;
     }

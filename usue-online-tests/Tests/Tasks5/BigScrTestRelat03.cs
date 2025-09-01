@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using Test_Wrapper;
 
 namespace UserTest
@@ -48,7 +49,7 @@ namespace UserTest
                 $"Порядок написания пар скобок бинарных отношений важен.";
 
             Image img = Image.FromFile(Environment.CurrentDirectory + $"\\wwwroot\\generators\\Relat\\{num}.jpg");
-            result.Pictures.Add(img);
+            //result.Pictures.Add(img);
 
             return result;
         }
@@ -78,7 +79,7 @@ namespace UserTest
 
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
-        public List<Image> Pictures { get; set; } = new();
+        public List<MemoryStream> Pictures { get; set; } = new();
         public int TimeLimitSeconds { get; set; } = 90;
     }
 }

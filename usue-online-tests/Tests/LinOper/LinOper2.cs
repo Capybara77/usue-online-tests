@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using Test_Wrapper;
 
 namespace LinOper
@@ -10,7 +11,7 @@ namespace LinOper
 	{
 		public string Text { get; set; }
 		public string[] CheckBoxes { get; set; }
-		public List<Image> Pictures { get; set; }
+		public List<MemoryStream> Pictures { get; set; }
 		public int TestID { get; set; }
 		public string Name { get; } = "Линейные операторы тест 2";
 		public string Description { get; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using Test_Wrapper;
 
@@ -75,7 +76,7 @@ namespace UserTest
 
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
-        public List<Image> Pictures { get; set; }
+        public List<MemoryStream> Pictures { get; set; }
         public int TimeLimitSeconds { get; set; } = 100;
     }
 }

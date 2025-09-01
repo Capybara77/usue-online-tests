@@ -2,6 +2,7 @@
 using System.Drawing.Drawing2D;
 using System.Drawing;
 using System;
+using System.IO;
 using Test_Wrapper;
 
 namespace usue_online_tests.Tests.List
@@ -174,7 +175,7 @@ namespace usue_online_tests.Tests.List
 
             graphics.FillEllipse(brush2, pointBx - radius, pointBy - radius, radius * 2, radius * 2);
 
-            test.Pictures.Add(img);
+            //test.Pictures.Add(img);
 
             string questionText = $"Парамерическое уравнение данной прямой с начальной точкой А и направляющим вектором \\(\\overline{{v}}\\) имеет вид:\r\n" +
                 $" (не сокращайте на общий множитель!)" +
@@ -214,7 +215,7 @@ namespace usue_online_tests.Tests.List
 
         public string Text { get; set; }
         public string[] CheckBoxes { get; set; }
-        public List<Image> Pictures { get; set; } = new List<Image>();
+        public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
         public int TimeLimitSeconds { get; set; } = 60;
         public bool IsHidden { get; set; } = false;
     }

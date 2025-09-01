@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Test_Wrapper;
@@ -11,7 +12,7 @@ namespace LinOper
 	{
 		public string Text { get; set; }
 		public string[] CheckBoxes { get; set; }
-		public List<Image> Pictures { get; set; }
+		public List<MemoryStream> Pictures { get; set; }
 		public int TestID { get; set; }
 		public string Name { get; } = "Линейные операторы тест 1";
 		public string Description { get; }

@@ -2,7 +2,10 @@
 using System.Drawing.Drawing2D;
 using System.Drawing;
 using System;
+using System.IO;
 using Test_Wrapper;
+
+namespace usue_online_tests.Tests.VectorAlg;
 
 public class Vector002 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 {
@@ -143,7 +146,7 @@ public class Vector002 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 
 
 
-        test.Pictures.Add(img);
+        //test.Pictures.Add(img);
 
         string questionText = $"В разложении \\(\\overline{{c}}\\) в линейную комбинацию введите числа(коэффициенты):" +
             $" \\(\\overline{{c}}\\) = \\(<vectorA>\\)\\(\\overline{{a}}\\) + \\(<vectorB>\\)\\(\\overline{{b}}\\).";
@@ -169,7 +172,7 @@ public class Vector002 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 
     public string Text { get; set; }
     public string[] CheckBoxes { get; set; }
-    public List<Image> Pictures { get; set; } = new List<Image>();
+    public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
     public int TimeLimitSeconds { get; set; } = 60;
     public bool IsHidden { get; set; } = false;
 }

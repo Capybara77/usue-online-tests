@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using Test_Wrapper;
 
@@ -13,7 +14,7 @@ namespace FinField
 		public string Description { get; }
 		public string Text { get; set; }
 		public string[] CheckBoxes { get; set; }
-		public List<Image> Pictures { get; set; }
+		public List<MemoryStream> Pictures { get; set; }
 
 		public class Data
 		{

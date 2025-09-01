@@ -2,7 +2,10 @@
 using System.Drawing.Drawing2D;
 using System.Drawing;
 using System;
+using System.IO;
 using Test_Wrapper;
+
+namespace usue_online_tests.Tests.VectorAlg;
 
 public class Vector005 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 {
@@ -139,7 +142,7 @@ public class Vector005 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 
 
 
-        test.Pictures.Add(img);
+        //test.Pictures.Add(img);
 
         string questionText = $"Если векторы \\(\\overline{{a}}\\), \\(\\overline{{b}}\\) и 2\\(\\overline{{a}}\\) + 3\\(\\overline{{b}}\\) отложить от точки с номером {number} (обевдена кружком)," +
             $"то концы полученных направленных отрезков будут находиться в точках, соответсвенно \\(<answer1>\\), \\(<answer2>\\) и \\(<answer3>\\).";
@@ -166,7 +169,7 @@ public class Vector005 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 
     public string Text { get; set; }
     public string[] CheckBoxes { get; set; }
-    public List<Image> Pictures { get; set; } = new List<Image>();
+    public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
     public int TimeLimitSeconds { get; set; } = 60;
     public bool IsHidden { get; set; } = false;
 }

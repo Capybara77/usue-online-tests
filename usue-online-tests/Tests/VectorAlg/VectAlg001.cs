@@ -4,6 +4,8 @@ using System.IO;
 using SkiaSharp;
 using Test_Wrapper;
 
+namespace usue_online_tests.Tests.VectorAlg;
+
 public class Analit3 : ITestCreator, ITest
 {
     public int answer1;

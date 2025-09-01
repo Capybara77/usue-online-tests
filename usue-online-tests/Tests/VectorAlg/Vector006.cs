@@ -2,7 +2,10 @@
 using System.Drawing.Drawing2D;
 using System.Drawing;
 using System;
+using System.IO;
 using Test_Wrapper;
+
+namespace usue_online_tests.Tests.VectorAlg;
 
 public class Vector006 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 {
@@ -124,7 +127,7 @@ public class Vector006 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
         graphics.DrawLine(vectorPen, vectorStartXA, vectorStartYA, vectorEndXA, vectorEndYA);
 
 
-        test.Pictures.Add(img);
+        //test.Pictures.Add(img);
 
         string questionText = $"На четеже изображён направленный отрезок, полученный откладыванием вектора \\(\\overline{{a}}\\) от точки с номером {number}.\r\n" +
             $"Точка, координаты которой совпадают с координатами вектора \\(\\overline{{a}}\\), имеет номер \\(<answer1>\\).";
@@ -149,7 +152,7 @@ public class Vector006 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 
     public string Text { get; set; }
     public string[] CheckBoxes { get; set; }
-    public List<Image> Pictures { get; set; } = new List<Image>();
+    public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
     public int TimeLimitSeconds { get; set; } = 60;
     public bool IsHidden { get; set; } = false;
 }
