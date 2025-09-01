@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using SkiaSharp;
+﻿using System.Collections.Generic;
+using System.Drawing.Drawing2D;
+using System.Drawing;
+using System;
 using Test_Wrapper;
 
-public class Vector005 : ITestCreator, ITest
+public class Vector005 : ITestCreator, ITest, ITimeLimit, IHidden, ITestGroup
 {
     int answer1;
     int answer2;
     int answer3;
 
     public int TestID { get; set; }
+    public string GroupName { get; set; } = "Analitic Geometry and Vectors";
     public string Name { get; } = "Векторная алгебра 005";
     public string Description { get; } = "Упражнение по векторной алгебре";
 
@@ -19,12 +20,11 @@ public class Vector005 : ITestCreator, ITest
         Random random = new Random(randomSeed);
         ITest test = new Vector005();
 
-        var imageInfo = new SKImageInfo(510, 510);
-        using var surface = SKSurface.Create(imageInfo);
-        var canvas = surface.Canvas;
-        canvas.Clear(SKColors.White);
+        Bitmap img = new Bitmap(510, 510);
+        Graphics graphics = Graphics.FromImage(img);
+        graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+        graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-        // --- Логика генерации номеров и координат оставлена без изменений ---
         int[] numbers = new int[289];
         for (int i = 0; i <= 16; i++)
         {
@@ -45,14 +45,12 @@ public class Vector005 : ITestCreator, ITest
         }
 
         int gap = 30;
+
         int horizontalCount = 530 / gap;
         int verticalCount = 530 / gap;
+
         int xOffset = 15;
         int yOffset = 15;
-
-        // --- Рисование сетки чисел с помощью SkiaSharp ---
-        using var numberFont = new SKFont(SKTypeface.FromFamilyName("Arial"), 8);
-        using var numberPaint = new SKPaint(numberFont) { Color = SKColors.Black, IsAntialias = true };
 
         for (int i = 0; i < horizontalCount; i++)
         {
@@ -63,36 +61,42 @@ public class Vector005 : ITestCreator, ITest
 
                 int numberIndex = j * horizontalCount + i;
                 string numberText = numbers[numberIndex].ToString();
+                Font font2 = new Font("Arial", 8);
 
-                // Измеряем текст, чтобы его центрировать
-                var textBounds = new SKRect();
-                numberPaint.MeasureText(numberText, ref textBounds);
+                SizeF textSize = graphics.MeasureString(numberText, font2);
 
-                // Вычисляем координаты для центрирования
-                float centeredX = x - textBounds.MidX;
-                float centeredY = y - textBounds.MidY;
+                float centeredX = x - textSize.Width / 2;
+                float centeredY = y - textSize.Height / 2;
 
-                canvas.DrawText(numberText, centeredX, centeredY, numberPaint);
+                graphics.DrawString(numberText, font2, Brushes.Black, centeredX, centeredY);
+
             }
         }
 
-        int centerX = imageInfo.Width / 2;
-        int centerY = imageInfo.Height / 2;
+        int centerX = img.Width / 2;
+        int centerY = img.Height / 2;
+
 
         int vectorStartXA, vectorEndXA, vectorStartYA, vectorEndYA, vectorStartXB, vectorEndXB, vectorStartYB, vectorEndYB, vectorX, vectorY;
+
 
         vectorStartXA = centerX - 30 * random.Next(1, 5) + 3;
         vectorStartYA = centerY - 30 * random.Next(1, 5);
         vectorEndXA = vectorStartXA + 30 * random.Next(1, 4);
         vectorEndYA = vectorStartYA - 30 * random.Next(1, 3);
 
+
         vectorStartXB = centerX - 30 * random.Next(0, 5);
         vectorStartYB = centerY + 30 * random.Next(3, 8);
         vectorEndXB = vectorStartXB - 30 * random.Next(1, 4) + 3;
         vectorEndYB = vectorStartYB - 30 * random.Next(1, 3);
 
+
         vectorX = centerX + 30 * random.Next(2, 5);
         vectorY = centerY + 30 * random.Next(3, 9);
+
+
+
 
         var newVectorEndXA = vectorX + (vectorEndXA - vectorStartXA);
         var newVectorEndYA = vectorY + (vectorEndYA - vectorStartYA);
@@ -109,39 +113,33 @@ public class Vector005 : ITestCreator, ITest
         int index = ((verticalCount - 1) - (vectorY - yOffset) / gap) * horizontalCount + (vectorX - xOffset) / gap;
         var number = numbers[index];
 
-        this.answer1 = numbers[indexA];
-        this.answer2 = numbers[indexB];
-        this.answer3 = numbers[indexAB];
+        answer1 = numbers[indexA];
+        answer2 = numbers[indexB];
+        answer3 = numbers[indexAB];
 
-        // --- Настройка объектов SkiaSharp для рисования ---
-        using var labelFont = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), 15);
-        using var labelPaint = new SKPaint(labelFont) { Color = SKColors.Black, IsAntialias = true };
+        Font font = new Font("Arial", 15, FontStyle.Bold);
 
-        using var vectorPen = new SKPaint { Color = SKColors.DeepPink, StrokeWidth = 3, Style = SKPaintStyle.Stroke, IsAntialias = true };
-        using var circlePen = new SKPaint { Color = SKColors.Red, StrokeWidth = 2, Style = SKPaintStyle.Stroke, IsAntialias = true };
 
-        // --- Рисование фигур ---
-        float radius = 11;
-        // В оригинале центр круга был немного смещен (vectorX - 1, vectorY). Сохраняем это.
-        canvas.DrawCircle(vectorX - 1, vectorY, radius, circlePen);
+        Pen vectorPen = new Pen(Color.DeepPink, 3);
+        Pen pen = new Pen(Color.Red, 2);
 
-        // Рисуем векторы со стрелками
-        DrawArrow(canvas, new SKPoint(vectorStartXA, vectorStartYA), new SKPoint(vectorEndXA, vectorEndYA), vectorPen);
-        DrawArrow(canvas, new SKPoint(vectorStartXB, vectorStartYB), new SKPoint(vectorEndXB, vectorEndYB), vectorPen);
+        CustomLineCap bigArrow = new AdjustableArrowCap(5, 5, true);
+        vectorPen.CustomEndCap = bigArrow;
 
-        // Рисуем подписи к векторам
-        canvas.DrawText("a", vectorEndXA, vectorEndYA - 10, labelPaint);
-        canvas.DrawText("b", vectorEndXB - 20, vectorEndYB - 10, labelPaint);
+        int radius = 11;
 
-        // Сохранение изображения
-        var ms = new MemoryStream();
-        using (var image = surface.Snapshot())
-        using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
-        {
-            data.SaveTo(ms);
-        }
-        ms.Position = 0;
-        test.Pictures.Add(ms);
+        graphics.DrawEllipse(pen, vectorX - radius - 1, vectorY - radius, 2 * radius, 2 * radius);
+
+        graphics.DrawLine(vectorPen, vectorStartXA, vectorStartYA, vectorEndXA, vectorEndYA);
+
+        graphics.DrawLine(vectorPen, vectorStartXB, vectorStartYB, vectorEndXB, vectorEndYB);
+
+        graphics.DrawString("a", font, Brushes.Black, vectorEndXA, vectorEndYA - 20);
+        graphics.DrawString("b", font, Brushes.Black, vectorEndXB - 20, vectorEndYB - 20);
+
+
+
+        test.Pictures.Add(img);
 
         string questionText = $"Если векторы \\(\\overline{{a}}\\), \\(\\overline{{b}}\\) и 2\\(\\overline{{a}}\\) + 3\\(\\overline{{b}}\\) отложить от точки с номером {number} (обевдена кружком)," +
             $"то концы полученных направленных отрезков будут находиться в точках, соответсвенно \\(<answer1>\\), \\(<answer2>\\) и \\(<answer3>\\).";
@@ -151,30 +149,8 @@ public class Vector005 : ITestCreator, ITest
         return test;
     }
 
-    private void DrawArrow(SKCanvas canvas, SKPoint start, SKPoint end, SKPaint paint, float arrowHeadLength = 10f, float arrowHeadAngle = 25.0f)
-    {
-        canvas.DrawLine(start, end, paint);
-        var angle = Math.Atan2(end.Y - start.Y, end.X - start.X);
-        using var path = new SKPath();
-        var radians = arrowHeadAngle * Math.PI / 180;
-        var p1 = new SKPoint(
-            (float)(end.X - arrowHeadLength * Math.Cos(angle - radians)),
-            (float)(end.Y - arrowHeadLength * Math.Sin(angle - radians))
-        );
-        var p2 = new SKPoint(
-            (float)(end.X - arrowHeadLength * Math.Cos(angle + radians)),
-            (float)(end.Y - arrowHeadLength * Math.Sin(angle + radians))
-        );
-        path.MoveTo(p1);
-        path.LineTo(end);
-        path.LineTo(p2);
-        // Рисуем стрелку тем же пером, что и линию
-        canvas.DrawPath(path, paint);
-    }
-
     public int CheckAnswer(int randomSeed, Dictionary<string, string> answers)
     {
-        // Логика проверки не использует графику и остается без изменений
         int total = 0;
 
         foreach (var answer in answers)
@@ -190,5 +166,7 @@ public class Vector005 : ITestCreator, ITest
 
     public string Text { get; set; }
     public string[] CheckBoxes { get; set; }
-    public List<MemoryStream> Pictures { get; set; } = new List<MemoryStream>();
+    public List<Image> Pictures { get; set; } = new List<Image>();
+    public int TimeLimitSeconds { get; set; } = 60;
+    public bool IsHidden { get; set; } = false;
 }
