@@ -35,7 +35,7 @@ namespace usue_online_tests.Tests.PolynomA
             ITest result = new MultiPoly13();
             result.Text =
                 $"\\({Ax} \\cdot {letterA}^{{2}}+{Ay} \\cdot {letterA}+{Az}=" +
-                $"<Ax:5>\\left({letterA}+<Bx>\\right)^{{2}}+<By:5>\\)" + $"{Ax} {Bx} {By}";
+                $"<Ax:5>\\left({letterA}+<Bx>\\right)^{{2}}+<By:5>\\)";
             result.Text = result.Text.Replace("+ -", "-");
             result.Text = result.Text.Replace("- -", "+");
             return result;
