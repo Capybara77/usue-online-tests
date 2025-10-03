@@ -11,6 +11,9 @@ RUN dotnet publish "usue-online-tests/usue-online-tests.csproj" -c Release -o /a
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 
 RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates gnupg && \
+    apt-get install -y --reinstall debian-archive-keyring && \
+    apt-get update && \
     apt-get install -y --no-install-recommends libfontconfig1 libfreetype6 && \
     rm -rf /var/lib/apt/lists/*
 
