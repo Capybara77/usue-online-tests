@@ -1,4 +1,4 @@
-ROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+ROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
 COPY . .
@@ -8,7 +8,7 @@ RUN dotnet restore "./usue-online-tests/usue-online-tests.csproj"
 WORKDIR "/src/."
 RUN dotnet publish "usue-online-tests/usue-online-tests.csproj" -c Release -o /app/publish --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends libfontconfig1 libfreetype6 && \
