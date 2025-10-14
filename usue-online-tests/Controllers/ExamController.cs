@@ -59,6 +59,7 @@ namespace usue_online_tests.Controllers
                 {
                     User user = GetUserByCookie.GetUser();
                     Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
+
                     // если экзамена нет
                     if (exam == null) return View("ErrorPage", "Тест не существует");
                     TestPreset preset = exam.Preset;
@@ -127,6 +128,8 @@ namespace usue_online_tests.Controllers
                     int spentTime = (int)(DateTime.Now.ToNowEkb() - userExamResult.ExamTestAnswers.First(answer => answer.TestId == testId).DateTimeStart).TotalSeconds;
 
                     int hash = CreateHash(user.Name + user.Group + exam.Id);
+
+                    Logger.LogInfo($"{user.Name} запустил тест - #{testNumber} экзамен - #{examId} Хэш: {hash}");
 
                     ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
 

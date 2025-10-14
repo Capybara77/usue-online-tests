@@ -48,5 +48,16 @@ namespace usue_online_tests.Services
         }
 
 
+        public static void LogInfo(string message)
+        {
+            lock (lockObject)
+            {
+                using (StreamWriter writer = new StreamWriter(logFilePath, true))
+                {
+                    writer.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] INFO: {message}");
+                }
+            }
+        }
+
     }
 }
