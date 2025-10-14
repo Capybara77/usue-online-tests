@@ -15,6 +15,8 @@ using Test_Wrapper;
 using usue_online_tests.Data;
 using usue_online_tests.Models;
 using usue_online_tests.Tests;
+using Microsoft.Extensions.Logging;
+using usue_online_tests.Services;
 
 namespace usue_online_tests.Controllers
 {
@@ -48,97 +50,114 @@ namespace usue_online_tests.Controllers
 
         public async Task<IActionResult> StartTest(int examId, int testNumber)
         {
-            User user = GetUserByCookie.GetUser();
-            Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
-            // если экзамена нет
-            if (exam == null) return View("ErrorPage", "Тест не существует");
-            TestPreset preset = exam.Preset;
+            int maxAttempt = 3;
+            int attempt = 1;
 
-            if (preset.IsHomework) return StartHomework(examId, testNumber);
-
-            // если пользователь из другой группы
-            if (user.Group != exam.Group) View("ErrorPage", "Тест для другой группы");
-
-            UserExamResult userExamResult =
-                Context.UserExamResults
-                    .Include(result => result.ExamTestAnswers)
-                    .FirstOrDefault(result => result.User.Id == user.Id && result.Exam.Id == examId);
-
-            // если это первый запуск
-            if (userExamResult == null)
+            while (attempt != maxAttempt)
             {
-                userExamResult = new UserExamResult
+                try
                 {
-                    User = user,
-                    Exam = exam,
-                    DateTimeStart = DateTime.Now.ToNowEkb(),
-                    IsCompleted = false
-                };
-                Context.UserExamResults.Add(userExamResult);
-                Context.SaveChanges();
-            }
+                    User user = GetUserByCookie.GetUser();
+                    Exam exam = Context.Exams.Include(exam1 => exam1.Preset).FirstOrDefault(exam1 => exam1.Id == examId);
 
-            // время истекло
-            if (exam.DateTimeEnd < DateTime.Now.ToNowEkb())
-                return View("ErrorPage", "Время истекло");
+                    // если экзамена нет
+                    if (exam == null) return View("ErrorPage", "Тест не существует");
+                    TestPreset preset = exam.Preset;
 
-            // некорректный номер теста
-            if (testNumber < 1) return View("ErrorPage", "Некорректный номер теста");
+                    if (preset.IsHomework) return StartHomework(examId, testNumber);
 
-            // сохранение результата теста
-            if (preset.Tests.Length < testNumber)
-            {
-                await SaveTestResult(userExamResult);
-                return LocalRedirect("/profile");
-            }
+                    // если пользователь из другой группы
+                    if (user.Group != exam.Group) View("ErrorPage", "Тест для другой группы");
 
-            // создание новой последовательности тестов
-            int[] userSequenceOrder = ShuffleSequence(preset.Tests.Length, CreateHash(user.Name));
-            int currentRealTestNumber = userSequenceOrder[testNumber - 1];
+                    UserExamResult userExamResult =
+                        Context.UserExamResults
+                            .Include(result => result.ExamTestAnswers)
+                            .FirstOrDefault(result => result.User.Id == user.Id && result.Exam.Id == examId);
 
-            int testId = preset.Tests[currentRealTestNumber - 1];
+                    // если это первый запуск
+                    if (userExamResult == null)
+                    {
+                        userExamResult = new UserExamResult
+                        {
+                            User = user,
+                            Exam = exam,
+                            DateTimeStart = DateTime.Now.ToNowEkb(),
+                            IsCompleted = false
+                        };
+                        Context.UserExamResults.Add(userExamResult);
+                        Context.SaveChanges();
+                    }
 
-            //проверка на существование такого ответа
-            if (userExamResult.ExamTestAnswers != null && userExamResult.ExamTestAnswers.Any(answer => answer.TestId == testId && answer.DateTimeEnd != default))
-                return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
+                    // время истекло
+                    if (exam.DateTimeEnd < DateTime.Now.ToNowEkb())
+                        return View("ErrorPage", "Время истекло");
 
-            // выдача задания и фиксация времени
-            userExamResult.ExamTestAnswers ??= new List<ExamTestAnswer>();
+                    // некорректный номер теста
+                    if (testNumber < 1) return View("ErrorPage", "Некорректный номер теста");
 
-            if (userExamResult.ExamTestAnswers.All(answer => answer.TestId != testId))
-            {
-                userExamResult.ExamTestAnswers.Add(new ExamTestAnswer
+                    // сохранение результата теста
+                    if (preset.Tests.Length < testNumber)
+                    {
+                        await SaveTestResult(userExamResult);
+                        return LocalRedirect("/profile");
+                    }
+
+                    // создание новой последовательности тестов
+                    int[] userSequenceOrder = ShuffleSequence(preset.Tests.Length, CreateHash(user.Name));
+                    int currentRealTestNumber = userSequenceOrder[testNumber - 1];
+
+                    int testId = preset.Tests[currentRealTestNumber - 1];
+
+                    //проверка на существование такого ответа
+                    if (userExamResult.ExamTestAnswers != null && userExamResult.ExamTestAnswers.Any(answer => answer.TestId == testId && answer.DateTimeEnd != default))
+                        return LocalRedirect($"/exam/StartTest?examId={examId}&testNumber={testNumber + 1}");
+
+                    // выдача задания и фиксация времени
+                    userExamResult.ExamTestAnswers ??= new List<ExamTestAnswer>();
+
+                    if (userExamResult.ExamTestAnswers.All(answer => answer.TestId != testId))
+                    {
+                        userExamResult.ExamTestAnswers.Add(new ExamTestAnswer
+                        {
+                            DateTimeStart = DateTime.Now.ToNowEkb(),
+                            TestId = testId
+                        });
+                        Context.SaveChanges();
+                    }
+
+                    int spentTime = (int)(DateTime.Now.ToNowEkb() - userExamResult.ExamTestAnswers.First(answer => answer.TestId == testId).DateTimeStart).TotalSeconds;
+
+                    int hash = CreateHash(user.Name + user.Group + exam.Id);
+
+                    Logger.LogInfo($"{user.Name} запустил тест - #{testNumber} экзамен - #{examId} Хэш: {hash}");
+
+                    ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
+
+                    if (testCreator == null)
+                        return View("ErrorPage", "Нет генератора в системе. Обратитесь по номеру +79533804297");
+
+                    TestWrapper test = new TestWrapper
+                    {
+                        Hash = hash,
+                        Test = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId)?.CreateTest(hash),
+                        TestId = testId,
+                        BtnText = testNumber == preset.Tests.Length ? "Завершить" : "Следующий вопрос",
+                        Link = $"/exam/CheckAnswersExam?examId={examId}&testNumber={testNumber + 1}",
+                        TimeLimited = exam.Preset.TimeLimited,
+                        ExamId = examId
+                    };
+
+                    if (test.TimeLimited)
+                        test.SecLimit = testCreator is ITimeLimit timeLimitCreator ? timeLimitCreator.TimeLimitSeconds - spentTime : 60 - spentTime;
+
+                    return View(test);
+                } catch(Exception ex)
                 {
-                    DateTimeStart = DateTime.Now.ToNowEkb(),
-                    TestId = testId
-                });
-                Context.SaveChanges();
+                    attempt++;
+                    Logger.LogError("Ошибка при запуске тестов", ex);
+                }
             }
-
-            int spentTime = (int)(DateTime.Now.ToNowEkb() - userExamResult.ExamTestAnswers.First(answer => answer.TestId == testId).DateTimeStart).TotalSeconds;
-
-            int hash = CreateHash(user.Name + user.Group + exam.Id);
-
-            ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
-
-            if (testCreator == null)
-                return View("ErrorPage", "Нет генератора в системе. Обратитесь по номеру +79533804297");
-
-            TestWrapper test = new TestWrapper
-            {
-                Hash = hash,
-                Test = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId)?.CreateTest(hash),
-                TestId = testId,
-                BtnText = testNumber == preset.Tests.Length ? "Завершить" : "Следующий вопрос",
-                Link = $"/exam/CheckAnswersExam?examId={examId}&testNumber={testNumber + 1}",
-                TimeLimited = exam.Preset.TimeLimited,
-                ExamId = examId
-            };
-
-            if (test.TimeLimited)
-                test.SecLimit = testCreator is ITimeLimit timeLimitCreator ? timeLimitCreator.TimeLimitSeconds - spentTime : 60 - spentTime;
-
-            return View(test);
+            return View("ErrorPage", "Возникла ошибка при генерации теста");
         }
 
         [HttpPost]
