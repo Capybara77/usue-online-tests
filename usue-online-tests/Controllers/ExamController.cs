@@ -129,7 +129,7 @@ namespace usue_online_tests.Controllers
 
                     int hash = CreateHash(user.Name + user.Group + exam.Id);
 
-                    Logger.LogInfo($"{user.Name} запустил тест - #{testNumber} экзамен - #{examId} Хэш: {hash}");
+                    Logger.LogInfo($"{user.Name} запустил тест - #{testNumber} ({testId}) экзамен - #{examId} Хэш: {hash}");
 
                     ITestCreator testCreator = TestsLoader.TestCreators.FirstOrDefault(creator => creator.TestID == testId);
 
